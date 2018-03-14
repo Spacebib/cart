@@ -13,13 +13,17 @@ class Registration
 {
     private $participants;
 
+    private $dataStore;
+
     /**
      * Registration constructor.
-     * @param $participants
+     * @param array $participants
+     * @param DataStore $dataStore
      */
-    public function __construct(array $participants)
+    public function __construct(array $participants, DataStore $dataStore)
     {
         $this->participants = $participants;
+        $this->dataStore = $dataStore;
     }
 
     /**
@@ -27,7 +31,7 @@ class Registration
      */
     public function renderParticipant($trackId)
     {
-
+        return $this->getParticipantByTrackId($trackId)->fo
     }
 
     /**
@@ -61,11 +65,12 @@ class Registration
 
     }
 
-    public function sleep()
-    {}
-
-    public static function awake()
+    /**
+     * @param $trackId
+     * @return Participant
+     */
+    private function getParticipantByTrackId($trackId)
     {
-
+        return $this->participants[$trackId];
     }
 }

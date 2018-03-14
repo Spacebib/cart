@@ -64,12 +64,4 @@ class Cart
         return $this->subTotal();
     }
 
-    public function sleep()
-    {
-    }
-
-    public static function awake()
-    {
-
-    }
 }

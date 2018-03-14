@@ -13,6 +13,8 @@ class Form
 {
     private $fields;
 
+    private $data;
+
     /**
      * Form constructor.
      * @param $fields
@@ -22,5 +24,31 @@ class Form
         $this->fields = $fields;
     }
 
+    public function fill($fillData)
+    {
+        $data = array_filter($fillData, function ($key) {
+            return in_array($key, $this->fields);
+        }, ARRAY_FILTER_USE_KEY);
+
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
 
 }

@@ -21,6 +21,12 @@ class Participant
 
     private $form;
 
+    private $isTouched = false;
+
+    private $isDirty = false;
+
+    private $isCompleted = false;
+
     /**
      * Participant constructor.
      * @param $id
@@ -44,6 +50,54 @@ class Participant
     public function getTrackId()
     {
         return $this->trackId;
+    }
+
+    /**
+     * @param bool $isTouched
+     */
+    public function setIsTouched($isTouched)
+    {
+        $this->isTouched = $isTouched;
+    }
+
+    /**
+     * @param bool $isDirty
+     */
+    public function setIsDirty($isDirty)
+    {
+        $this->isDirty = $isDirty;
+    }
+
+    /**
+     * @param bool $isCompleted
+     */
+    public function setIsCompleted($isCompleted)
+    {
+        $this->isCompleted = $isCompleted;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTouched()
+    {
+        return $this->isTouched;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDirty()
+    {
+        return $this->isDirty;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted()
+    {
+        return $this->isCompleted;
     }
 
 }

@@ -51,7 +51,9 @@ class EventFactory
                                 'email',
                                 'dob',
                                 'first_name',
-                                'last_name'
+                                'last_name',
+                                'nationality',
+                                'name_on_bib'
                             ]
                         ]
                     ]
