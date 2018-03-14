@@ -91,7 +91,17 @@ class Event
 
     public function getCategoryById($categoryId)
     {
+        $found = array_filter($this->categories, function (Category $category) use ($categoryId) {
+            return $category->getId() === $categoryId;
+        });
 
+        if (count($found) == 0) {
+            throw new \LogicException(
+                sprintf('Category with ID %s is not found', $categoryId)
+            );
+        }
+
+        return $first = array_shift($found);
     }
 
 }

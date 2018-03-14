@@ -37,6 +37,16 @@ class Category
     /**
      * @return mixed
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
     public function getParticipants()
     {
         return $this->participants;

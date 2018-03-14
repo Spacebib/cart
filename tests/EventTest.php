@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart\Test;
 
+use Dilab\Cart\Category;
 use Dilab\Cart\Event;
 use Dilab\Cart\Participant;
 use Dilab\Cart\Test\Factory\EventFactory;
@@ -34,5 +35,15 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $expected = [0, 1, 2, 3];
 
         $this->assertSame($expected, $participantTrackIds);
+    }
+
+    public function testGetCategoryById()
+    {
+        $event = EventFactory::create();
+        $result = $event->getCategoryById(1);
+        $this->assertInstanceOf(Category::class, $result);
+
+        $this->setExpectedException(\LogicException::class);
+        $result = $event->getCategoryById(100000);
     }
 }
