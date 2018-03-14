@@ -20,10 +20,23 @@ class Money
      * @param $currency
      * @param $amountInCent
      */
-    public function __construct($currency, $amountInCent)
+    private function __construct($currency, $amountInCent)
     {
         $this->currency = $currency;
         $this->amountInCent = $amountInCent;
+    }
+
+    public static function fromCent($currency, $amountInCent)
+    {
+        return new self(
+            $currency,
+            $amountInCent
+        );
+    }
+
+    public function toCent()
+    {
+        return $this->amountInCent;
     }
 
 }
