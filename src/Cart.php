@@ -11,6 +11,8 @@ namespace Dilab\Cart;
 
 class Cart
 {
+    private $buyerEmail;
+
     /**
      * @var DataStore
      */
@@ -18,16 +20,32 @@ class Cart
 
     /**
      * Cart constructor.
-     * @param $store
+     * @param $buyerEmail
+     * @param DataStore $store
      */
-    public function __construct(DataStore $store)
+    public function __construct($buyerEmail, DataStore $store)
     {
+        $this->buyerEmail = $buyerEmail;
         $this->store = $store;
     }
 
-    public function addTicket($categoryId, $qty)
+    public function addTicket(Category $category, $qty)
     {
 
     }
 
+    public function tickets()
+    {
+
+    }
+
+    public function subTotal()
+    {
+
+    }
+
+    public function total()
+    {
+
+    }
 }

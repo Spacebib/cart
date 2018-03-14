@@ -11,10 +11,54 @@ namespace Dilab\Cart;
 
 class Registration
 {
-    public function fillForm()
+    private $participants;
+
+    /**
+     * Registration constructor.
+     * @param $participants
+     */
+    public function __construct(array $participants)
+    {
+        $this->participants = $participants;
+    }
+
+    /**
+     * return a list of form fields
+     */
+    public function renderParticipant($trackId)
     {
 
     }
 
-    public function read
+    /**
+     * return true/false
+     */
+    public function fillParticipant($trackId, array $data)
+    {
+
+    }
+
+    /**
+     * return trur/false
+     */
+    public function isRedirect()
+    {
+
+    }
+
+    public function isDirty($trackId)
+    {
+
+    }
+
+    public function isTouched($trackId)
+    {
+
+    }
+
+    public function isCompleted($trackId)
+    {
+
+    }
+
 }

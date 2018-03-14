@@ -6,11 +6,10 @@
  * Time: 6:02 PM
  */
 
-use Dilab\Cart\Event;
+namespace Dilab\Cart\Test;
 
-class EventTest extends PHPUnit_Framework_TestCase
+class EventTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGetCategory()
     {
         $this->assertTrue(true);

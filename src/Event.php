@@ -11,15 +11,32 @@ namespace Dilab\Cart;
 
 class Event
 {
+    private $id;
 
-    public function build()
+    private $name;
+
+    private $categories;
+
+    /**
+     * Event constructor.
+     * @param $id
+     * @param $name
+     * @param array $categories
+     */
+    public function __construct($id, $name, array $categories)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->categories = $categories;
+    }
+
+    public function getParticipants()
     {
 
     }
 
-    public function getCategory($categoryId)
+    public function getCategoryById($categoryId)
     {
 
     }
-
 }
