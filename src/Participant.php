@@ -53,6 +53,14 @@ class Participant
     }
 
     /**
+     * @return Form
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
      * @param bool $isTouched
      */
     public function setIsTouched($isTouched)

@@ -39,18 +39,20 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
             'nationality' => '',
             'name_on_bib' => ''
         ];
-        $this->assertEquals($expected, $this->registration->renderParticipant($trackId));
+        $this->assertEquals($expected, $this->registration->renderFormData($trackId));
         $this->assertFalse($this->registration->isDirty($trackId));
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->assertTrue($this->registration->isTouched($trackId));
 
+        $trackId = 0;
         $expected = [
             'email' => '',
             'dob' => '',
             'first_name' => '',
-            'last_name => '
+            'last_name' => ''
         ];
-        $this->assertEquals($expected, $this->registration->renderParticipant(0));
+        $result = $this->registration->renderFormData($trackId);
+        $this->assertEquals($expected, $result);
         $this->assertFalse($this->registration->isDirty($trackId));
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->assertTrue($this->registration->isTouched($trackId));
@@ -66,18 +68,4 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testIsDirty()
-    {
-
-    }
-
-    public function testIsTouched()
-    {
-
-    }
-
-    public function testIsCompleted()
-    {
-
-    }
 }

@@ -27,7 +27,9 @@ class Form
     public function fill($fillData)
     {
         $data = array_filter($fillData, function ($key) {
+
             return in_array($key, $this->fields);
+
         }, ARRAY_FILTER_USE_KEY);
 
         $this->data = $data;

@@ -32,12 +32,10 @@ class EventFactory
                                 'gender' => 'male'
                             ],
                             'fields' => [
-                                'fields' => [
-                                    'email',
-                                    'dob',
-                                    'first_name',
-                                    'last_name'
-                                ]
+                                'email',
+                                'dob',
+                                'first_name',
+                                'last_name'
                             ]
                         ],
                         [
