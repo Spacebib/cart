@@ -1,0 +1,23 @@
+{
+    "name": "dilab/cart",
+    "description": "Shopping Cart Library",
+    "keywords": [
+        "cart"
+    ],
+    "type": "library",
+    "authors": [
+        {
+            "name": "xu ding",
+            "email": "thedilab@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7.0"
+    },
+    "autoload": {
+        "psr-4": { "Dilab\\Cart\\" : "src/" }
+    }
+}
