@@ -49,13 +49,19 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $result = $this->cart->subTotal();
         $this->assertNull($result);
 
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->subTotal();
-        $this->assertEquals(Money::fromCent('SGD', 100000), $result);
+        $this->assertEquals(Money::fromCent('SGD', 101000), $result);
     }
 
     public function testTotal()
     {
+        $result = $this->cart->total();
+        $this->assertNull($result);
 
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
+        $result = $this->cart->total();
+        $this->assertEquals(Money::fromCent('SGD', 100000), $result);
     }
 }

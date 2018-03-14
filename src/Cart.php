@@ -53,13 +53,15 @@ class Cart
         $currency = $this->tickets[0]->getPrice()->getCurrency();
 
         $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
-
+            return $category->getPrice()->plus($carry);
         }, Money::fromCent($currency, 0));
+
+        return $ticketsSubTotal;
     }
 
     public function total()
     {
-
+        return $this->subTotal();
     }
 
     public function sleep()
