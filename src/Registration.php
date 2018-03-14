@@ -29,30 +29,30 @@ class Registration
     /**
      * return a list of form fields
      */
-    public function renderFormData($trackId)
+    public function renderParticipantForm($trackId)
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $participant->setIsTouched(true);
-
         $form = $participant->getForm();
 
-        $form->fill(
-            array_combine(
-                $form->getFields(),
-                array_fill(0, count($form->getFields()), '')
-            )
-        );
+        $this->fillOnFirstView($participant);
+
+        $participant->setIsTouched(true);
 
         return $form->getData();
     }
 
-    /**
-     * return true/false
-     */
-    public function fillParticipant($trackId, array $data)
+    public function fillParticipantForm($trackId, array $data)
     {
+        $participant = $this->getParticipantByTrackId($trackId);
 
+        $form = $participant->getForm();
+
+        $form->fill($data);
+
+        $participant->setIsDirty(true);
+
+        return $this;
     }
 
     /**
@@ -85,5 +85,19 @@ class Registration
     private function getParticipantByTrackId($trackId)
     {
         return $this->participants[$trackId];
+    }
+
+    private function fillOnFirstView(Participant $participant)
+    {
+        if ($participant->isTouched()) {
+            return;
+        }
+
+        $participant->getForm()->fill(
+            array_combine(
+                $participant->getForm()->getFields(),
+                array_fill(0, count($participant->getForm()->getFields()), '')
+            )
+        );
     }
 }
