@@ -48,4 +48,12 @@ class Cart
     {
 
     }
+
+    public function sleep()
+    {}
+
+    public static function awake()
+    {
+
+    }
 }

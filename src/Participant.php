@@ -15,29 +15,35 @@ class Participant
 
     private $id;
 
-    private $category;
-
     private $name;
 
     private $rules;
+
+    private $form;
 
     /**
      * Participant constructor.
      * @param $id
      * @param $trackId
-     * @param $category
      * @param $name
-     * @param $rules
+     * @param array $rules
+     * @param Form $form
      */
-    public function __construct($id, $trackId, $category, $name, $rules)
+    public function __construct($id, $trackId, $name, array $rules, Form $form)
     {
         $this->id = $id;
         $this->trackId = $trackId;
-        $this->category = $category;
         $this->name = $name;
         $this->rules = $rules;
+        $this->form = $form;
     }
 
-
+    /**
+     * @return mixed
+     */
+    public function getTrackId()
+    {
+        return $this->trackId;
+    }
 
 }

@@ -34,5 +34,15 @@ class Category
         $this->participants = $participants;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
+
+
 
 }

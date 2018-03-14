@@ -61,4 +61,11 @@ class Registration
 
     }
 
+    public function sleep()
+    {}
+
+    public static function awake()
+    {
+
+    }
 }
