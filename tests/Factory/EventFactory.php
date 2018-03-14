@@ -59,7 +59,7 @@ class EventFactory
                 [
                     'id' => 2,
                     'name' => 'Men Open, 10km',
-                    'price' => 1000,
+                    'price' => 50000,
                     'participants' => [
                         [
                             'id' => 1,

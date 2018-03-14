@@ -18,6 +18,8 @@ class Cart
      */
     private $store;
 
+    private $tickets;
+
     /**
      * Cart constructor.
      * @param $buyerEmail
@@ -27,21 +29,32 @@ class Cart
     {
         $this->buyerEmail = $buyerEmail;
         $this->store = $store;
+        $this->tickets = [];
     }
 
     public function addTicket(Category $category, $qty)
     {
-
+        $tickets = array_fill(0, $qty, $category);
+        $this->tickets = array_merge($this->tickets, $tickets);
+        return $this;
     }
 
     public function tickets()
     {
-
+        return $this->tickets;
     }
 
     public function subTotal()
     {
+        if (empty($this->tickets)) {
+            return null;
+        }
 
+        $currency = $this->tickets[0]->getPrice()->getCurrency();
+
+        $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
+
+        }, Money::fromCent($currency, 0));
     }
 
     public function total()
@@ -50,7 +63,8 @@ class Cart
     }
 
     public function sleep()
-    {}
+    {
+    }
 
     public static function awake()
     {

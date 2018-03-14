@@ -14,8 +14,21 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
 {
     public function testInit()
     {
-        $money = Money::fromCent('SGD',10000);
+        $money = Money::fromCent('SGD', 10000);
         $this->assertInstanceOf(Money::class, $money);
         $this->assertSame(10000, $money->toCent());
     }
+
+    public function testPlus()
+    {
+        $moneyA = Money::fromCent('SGD', 10000);
+        $moneyB = Money::fromCent('SGD', 50);
+        $result = $moneyA->plus($moneyB);
+        $this->assertEquals(Money::fromCent('SGD', 10050), $result);
+
+        $this->setExpectedException(\LogicException::class);
+        $moneyB = Money::fromCent('USD', 50);
+        $moneyA->plus($moneyB);
+    }
+
 }

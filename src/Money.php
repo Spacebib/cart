@@ -22,6 +22,10 @@ class Money
      */
     private function __construct($currency, $amountInCent)
     {
+        if ($amountInCent < 0) {
+            throw new \LogicException('Invalid cent value');
+        }
+
         $this->currency = $currency;
         $this->amountInCent = $amountInCent;
     }
@@ -37,6 +41,26 @@ class Money
     public function toCent()
     {
         return $this->amountInCent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    public function plus(Money $b)
+    {
+        if ($b->getCurrency() !== $this->getCurrency()) {
+            throw new \LogicException('Invalid plus operation between two different currencies');
+        }
+
+        return Money::fromCent(
+            $this->getCurrency(),
+            $this->toCent() + $b->toCent()
+        );
     }
 
 }

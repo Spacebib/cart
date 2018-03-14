@@ -42,7 +42,13 @@ class Category
         return $this->id;
     }
 
-
+    /**
+     * @return Money
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
 
     /**
      * @return mixed
@@ -51,8 +57,5 @@ class Category
     {
         return $this->participants;
     }
-
-
-
 
 }
