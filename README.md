@@ -60,13 +60,13 @@ $registration->getParticipantsTrackIds();
 + Render a form
 
 ```php
-$registration->renderParticipant();
+$registration->renderParticipantForm($trackId);
 ```
 
 + Fill a form
 
 ```php
-$registration->fillParticipant();
+$registration->fillParticipantForm($trackId, $data);
 ```
 
 + Get errors of a participant form

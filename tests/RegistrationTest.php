@@ -24,16 +24,11 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $mockDataStore = $this->getMockBuilder(DataStore::class)->getMock();
-
-        $cart = new Cart('xuding@spacebib.com', $mockDataStore);
+        $cart = new Cart('xuding@spacebib.com');
 
         $cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
 
-        $this->registration = new Registration(
-            $cart->getParticipants(),
-            $mockDataStore
-        );
+        $this->registration = new Registration($cart->getParticipants());
     }
 
     public function testFormFiller()

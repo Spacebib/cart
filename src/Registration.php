@@ -17,21 +17,17 @@ class Registration
 
     private $participants;
 
-    private $dataStore;
-
     private $errors;
 
     /**
      * Registration constructor.
      * @param array $participants
-     * @param DataStore $dataStore
      */
-    public function __construct(array $participants, DataStore $dataStore)
+    public function __construct(array $participants)
     {
         $this->guardParticipants($participants);
 
         $this->participants = $participants;
-        $this->dataStore = $dataStore;
     }
 
     /**
