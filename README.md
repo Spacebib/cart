@@ -18,7 +18,7 @@ $cart = new Cart('xuding@spacebib.com',new DataStore())
 + Create Registration Form
 
 ```php
-$registration = new Registration($event->getParticipants(), new DataStore());
+$registration = new Registration($cart->getParticipants(), new DataStore());
 ```
 
 ## Cart API
@@ -67,4 +67,10 @@ $registration->renderParticipant();
 
 ```php
 $registration->fillParticipant();
+```
+
++ Redirect to next page
+
+```php
+$registration->redirectTo();
 ```
