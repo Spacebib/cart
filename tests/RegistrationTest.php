@@ -28,7 +28,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
 
         $cart = new Cart('xuding@spacebib.com', $mockDataStore);
 
-        $cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        $cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
 
         $this->registration = new Registration(
             $cart->getParticipants(),
@@ -81,8 +81,34 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->registration->isDirty($trackId));
     }
 
-    public function testIsRedirect()
+    public function testRedirectTo()
     {
+        $trackId = 0;
+        $data = [
+            'email' => 'xuding@spacebib.com',
+            'dob' => '2018-01-02',
+            'first_name' => 'xu',
+            'last_name' => 'ding'
+        ];
+        $this->assertFalse($this->registration->isCompleted($trackId));
+        $this->registration->renderParticipantForm($trackId);
+        $this->assertTrue( $this->registration->fillParticipantForm($trackId, $data));
+        $this->assertTrue($this->registration->isCompleted($trackId));
+        $this->assertEquals(1,$this->registration->redirectTo());
+
+        $trackId = 2;
+        $data = [
+            'email' => 'xuding@spacebib.com',
+            'dob' => '2018-01-02',
+            'first_name' => 'xu',
+            'last_name' => 'ding'
+        ];
+        $this->assertFalse($this->registration->isCompleted($trackId));
+        $this->registration->renderParticipantForm($trackId);
+        $this->registration->fillParticipantForm($trackId, $data);
+        $this->assertTrue( $this->registration->fillParticipantForm($trackId, $data));
+        $this->assertTrue($this->registration->isCompleted($trackId));
+        $this->assertEquals(1,$this->registration->redirectTo());
 
     }
 

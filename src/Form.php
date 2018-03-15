@@ -15,6 +15,8 @@ class Form
 
     private $data;
 
+    private $errors = [];
+
     /**
      * Form constructor.
      * @param $fields
@@ -24,17 +26,44 @@ class Form
         $this->fields = $fields;
     }
 
+    /**
+     * @param $fillData
+     * @return boolean
+     */
     public function fill($fillData)
     {
-        $data = array_filter($fillData, function ($key) {
+        $data = $this->readWhatIsDefined($fillData);
 
-            return in_array($key, $this->fields);
-
-        }, ARRAY_FILTER_USE_KEY);
+        if (!$this->valid($data)) {
+            return false;
+        }
 
         $this->data = $data;
 
-        return $this;
+        $this->errors = [];
+
+        return true;
+    }
+
+    private function valid($data)
+    {
+        return $this->fieldsNotBeEmpty($data);
+    }
+
+    private function fieldsNotBeEmpty($data)
+    {
+        $emptyFields = array_filter($data, function ($val) {
+            return empty($val);
+        });
+
+        if (!empty($emptyFields)) {
+            $this->errors = array_fill_keys(
+                array_keys($emptyFields),
+                'Field can not be empty'
+            );
+        }
+
+        return empty($emptyFields);
     }
 
     /**
@@ -51,6 +80,24 @@ class Form
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    private function readWhatIsDefined($fillData)
+    {
+        $data = array_filter($fillData, function ($key) {
+
+            return in_array($key, $this->fields);
+
+        }, ARRAY_FILTER_USE_KEY);
+        return $data;
     }
 
 }

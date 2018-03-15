@@ -11,6 +11,8 @@ namespace Dilab\Cart;
 
 class Registration
 {
+    const SUMMARY = 'summary';
+
     private $participants;
 
     private $dataStore;
@@ -28,7 +30,6 @@ class Registration
         $this->dataStore = $dataStore;
     }
 
-
     /**
      * return a list of form fields
      */
@@ -45,6 +46,11 @@ class Registration
         return $form->getData();
     }
 
+    /**
+     * @param $trackId
+     * @param array $data
+     * @return boolean
+     */
     public function fillParticipantForm($trackId, array $data)
     {
         $participant = $this->getParticipantByTrackId($trackId);
@@ -55,13 +61,18 @@ class Registration
 
         $participant->setIsDirty(true);
 
-        return $this;
+        return true;
+    }
+
+    public function getErrors($trackId)
+    {
+
     }
 
     /**
-     * return trur/false
+     * @return integer / string
      */
-    public function isRedirect()
+    public function redirectTo()
     {
 
     }

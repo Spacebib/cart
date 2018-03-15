@@ -23,19 +23,44 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->form = new Form(['email', 'first_name']);
     }
 
-    public function testFill()
+    public function fillProvider()
     {
-        $this->form->fill([
-            'email' => 'xuding@spacebib.com',
-            'first_name' => 'xu',
-            'last_name' => 'ding'
-        ]);
-
-        $expected = [
-            'email' => 'xuding@spacebib.com',
-            'first_name' => 'xu',
+        return [
+            [
+                [
+                    'email' => 'xuding@spacebib.com',
+                    'first_name' => 'xu'
+                ],
+                true
+            ],
+            [
+                [
+                    'email' => '',
+                    'first_name' => 'xu'
+                ],
+                false,
+                ['email']
+            ]
         ];
+    }
 
-        $this->assertSame($expected, $this->form->getData());
+    /**
+     * @dataProvider fillProvider
+     */
+    public function testFill($data, $expected, $errorFields = array())
+    {
+        $result = $this->form->fill($data);
+
+        $this->assertEquals($expected, $result);
+
+        if ($expected) {
+            $this->assertSame($data, $this->form->getData());
+        }
+
+        if (!$expected) {
+            foreach ($errorFields as $field) {
+                $this->assertArrayHasKey($field, $this->form->getErrors());
+            }
+        }
     }
 }
