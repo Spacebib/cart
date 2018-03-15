@@ -75,17 +75,6 @@ class Event
         return new self($id, $name, $currency, $categories);
     }
 
-    public function getParticipants()
-    {
-        return array_reduce($this->categories, function ($carrier, Category $category) {
-
-            $carrier = array_merge($carrier, $category->getParticipants());
-
-            return $carrier;
-
-        }, []);
-    }
-
     public function getCategoryById($categoryId)
     {
         $found = array_filter($this->categories, function (Category $category) use ($categoryId) {

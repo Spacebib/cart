@@ -22,9 +22,12 @@ class Registration
      */
     public function __construct(array $participants, DataStore $dataStore)
     {
+        $this->guardParticipants($participants);
+
         $this->participants = $participants;
         $this->dataStore = $dataStore;
     }
+
 
     /**
      * return a list of form fields
@@ -99,5 +102,19 @@ class Registration
                 array_fill(0, count($participant->getForm()->getFields()), '')
             )
         );
+    }
+
+    private function guardParticipants(array $participants)
+    {
+        $trackIds = array_map(function(Participant $participant) {
+            return $participant->getTrackId();
+        }, $participants);
+
+        if (count(array_unique($trackIds)) != count($participants)) {
+            throw new \LogicException(sprintf(
+                'Invalid track IDs: %s',
+                json_encode($trackIds)
+            ));
+        }
     }
 }

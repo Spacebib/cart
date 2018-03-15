@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart\Test;
 
+use Dilab\Cart\Cart;
 use Dilab\Cart\DataStore;
 use Dilab\Cart\Registration;
 use Dilab\Cart\Test\Factory\EventFactory;
@@ -22,9 +23,16 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $mockDataStore = $this->getMockBuilder(DataStore::class)->getMock();
+
+        $cart = new Cart('xuding@spacebib.com', $mockDataStore);
+
+        $cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+
         $this->registration = new Registration(
-            EventFactory::create()->getParticipants(),
-            $this->getMockBuilder(DataStore::class)->getMock()
+            $cart->getParticipants(),
+            $mockDataStore
         );
     }
 
