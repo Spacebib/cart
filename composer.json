@@ -13,6 +13,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
+        "zumba/json-serializer": "^2.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7.0"

@@ -89,7 +89,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
 
         $serialized = $this->cart->serialize();
-        $deserialized = Cart::deserialize($serialized);
-        $this->assertEquals($deserialized, $this->cart);
+        $unserialized = Cart::deserialize($serialized);
+        $this->assertEquals($unserialized, $this->cart);
     }
 }

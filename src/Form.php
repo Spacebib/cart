@@ -9,7 +9,7 @@
 namespace Dilab\Cart;
 
 
-class Form implements Serializable
+class Form
 {
     private $fields;
 
@@ -92,23 +92,6 @@ class Form implements Serializable
             return in_array($key, $this->fields);
 
         }, ARRAY_FILTER_USE_KEY);
-    }
-
-    public function serialize()
-    {
-        return [
-            'fields' => $this->fields,
-            'data' => $this->data,
-            'errors' => $this->errors
-        ];
-    }
-
-    public static function deserialize($data)
-    {
-        $obj = new Form($data['fields']);
-        $obj->setData($data['data']);
-        $obj->setErrors($data['errors']);
-        return $obj;
     }
 
     private function valid($data)

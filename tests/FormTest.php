@@ -63,12 +63,4 @@ class FormTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
-
-    public function testSerialization()
-    {
-        $this->assertEquals(
-            $this->form,
-            Form::deserialize($this->form->serialize())
-        );
-    }
 }

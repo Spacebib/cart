@@ -11,6 +11,8 @@ namespace Dilab\Cart;
 
 class Registration
 {
+    use Serializable;
+
     const SUMMARY = 'summary';
 
     private $participants;

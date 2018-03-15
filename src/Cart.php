@@ -11,6 +11,8 @@ namespace Dilab\Cart;
 
 class Cart
 {
+    use Serializable;
+
     private $buyerEmail;
 
     private $tickets;
@@ -95,21 +97,6 @@ class Cart
     public function total()
     {
         return $this->subTotal();
-    }
-
-    public function serialize()
-    {
-        return [
-            'buyer_email' => $this->buyerEmail,
-            'tickets' => array_map(function (Category $category) {
-                return $category->serialize();
-            })
-        ];
-    }
-
-    public static function deserialize($data)
-    {
-
     }
 
 }

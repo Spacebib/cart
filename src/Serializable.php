@@ -9,9 +9,19 @@
 namespace Dilab\Cart;
 
 
-interface Serializable
-{
-    public function serialize();
+use Zumba\JsonSerializer\JsonSerializer;
 
-    public static function deserialize($data);
+trait Serializable
+{
+    public function serialize()
+    {
+        $serializer = new JsonSerializer();
+        return $serializer->serialize($this);
+    }
+
+    public static function deserialize($data)
+    {
+        $serializer = new JsonSerializer();
+        return $serializer->unserialize($data);
+    }
 }

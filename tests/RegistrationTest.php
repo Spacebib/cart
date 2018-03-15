@@ -111,4 +111,21 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Registration::SUMMARY, $this->registration->redirectTo());
     }
 
+    public function testSerialization()
+    {
+        $trackId = 0;
+        $data = [
+            'email' => 'xuding@spacebib.com',
+            'dob' => '2018-01-02',
+            'first_name' => 'xu',
+            'last_name' => 'ding'
+        ];
+        $this->assertFalse($this->registration->isCompleted($trackId));
+        $this->registration->renderParticipantForm($trackId);
+        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
+
+        $serialized = $this->registration->serialize();
+        $unserialized = Registration::deserialize($serialized);
+        $this->assertEquals($unserialized, $this->registration);
+    }
 }
