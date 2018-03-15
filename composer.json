@@ -11,7 +11,7 @@
             "email": "thedilab@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev-master",
     "require": {
         "zumba/json-serializer": "^2.2"
     },
