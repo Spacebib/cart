@@ -13,22 +13,15 @@ class Cart
 {
     private $buyerEmail;
 
-    /**
-     * @var DataStore
-     */
-    private $store;
-
     private $tickets;
 
     /**
      * Cart constructor.
      * @param $buyerEmail
-     * @param DataStore $store
      */
-    public function __construct($buyerEmail, DataStore $store)
+    public function __construct($buyerEmail)
     {
         $this->buyerEmail = $buyerEmail;
-        $this->store = $store;
         $this->tickets = [];
     }
 
@@ -91,7 +84,9 @@ class Cart
         $currency = $this->tickets[0]->getPrice()->getCurrency();
 
         $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
+
             return $category->getPrice()->plus($carry);
+
         }, Money::fromCent($currency, 0));
 
         return $ticketsSubTotal;
@@ -100,6 +95,21 @@ class Cart
     public function total()
     {
         return $this->subTotal();
+    }
+
+    public function serialize()
+    {
+        return [
+            'buyer_email' => $this->buyerEmail,
+            'tickets' => array_map(function (Category $category) {
+                return $category->serialize();
+            })
+        ];
+    }
+
+    public static function deserialize($data)
+    {
+
     }
 
 }

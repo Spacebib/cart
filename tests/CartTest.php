@@ -81,4 +81,15 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $result = $this->cart->total();
         $this->assertEquals(Money::fromCent('SGD', 100000), $result);
     }
+
+    public function testSerialization()
+    {
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
+
+        $serialized = $this->cart->serialize();
+        $deserialized = Cart::deserialize($serialized);
+        $this->assertEquals($deserialized, $this->cart);
+    }
 }

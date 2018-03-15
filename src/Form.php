@@ -9,7 +9,7 @@
 namespace Dilab\Cart;
 
 
-class Form
+class Form implements Serializable
 {
     private $fields;
 
@@ -45,25 +45,20 @@ class Form
         return true;
     }
 
-    private function valid($data)
+    /**
+     * @param mixed $data
+     */
+    public function setData($data)
     {
-        return $this->fieldsNotBeEmpty($data);
+        $this->data = $data;
     }
 
-    private function fieldsNotBeEmpty($data)
+    /**
+     * @param array $errors
+     */
+    public function setErrors($errors)
     {
-        $emptyFields = array_filter($data, function ($val) {
-            return empty($val);
-        });
-
-        if (!empty($emptyFields)) {
-            $this->errors = array_fill_keys(
-                array_keys($emptyFields),
-                'Field can not be empty'
-            );
-        }
-
-        return empty($emptyFields);
+        $this->errors = $errors;
     }
 
     /**
@@ -99,4 +94,41 @@ class Form
         }, ARRAY_FILTER_USE_KEY);
     }
 
+    public function serialize()
+    {
+        return [
+            'fields' => $this->fields,
+            'data' => $this->data,
+            'errors' => $this->errors
+        ];
+    }
+
+    public static function deserialize($data)
+    {
+        $obj = new Form($data['fields']);
+        $obj->setData($data['data']);
+        $obj->setErrors($data['errors']);
+        return $obj;
+    }
+
+    private function valid($data)
+    {
+        return $this->fieldsNotBeEmpty($data);
+    }
+
+    private function fieldsNotBeEmpty($data)
+    {
+        $emptyFields = array_filter($data, function ($val) {
+            return empty($val);
+        });
+
+        if (!empty($emptyFields)) {
+            $this->errors = array_fill_keys(
+                array_keys($emptyFields),
+                'Field can not be empty'
+            );
+        }
+
+        return empty($emptyFields);
+    }
 }
