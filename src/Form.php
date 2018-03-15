@@ -92,12 +92,11 @@ class Form
 
     private function readWhatIsDefined($fillData)
     {
-        $data = array_filter($fillData, function ($key) {
+        return array_filter($fillData, function ($key) {
 
             return in_array($key, $this->fields);
 
         }, ARRAY_FILTER_USE_KEY);
-        return $data;
     }
 
 }
