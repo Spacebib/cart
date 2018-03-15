@@ -9,8 +9,11 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
+use Dilab\Cart\Category;
 use Dilab\Cart\DataStore;
+use Dilab\Cart\Form;
 use Dilab\Cart\Money;
+use Dilab\Cart\Participant;
 use Dilab\Cart\Test\Factory\EventFactory;
 
 class CartTest extends \PHPUnit_Framework_TestCase
@@ -30,7 +33,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddTicket()
+    public function testAddTicketThenGetParticipants()
     {
         $this->assertCount(0, $this->cart->tickets());
 
@@ -40,8 +43,22 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(4, $result);
 
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-        $result = $this->cart->tickets();
-        $this->assertCount(6, $result);
+        $tickets = $this->cart->tickets();
+        $this->assertCount(6, $tickets);
+
+        $participants = $this->cart->getParticipants();
+        $this->assertCount(12, $participants);
+
+        $participantsObjects = array_map(function (Participant $participant) {
+            return spl_object_hash($participant);
+        }, $participants);
+        $this->assertCount(12, array_unique($participantsObjects));
+
+        $participantsTrackIds = array_map(function (Participant $participant) {
+            return $participant->getTrackId();
+        }, $participants);
+        $expected = range(0, 11);
+        $this->assertSame($expected, $participantsTrackIds);
     }
 
     public function testSubTotal()

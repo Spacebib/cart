@@ -46,11 +46,9 @@ class Event
 
         $categoriesData = self::getWithException($data, 'categories');
 
-        $categories = array_map(function ($category, $i) use ($currency) {
+        $categories = array_map(function ($category) use ($currency) {
 
             $participantsData = self::getWithException($category, 'participants');
-
-            $countParticipants = count($participantsData);
 
             return new Category(
 
@@ -60,11 +58,10 @@ class Event
 
                 Money::fromCent($currency, self::getWithException($category, 'price')),
 
-                array_map(function ($participant, $j) use ($i, $countParticipants) {
+                array_map(function ($participant) {
 
                     return new Participant(
                         self::getWithException($participant, 'id'),
-                        ($i * $countParticipants + $j),
                         self::getWithException($participant, 'name'),
                         self::getWithException($participant, 'rules'),
                         new Form(self::getWithException($participant, 'fields'))

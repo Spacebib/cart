@@ -34,9 +34,47 @@ class Cart
 
     public function addTicket(Category $category, $qty)
     {
-        $tickets = array_fill(0, $qty, $category);
+        $tickets = array_map(function () use ($category) {
+
+            return new Category(
+                $category->getId(),
+                $category->getName(),
+                $category->getPrice(),
+                $category->getParticipants()
+            );
+
+        }, range(1, $qty));
+
         $this->tickets = array_merge($this->tickets, $tickets);
+
         return $this;
+    }
+
+    public function getParticipants()
+    {
+        $participants = array_reduce($this->tickets, function ($carrier, Category $category) {
+            $carrier = array_merge($carrier, $category->getParticipants());
+            return $carrier;
+        }, []);
+
+        $participants = array_values($participants);
+
+        $participants = array_map(function (Participant $participant, $key) {
+
+            $newParticipant = new Participant(
+                $participant->getId(),
+                $participant->getName(),
+                $participant->getRules(),
+                $participant->getForm()
+            );
+
+            $newParticipant->setTrackId($key);
+
+            return $newParticipant;
+
+        }, $participants, array_keys($participants));
+
+        return $participants;
     }
 
     public function tickets()

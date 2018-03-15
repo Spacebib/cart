@@ -11,7 +11,7 @@ namespace Dilab\Cart;
 
 class Participant
 {
-    private $trackId;
+    private $trackId = 0;
 
     private $id;
 
@@ -30,15 +30,13 @@ class Participant
     /**
      * Participant constructor.
      * @param $id
-     * @param $trackId
      * @param $name
      * @param array $rules
      * @param Form $form
      */
-    public function __construct($id, $trackId, $name, array $rules, Form $form)
+    public function __construct($id, $name, array $rules, Form $form)
     {
         $this->id = $id;
-        $this->trackId = $trackId;
         $this->name = $name;
         $this->rules = $rules;
         $this->form = $form;
@@ -47,9 +45,42 @@ class Participant
     /**
      * @return mixed
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRules()
+    {
+        return $this->rules;
+    }
+
+
+    /**
+     * @return mixed
+     */
     public function getTrackId()
     {
         return $this->trackId;
+    }
+
+    /**
+     * @param mixed $trackId
+     */
+    public function setTrackId($trackId)
+    {
+        $this->trackId = $trackId;
     }
 
     /**

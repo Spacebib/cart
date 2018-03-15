@@ -1,4 +1,4 @@
-# cart
+# Cart
 A Shopping Cart Abstraction
 
 ## Usage
@@ -27,6 +27,12 @@ $registration = new Registration($event->getParticipants(), new DataStore());
 
 ```php
 $cart->addTicket($event->getCategoryById(1), 1);
+```
+
++ Get participants
+
+```php
+$cart->getParticipants();
 ```
 
 + Get order details

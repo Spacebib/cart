@@ -43,6 +43,14 @@ class Category
     }
 
     /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * @return Money
      */
     public function getPrice()
