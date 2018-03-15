@@ -92,11 +92,11 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->registration->renderParticipantForm($trackId);
-        $this->assertTrue( $this->registration->fillParticipantForm($trackId, $data));
+        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
         $this->assertTrue($this->registration->isCompleted($trackId));
-        $this->assertEquals(1,$this->registration->redirectTo());
+        $this->assertEquals(1, $this->registration->redirectTo());
 
-        $trackId = 2;
+        $trackId = 1;
         $data = [
             'email' => 'xuding@spacebib.com',
             'dob' => '2018-01-02',
@@ -106,10 +106,9 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->registration->renderParticipantForm($trackId);
         $this->registration->fillParticipantForm($trackId, $data);
-        $this->assertTrue( $this->registration->fillParticipantForm($trackId, $data));
+        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
         $this->assertTrue($this->registration->isCompleted($trackId));
-        $this->assertEquals(1,$this->registration->redirectTo());
-
+        $this->assertEquals(Registration::SUMMARY, $this->registration->redirectTo());
     }
 
 }

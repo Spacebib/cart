@@ -17,6 +17,8 @@ class Registration
 
     private $dataStore;
 
+    private $errors;
+
     /**
      * Registration constructor.
      * @param array $participants
@@ -39,11 +41,15 @@ class Registration
 
         $form = $participant->getForm();
 
-        $this->fillOnFirstView($participant);
+        $wasTouched = $participant->isTouched();
 
         $participant->setIsTouched(true);
 
-        return $form->getData();
+        if ($wasTouched) {
+            return $form->getData();
+        }
+
+        return $this->initialViewData($participant);
     }
 
     /**
@@ -57,16 +63,25 @@ class Registration
 
         $form = $participant->getForm();
 
-        $form->fill($data);
+        if (!$form->fill($data)) {
+
+            $this->errors[$trackId] = $form->getErrors();
+
+            return false;
+        }
 
         $participant->setIsDirty(true);
+
+        $participant->setIsCompleted(true);
+
+        $this->errors[$trackId] = [];
 
         return true;
     }
 
     public function getErrors($trackId)
     {
-
+        return $this->errors[$trackId];
     }
 
     /**
@@ -74,7 +89,15 @@ class Registration
      */
     public function redirectTo()
     {
+        $inCompletedParticipants = array_filter($this->participants, function (Participant $participant) {
+            return !$participant->isCompleted();
+        });
 
+        if (empty($inCompletedParticipants)) {
+            return self::SUMMARY;
+        }
+
+        return ($first = array_shift($inCompletedParticipants))->getTrackId();
     }
 
     public function isDirty($trackId)
@@ -101,23 +124,9 @@ class Registration
         return $this->participants[$trackId];
     }
 
-    private function fillOnFirstView(Participant $participant)
-    {
-        if ($participant->isTouched()) {
-            return;
-        }
-
-        $participant->getForm()->fill(
-            array_combine(
-                $participant->getForm()->getFields(),
-                array_fill(0, count($participant->getForm()->getFields()), '')
-            )
-        );
-    }
-
     private function guardParticipants(array $participants)
     {
-        $trackIds = array_map(function(Participant $participant) {
+        $trackIds = array_map(function (Participant $participant) {
             return $participant->getTrackId();
         }, $participants);
 
@@ -127,5 +136,13 @@ class Registration
                 json_encode($trackIds)
             ));
         }
+    }
+
+    private function initialViewData($participant)
+    {
+        return array_combine(
+            $participant->getForm()->getFields(),
+            array_fill(0, count($participant->getForm()->getFields()), '')
+        );
     }
 }
