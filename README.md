@@ -69,6 +69,12 @@ $registration->renderParticipant();
 $registration->fillParticipant();
 ```
 
++ Get errors of a participant form
+
+```php
+$registration->getErrors($trackId);
+```
+
 + Redirect to next page
 
 ```php
