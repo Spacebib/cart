@@ -24,6 +24,10 @@ class Form
     public function __construct($fields)
     {
         $this->fields = $fields;
+        $this->data = array_combine(
+            $fields,
+            array_fill(0, count($fields), '')
+        );
     }
 
     /**
@@ -34,11 +38,11 @@ class Form
     {
         $data = $this->readWhatIsDefined($fillData);
 
+        $this->data = $data;
+
         if (!$this->valid($data)) {
             return false;
         }
-
-        $this->data = $data;
 
         $this->errors = [];
 
