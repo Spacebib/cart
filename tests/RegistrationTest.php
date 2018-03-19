@@ -52,7 +52,20 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
             'email' => '',
             'dob' => '',
             'first_name' => '',
-            'last_name' => ''
+            'last_name' => '',
+            'gender' => '',
+            'nationality' => '',
+            'mobile_number' => '',
+            'address_standard' => '',
+            'blood' => '',
+            'is_med_cond' => '',
+            'med_cond' => '',
+            'allergy' => '',
+            'emy_contact_name' => '',
+            'emy_relationship' => '',
+            'emy_contact_no' => '',
+            'nric' => '',
+            'name_on_bib' => ''
         ];
         $result = $this->registration->renderParticipantForm($trackId);
         $this->assertEquals($expected, $result);
