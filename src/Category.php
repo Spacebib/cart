@@ -65,16 +65,4 @@ class Category
     {
         return $this->participants;
     }
-
-    public function serialize()
-    {
-
-    }
-
-    public static function deserialize($data)
-    {
-
-    }
-
-
 }
