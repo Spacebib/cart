@@ -11,21 +11,27 @@ namespace Dilab\Cart;
 
 class Form
 {
+    use CartHelper;
+
     private $fields;
 
     private $data;
 
     private $errors = [];
 
+    private $rules;
+
     /**
      * Form constructor.
      * @param $fields
+     * @param $rules
      */
-    public function __construct($fields)
+    public function __construct($rules, $fields)
     {
         $fields = $this->transformFields($fields);
         $this->fields = $fields;
         $this->data = $fields;
+        $this->rules = $rules;
     }
 
     /**
@@ -98,28 +104,41 @@ class Form
 
     private function valid($data)
     {
-        return $this->fieldsNotBeEmpty($data);
+        if (! $this->fieldsNotBeEmpty($data)) {
+            return false;
+        }
+        return $this->validateRules();
     }
 
     private function fieldsNotBeEmpty($data)
     {
-        $emptyFields = array_filter($data, function ($val) {
-            if (is_array($val)) {
-                return array_filter($val, function($_val) {
-                    return trim($_val) == '';
-                });
-            }
-            return trim($val) == '';
-        });
+        $emptyFields = $this->getEmptyFields(array_merge($this->fields, $data));
+
+        $notRequiredFields = $this->getNotRequiredFields($data);
+
+        $emptyFields = array_diff($emptyFields, $notRequiredFields);
 
         if (!empty($emptyFields)) {
             $this->errors = array_fill_keys(
-                array_keys($emptyFields),
+                $emptyFields,
                 'Field can not be empty'
             );
         }
 
         return empty($emptyFields);
+    }
+
+    private function validateRules()
+    {
+        while ($this->getNextRule()) {
+
+        }
+        return true;
+    }
+
+    private function getNextRule()
+    {
+        return array_pop($this->rules);
     }
 
     private function transformFields($fields)
@@ -132,6 +151,7 @@ class Form
                     break;
                 case 'mobile_number':
                 case 'emy_contact_no':
+                case 'kin_contact_no':
                     $newFields[$field] = ['code'=>'', 'number'=>''];
                     break;
                 case 'address_standard':
@@ -158,5 +178,41 @@ class Form
             }
         }
         return $newFields;
+    }
+
+    private function getNotRequiredFields($data)
+    {
+        /**
+         *  medical condition when it is false
+         *  address -> state
+         *  age > 18: kin_contact_name, kin_contact_no
+         */
+        $notRequiredFields = ['address.state'];
+        if (isset($data['is_med_cond']) && $data['is_med_cond']==0) {
+            $notRequiredFields = array_merge($notRequiredFields,
+                ['med_cond', 'allergy']);
+        }
+
+        if (isset($data['dob']) && self::is18($data['dob'])) {
+            $notRequiredFields = array_merge($notRequiredFields,
+                ['kin_contact_name', 'kin_contact_no.number', 'kin_contact_no.code']);
+        }
+        return $notRequiredFields;
+    }
+
+    private function getEmptyFields($data, $prefix='')
+    {
+        $emptyFields = [];
+        foreach ($data as $field=>$val) {
+            if (is_array($val)) {
+                $emptyFields = array_merge(
+                    $emptyFields,
+                    $this->getEmptyFields($val, $field.'.')
+                );
+            } elseif (trim($val) == '') {
+                $emptyFields[] = $prefix.$field;
+            }
+        }
+        return $emptyFields;
     }
 }

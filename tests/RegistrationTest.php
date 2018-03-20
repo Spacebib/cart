@@ -12,6 +12,7 @@ use Dilab\Cart\Cart;
 use Dilab\Cart\DataStore;
 use Dilab\Cart\Registration;
 use Dilab\Cart\Test\Factory\EventFactory;
+use Dilab\Cart\Test\Factory\FormDataFactory;
 
 class RegistrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,7 +71,9 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
             'emy_relationship' => '',
             'emy_contact_no' => ['code'=>'', 'number'=>''],
             'nric' => '',
-            'name_on_bib' => ''
+            'name_on_bib' => '',
+            'kin_contact_name' => '',
+            'kin_contact_no' => ['code'=>'', 'number'=>'']
         ];
         $result = $this->registration->renderParticipantForm($trackId);
         $this->assertEquals($expected, $result);
@@ -97,12 +100,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     public function testRedirectTo()
     {
         $trackId = 0;
-        $data = [
-            'email' => 'xuding@spacebib.com',
-            'dob' => '2018-01-02',
-            'first_name' => 'xu',
-            'last_name' => 'ding'
-        ];
+        $data = FormDataFactory::correctData();
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->registration->renderParticipantForm($trackId);
         $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
@@ -110,12 +108,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $this->registration->redirectTo());
 
         $trackId = 1;
-        $data = [
-            'email' => 'xuding@spacebib.com',
-            'dob' => '2018-01-02',
-            'first_name' => 'xu',
-            'last_name' => 'ding'
-        ];
+
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->registration->renderParticipantForm($trackId);
         $this->registration->fillParticipantForm($trackId, $data);
@@ -127,12 +120,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
     public function testSerialization()
     {
         $trackId = 0;
-        $data = [
-            'email' => 'xuding@spacebib.com',
-            'dob' => '2018-01-02',
-            'first_name' => 'xu',
-            'last_name' => 'ding'
-        ];
+        $data = FormDataFactory::correctData();
         $this->assertFalse($this->registration->isCompleted($trackId));
         $this->registration->renderParticipantForm($trackId);
         $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));

@@ -64,7 +64,14 @@ class Event
                         self::getWithException($participant, 'id'),
                         self::getWithException($participant, 'name'),
                         self::getWithException($participant, 'rules'),
-                        new Form(self::getWithException($participant, 'fields'))
+                        new Form(
+                            array_map(function ($condition, $name) {
+                                return new Rule($name, $condition);
+                            }, self::getWithException($participant, 'rules'),
+                                array_keys(self::getWithException($participant, 'rules'))
+                            ),
+                            self::getWithException($participant, 'fields')
+                        )
                     );
 
                 }, $participantsData, array_keys($participantsData))

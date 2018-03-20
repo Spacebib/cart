@@ -49,6 +49,8 @@ class EventFactory
                                 'emy_contact_no',
                                 'nric',
                                 'name_on_bib',
+                                'kin_contact_name',
+                                'kin_contact_no'
                             ]
                         ],
                         [

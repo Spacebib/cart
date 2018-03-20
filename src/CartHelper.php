@@ -21,4 +21,24 @@ trait CartHelper
 
         return $data[$path];
     }
+
+    public static function getAge($dob)
+    {
+        list ('year'=>$year, 'month'=>$month, 'year'=>$day) = $dob;
+        $age = date('Y') - $year;
+
+        if (date('n') < $month) {
+            $age -= 1;
+        } elseif (date('j') < $day) {
+            $age -= 1;
+        }
+
+        return $age;
+    }
+
+    public static function is18($dob)
+    {
+        $age = self::getAge($dob);
+        return $age >= 18;
+    }
 }

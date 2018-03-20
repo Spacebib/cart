@@ -20,7 +20,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->form = new Form(['email', 'first_name']);
+        $this->form = new Form([], ['email', 'first_name', 'dob', 'kin_contact_no', 'kin_contact_name']);
     }
 
     public function fillProvider()
@@ -29,17 +29,24 @@ class FormTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'email' => 'xuding@spacebib.com',
-                    'first_name' => 'xu'
-                ],
-                true
-            ],
-            [
-                [
-                    'email' => '',
-                    'first_name' => 'xu'
+                    'first_name' => 'xu',
+                    'dob'=> ['day'=>1, 'month'=>2, 'year'=>2017],
+                    'kin_contact_name' => '',
+                    'kin_contact_no' => ['code'=>'', 'number'=>'']
                 ],
                 false,
-                ['email']
+                ['kin_contact_name', 'kin_contact_no.code', 'kin_contact_no.number']
+            ],
+
+            [
+                [
+                    'email' => 'xuding@spacebib.com',
+                    'first_name' => 'xu',
+                    'dob'=> ['day'=>1, 'month'=>2, 'year'=>1995],
+                    'kin_contact_name' => '',
+                    'kin_contact_no' => ['code'=>'', 'number'=>'']
+                ],
+                true,
             ]
         ];
     }

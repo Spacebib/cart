@@ -26,5 +26,4 @@ class Rule
         $this->condition = $condition;
     }
 
-
 }
