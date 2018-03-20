@@ -40,7 +40,7 @@ class EventFactory
                                 'nationality',
                                 'mobile_number',
                                 'address_standard',
-                                'blood',
+                                'blood_type',
                                 'is_med_cond',
                                 'med_cond',
                                 'allergy',

@@ -23,11 +23,9 @@ class Form
      */
     public function __construct($fields)
     {
+        $fields = $this->transformFields($fields);
         $this->fields = $fields;
-        $this->data = array_combine(
-            $fields,
-            array_fill(0, count($fields), '')
-        );
+        $this->data = $fields;
     }
 
     /**
@@ -93,7 +91,7 @@ class Form
     {
         return array_filter($fillData, function ($key) {
 
-            return in_array($key, $this->fields);
+            return in_array($key, array_keys($this->fields));
 
         }, ARRAY_FILTER_USE_KEY);
     }
@@ -106,7 +104,12 @@ class Form
     private function fieldsNotBeEmpty($data)
     {
         $emptyFields = array_filter($data, function ($val) {
-            return empty($val);
+            if (is_array($val)) {
+                return array_filter($val, function($_val) {
+                    return trim($_val) == '';
+                });
+            }
+            return trim($val) == '';
         });
 
         if (!empty($emptyFields)) {
@@ -117,5 +120,43 @@ class Form
         }
 
         return empty($emptyFields);
+    }
+
+    private function transformFields($fields)
+    {
+        $newFields = [];
+        foreach ($fields as &$field) {
+            switch ($field) {
+                case 'dob':
+                    $newFields['dob'] = ['day'=>'', 'month'=>'', 'year'=>''];
+                    break;
+                case 'mobile_number':
+                case 'emy_contact_no':
+                    $newFields[$field] = ['code'=>'', 'number'=>''];
+                    break;
+                case 'address_standard':
+                    $newFields['address'] = [
+                        'address'=>'',
+                        'city'=>'',
+                        'state'=>'',
+                        'zip'=>'',
+                    ];
+                    break;
+                case 'address_sg_standard':
+                    $newFields['address'] = [
+                        'block' => '',
+                        'unit_prefix' => '',
+                        'unit_suffix' => '',
+                        'street' => '',
+                        'building' => '',
+                        'postal_code' => '',
+                    ];
+                    break;
+                default:
+                    $newFields[$field] = '';
+                    break;
+            }
+        }
+        return $newFields;
     }
 }

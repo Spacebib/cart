@@ -36,7 +36,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $trackId = 1;
         $expected = [
             'email' => '',
-            'dob' => '',
+            'dob' => ['day'=>'', 'month'=>'', 'year'=>''],
             'first_name' => '',
             'last_name' => '',
             'nationality' => '',
@@ -50,20 +50,25 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $trackId = 0;
         $expected = [
             'email' => '',
-            'dob' => '',
+            'dob' => ['day'=>'', 'month'=>'', 'year'=>''],
             'first_name' => '',
             'last_name' => '',
             'gender' => '',
             'nationality' => '',
-            'mobile_number' => '',
-            'address_standard' => '',
-            'blood' => '',
+            'mobile_number' => ['code'=>'', 'number'=>''],
+            'address' => [
+                'address'=>'',
+                'city'=>'',
+                'state'=>'',
+                'zip'=>'',
+            ],
+            'blood_type' => '',
             'is_med_cond' => '',
             'med_cond' => '',
             'allergy' => '',
             'emy_contact_name' => '',
             'emy_relationship' => '',
-            'emy_contact_no' => '',
+            'emy_contact_no' => ['code'=>'', 'number'=>''],
             'nric' => '',
             'name_on_bib' => ''
         ];
@@ -76,7 +81,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $trackId = 1;
         $data = [
             'email' => 'xuding@spacebib.com',
-            'dob' => '2018-01-02',
+            'dob' => ['day'=>'02', 'month'=> '01', 'year'=>'2017'],
             'first_name' => 'xu',
             'last_name' => 'ding',
             'nationality' => 'CHINA',

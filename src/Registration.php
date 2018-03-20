@@ -46,8 +46,8 @@ class Registration
         if ($wasTouched) {
             return $form->getData();
         }
-
-        return $this->initialViewData($participant);
+        return $form->getFields();
+//        return $this->initialViewData($participant);
     }
 
     /**
@@ -136,6 +136,10 @@ class Registration
         }
     }
 
+    /**
+     * @param Participant $participant
+     * @return array
+     */
     private function initialViewData($participant)
     {
         return array_combine(
@@ -143,4 +147,5 @@ class Registration
             array_fill(0, count($participant->getForm()->getFields()), '')
         );
     }
+
 }
