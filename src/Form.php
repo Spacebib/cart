@@ -107,6 +107,7 @@ class Form
         if (! $this->fieldsNotBeEmpty($data)) {
             return false;
         }
+        $usingRules = $this->rules;
         return $this->validateRules($data);
     }
 
@@ -130,7 +131,7 @@ class Form
 
     private function validateRules($data)
     {
-        while ($rule = $this->getNextRule()) {
+        foreach ($this->rules as $rule) {
             if (!$this->validateRule($rule, $data)) {
                 return false;
             }
@@ -150,11 +151,6 @@ class Form
             return false;
         }
         return true;
-    }
-
-    private function getNextRule()
-    {
-        return array_pop($this->rules);
     }
 
     private function transformFields($fields)
