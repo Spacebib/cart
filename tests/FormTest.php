@@ -29,6 +29,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'email' => 'xuding@spacebib.com',
+                    'email_confirmation' => 'xuding@spacebib.com',
                     'first_name' => 'xu',
                     'dob'=> ['day'=>1, 'month'=>2, 'year'=>2017],
                     'kin_contact_name' => '',
@@ -41,6 +42,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'email' => 'xuding@spacebib.com',
+                    'email_confirmation' => 'xuding@spacebib.com',
                     'first_name' => 'xu',
                     'dob'=> ['day'=>1, 'month'=>2, 'year'=>1995],
                     'kin_contact_name' => '',

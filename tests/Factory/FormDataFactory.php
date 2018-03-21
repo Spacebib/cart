@@ -15,6 +15,7 @@ class FormDataFactory
     {
         $data = [
             'email' => 'xuding@spacebib.com',
+            'email_confirmation' => 'xuding@spacebib.com',
             'dob' => ['day'=>1, 'month'=>2, 'year'=>1995],
             'first_name' => 'xu',
             'last_name' => 'ding',
@@ -41,6 +42,7 @@ class FormDataFactory
     {
         $data = [
             'email' => '',
+            'email_confirmation' => '',
             'dob' => ['day'=>'', 'month'=>'', 'year'=>''],
             'first_name' => '',
             'last_name' => '',

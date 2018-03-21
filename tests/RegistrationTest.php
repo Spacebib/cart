@@ -37,6 +37,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $trackId = 1;
         $expected = [
             'email' => '',
+            'email_confirmation' => '',
             'dob' => ['day'=>'', 'month'=>'', 'year'=>''],
             'first_name' => '',
             'last_name' => '',
@@ -60,6 +61,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $trackId = 1;
         $data = [
             'email' => 'xuding@spacebib.com',
+            'email_confirmation' => 'xuding@spacebib.com',
             'dob' => ['day'=>'02', 'month'=> '01', 'year'=>'1995'],
             'first_name' => 'xu',
             'last_name' => 'ding',
@@ -72,6 +74,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $result = $this->registration->renderParticipantForm($trackId);
         $this->assertEquals($data, $result);
         $this->assertTrue($this->registration->isDirty($trackId));
+
     }
 
     public function testRedirectTo()
