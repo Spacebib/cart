@@ -41,7 +41,8 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
             'first_name' => '',
             'last_name' => '',
             'nationality' => '',
-            'name_on_bib' => ''
+            'name_on_bib' => '',
+            'gender' => '',
         ];
         $this->assertEquals($expected, $this->registration->renderParticipantForm($trackId));
         $this->assertFalse($this->registration->isDirty($trackId));
@@ -49,32 +50,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->registration->isTouched($trackId));
 
         $trackId = 0;
-        $expected = [
-            'email' => '',
-            'dob' => ['day'=>'', 'month'=>'', 'year'=>''],
-            'first_name' => '',
-            'last_name' => '',
-            'gender' => '',
-            'nationality' => '',
-            'mobile_number' => ['code'=>'', 'number'=>''],
-            'address' => [
-                'address'=>'',
-                'city'=>'',
-                'state'=>'',
-                'zip'=>'',
-            ],
-            'blood_type' => '',
-            'is_med_cond' => '',
-            'med_cond' => '',
-            'allergy' => '',
-            'emy_contact_name' => '',
-            'emy_relationship' => '',
-            'emy_contact_no' => ['code'=>'', 'number'=>''],
-            'nric' => '',
-            'name_on_bib' => '',
-            'kin_contact_name' => '',
-            'kin_contact_no' => ['code'=>'', 'number'=>'']
-        ];
+        $expected = FormDataFactory::emptyData();
         $result = $this->registration->renderParticipantForm($trackId);
         $this->assertEquals($expected, $result);
         $this->assertFalse($this->registration->isDirty($trackId));
@@ -84,14 +60,15 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $trackId = 1;
         $data = [
             'email' => 'xuding@spacebib.com',
-            'dob' => ['day'=>'02', 'month'=> '01', 'year'=>'2017'],
+            'dob' => ['day'=>'02', 'month'=> '01', 'year'=>'1995'],
             'first_name' => 'xu',
             'last_name' => 'ding',
             'nationality' => 'CHINA',
-            'name_on_bib' => 'Xu Ding'
+            'name_on_bib' => 'Xu Ding',
+            'gender' => 'male'
         ];
         $this->registration->renderParticipantForm($trackId);
-        $this->registration->fillParticipantForm($trackId, $data);
+        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
         $result = $this->registration->renderParticipantForm($trackId);
         $this->assertEquals($data, $result);
         $this->assertTrue($this->registration->isDirty($trackId));

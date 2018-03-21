@@ -9,6 +9,9 @@
 namespace Dilab\Cart;
 
 
+use Dilab\Cart\Rules\RuleAge;
+use Dilab\Cart\Rules\RuleGender;
+
 class Event
 {
     use CartHelper;
@@ -65,11 +68,7 @@ class Event
                         self::getWithException($participant, 'name'),
                         self::getWithException($participant, 'rules'),
                         new Form(
-                            array_map(function ($condition, $name) {
-                                return new Rule($name, $condition);
-                            }, self::getWithException($participant, 'rules'),
-                                array_keys(self::getWithException($participant, 'rules'))
-                            ),
+                            self::generateRules(self::getWithException($participant, 'rules')),
                             self::getWithException($participant, 'fields')
                         )
                     );
@@ -95,6 +94,34 @@ class Event
         }
 
         return $first = array_shift($found);
+    }
+
+    /**
+     * @param array $rules
+     * @return mixed
+     */
+    private static function generateRules($rules)
+    {
+        $rules = array_map(
+            function ($condition, $name) {
+                return self::getRule($name, $condition);
+            },
+            $rules,
+            array_keys($rules)
+        );
+        return $rules;
+    }
+
+    private static function getRule($name, $condition)
+    {
+        switch ($name) {
+            case 'age':
+                return new RuleAge($condition);
+            case 'gender':
+                return new RuleGender($condition);
+            default:
+                return null;
+        }
     }
 
 }

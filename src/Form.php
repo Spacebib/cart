@@ -107,7 +107,7 @@ class Form
         if (! $this->fieldsNotBeEmpty($data)) {
             return false;
         }
-        return $this->validateRules();
+        return $this->validateRules($data);
     }
 
     private function fieldsNotBeEmpty($data)
@@ -128,10 +128,26 @@ class Form
         return empty($emptyFields);
     }
 
-    private function validateRules()
+    private function validateRules($data)
     {
-        while ($this->getNextRule()) {
+        while ($rule = $this->getNextRule()) {
+            if (!$this->validateRule($rule, $data)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    /**
+     * @param \Dilab\Cart\Rules\Rule $rule
+     * @param $data
+     * @return bool
+     */
+    private function validateRule($rule, $data)
+    {
+        if (! $rule->valid($data)) {
+            $this->setErrors(array_merge($this->errors, $rule->errors()));
+            return false;
         }
         return true;
     }
