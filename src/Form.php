@@ -188,6 +188,10 @@ class Form
                         'postal_code' => '',
                     ];
                     break;
+                case 'email':
+                    $newFields['email'] = '';
+                    $newFields['email_confirmation'] = '';
+                    break;
                 default:
                     $newFields[$field] = '';
                     break;
