@@ -28,7 +28,7 @@ class EventFactory
                             'id' => 1,
                             'name' => 'Runner 1',
                             'rules' => [
-                                'age' => '>50',
+                                'age' => '>=18',
                                 'gender' => 'male'
                             ],
                             'fields' => [
@@ -57,7 +57,7 @@ class EventFactory
                             'id' => 2,
                             'name' => 'Runner 2',
                             'rules' => [
-                                'age' => '>50',
+                                'age' => '>=18',
                                 'gender' => 'male'
                             ],
                             'fields' => [
@@ -66,7 +66,8 @@ class EventFactory
                                 'first_name',
                                 'last_name',
                                 'nationality',
-                                'name_on_bib'
+                                'name_on_bib',
+                                'gender'
                             ]
                         ]
                     ]
@@ -80,7 +81,7 @@ class EventFactory
                             'id' => 1,
                             'name' => 'Runner 1',
                             'rules' => [
-                                'age' => '>50',
+                                'age' => '>=18',
                                 'gender' => 'male'
                             ],
                             'fields' => [
@@ -94,7 +95,7 @@ class EventFactory
                             'id' => 3,
                             'name' => 'Runner 2',
                             'rules' => [
-                                'age' => '>50',
+                                'age' => '>=18',
                                 'gender' => 'male'
                             ],
                             'fields' => [
