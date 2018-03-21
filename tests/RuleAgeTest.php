@@ -32,7 +32,7 @@ class RuleAgeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->rule->valid($data));
         $this->assertContains('years old & above', $this->rule->errors()['dob']);
 
-        $data['dob'] = ['day'=>1, 'month'=>2, 'year'=>1995];
+        $data['dob'] = ['day'=>27, 'month'=>1, 'year'=>2000];
         $this->assertTrue($this->rule->valid($data));
         $this->assertEmpty($this->rule->errors());
     }
