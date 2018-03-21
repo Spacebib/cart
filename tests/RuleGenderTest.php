@@ -24,7 +24,7 @@ class RuleGenderTest extends \PHPUnit_Framework_TestCase
         $this->rule = new RuleGender('male');
 
     }
-    public function testAge()
+    public function testGender()
     {
         $data = FormDataFactory::correctData();
 
