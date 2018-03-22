@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 use Dilab\Cart\CartHelper;
 
 class RuleAge implements Rule

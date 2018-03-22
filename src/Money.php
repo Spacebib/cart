@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 class Money
 {
     private $currency;
@@ -62,5 +61,4 @@ class Money
             $this->toCent() + $b->toCent()
         );
     }
-
 }

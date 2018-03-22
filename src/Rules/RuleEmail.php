@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 class RuleEmail implements Rule
 {
     private $errors = [];

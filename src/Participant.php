@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 class Participant
 {
     private $trackId = 0;
@@ -27,19 +26,23 @@ class Participant
 
     private $isCompleted = false;
 
+    private $category_id;
+
     /**
      * Participant constructor.
      * @param $id
      * @param $name
+     * @param $category_id
      * @param array $rules
      * @param Form $form
      */
-    public function __construct($id, $name, array $rules, Form $form)
+    public function __construct($id, $name, $category_id, array $rules, Form $form)
     {
         $this->id = $id;
         $this->name = $name;
         $this->rules = $rules;
         $this->form = $form;
+        $this->category_id = $category_id;
     }
 
     /**
@@ -139,4 +142,19 @@ class Participant
         return $this->isCompleted;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCategoryId()
+    {
+        return $this->category_id;
+    }
+
+    /**
+     * @param mixed $category_id
+     */
+    public function setCategoryId($category_id)
+    {
+        $this->category_id = $category_id;
+    }
 }

@@ -8,11 +8,11 @@
 
 namespace Dilab\Cart;
 
-
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Rules\RuleGender;
 use Dilab\Cart\Rules\RuleLength;
+use Dilab\Cart\Rules\RuleNric;
 
 class Event
 {
@@ -52,32 +52,32 @@ class Event
         $categoriesData = self::getWithException($data, 'categories');
 
         $categories = array_map(function ($category) use ($currency) {
-
             $participantsData = self::getWithException($category, 'participants');
 
             return new Category(
 
                 self::getWithException($category, 'id'),
-
                 self::getWithException($category, 'name'),
-
                 Money::fromCent($currency, self::getWithException($category, 'price')),
-
-                array_map(function ($participant) {
-
-                    return new Participant(
-                        self::getWithException($participant, 'id'),
-                        self::getWithException($participant, 'name'),
-                        self::getWithException($participant, 'rules'),
-                        new Form(
-                            self::generateRules(self::getWithException($participant, 'rules')),
-                            self::getWithException($participant, 'fields')
-                        )
-                    );
-
-                }, $participantsData, array_keys($participantsData))
+                array_map(
+                    function ($participant) use ($category) {
+                        return new Participant(
+                            self::getWithException($participant, 'id'),
+                            self::getWithException($participant, 'name'),
+                            self::getWithException($category, 'id'),
+                            self::getWithException($participant, 'rules'),
+                            new Form(
+                                self::generateRules(
+                                    self::getWithException($participant, 'rules')
+                                ),
+                                self::getWithException($participant, 'fields')
+                            )
+                        );
+                    },
+                    $participantsData,
+                    array_keys($participantsData)
+                )
             );
-
         }, $categoriesData, array_keys($categoriesData));
 
         return new self($id, $name, $currency, $categories);
@@ -123,9 +123,10 @@ class Event
                 return new RuleAge($condition);
             case 'gender':
                 return new RuleGender($condition);
+            case 'nric':
+                return new RuleNric();
             default:
                 return null;
         }
     }
-
 }

@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart;
 
+use \Dilab\Cart\Rules\Rule as RuleInterface;
 
 use Dilab\Cart\Rules\RuleGender;
 use Dilab\Cart\Rules\RuleLength;
@@ -99,9 +100,7 @@ class Form
     private function readWhatIsDefined($fillData)
     {
         return array_filter($fillData, function ($key) {
-
             return in_array($key, array_keys($this->fields));
-
         }, ARRAY_FILTER_USE_KEY);
     }
 
@@ -139,6 +138,9 @@ class Form
     {
         $flag = true;
         foreach ($this->rules as $rule) {
+            if (! ($rule instanceof RuleInterface)) {
+                continue;
+            }
             if (!$this->validateRule($rule, $data)) {
                 $flag = false;
             }
@@ -210,21 +212,25 @@ class Form
          */
         $notRequiredFields = ['address.state'];
         if (isset($data['is_med_cond']) && $data['is_med_cond']==0) {
-            $notRequiredFields = array_merge($notRequiredFields,
-                ['med_cond', 'allergy']);
+            $notRequiredFields = array_merge(
+                $notRequiredFields,
+                ['med_cond', 'allergy']
+            );
         }
 
         if (isset($data['dob']) && self::is18($data['dob'])) {
-            $notRequiredFields = array_merge($notRequiredFields,
-                ['kin_contact_name', 'kin_contact_no.number', 'kin_contact_no.code']);
+            $notRequiredFields = array_merge(
+                $notRequiredFields,
+                ['kin_contact_name', 'kin_contact_no.number', 'kin_contact_no.code']
+            );
         }
         return $notRequiredFields;
     }
 
-    private function getEmptyFields($data, $prefix='')
+    private function getEmptyFields($data, $prefix = '')
     {
         $emptyFields = [];
-        foreach ($data as $field=>$val) {
+        foreach ($data as $field => $val) {
             if (is_array($val)) {
                 $emptyFields = array_merge(
                     $emptyFields,
@@ -235,5 +241,21 @@ class Form
             }
         }
         return $emptyFields;
+    }
+
+    /**
+     * @param mixed $rules
+     */
+    public function setRules($rules)
+    {
+        $this->rules = $rules;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRules()
+    {
+        return $this->rules;
     }
 }

@@ -29,7 +29,8 @@ class EventFactory
                             'name' => 'Runner 1',
                             'rules' => [
                                 'age' => '>=18',
-                                'gender' => 'male'
+                                'gender' => 'male',
+                                'nric' => '',
                             ],
                             'fields' => [
                                 'email',
@@ -58,7 +59,7 @@ class EventFactory
                             'name' => 'Runner 2',
                             'rules' => [
                                 'age' => '>=18',
-                                'gender' => 'male'
+                                'gender' => 'male',
                             ],
                             'fields' => [
                                 'email',

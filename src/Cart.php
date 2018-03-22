@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 class Cart
 {
     use Serializable;
@@ -30,14 +29,14 @@ class Cart
     public function addTicket(Category $category, $qty)
     {
         $tickets = array_map(function () use ($category) {
-
             return new Category(
                 $category->getId(),
                 $category->getName(),
                 $category->getPrice(),
-                $category->getParticipants()
+                array_map(function ($participant) {
+                    return clone $participant;
+                }, $category->getParticipants())
             );
-
         }, range(1, $qty));
 
         $this->tickets = array_merge($this->tickets, $tickets);
@@ -59,14 +58,14 @@ class Cart
             $newParticipant = new Participant(
                 $participant->getId(),
                 $participant->getName(),
+                $participant->getCategoryId(),
                 $participant->getRules(),
-                $participant->getForm()
+                clone $participant->getForm()
             );
 
             $newParticipant->setTrackId($key);
 
             return $newParticipant;
-
         }, $participants, array_keys($participants));
 
         return $participants;
@@ -86,11 +85,8 @@ class Cart
         $currency = $this->tickets[0]->getPrice()->getCurrency();
 
         $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
-
             return $category->getPrice()->plus($carry);
-
         }, Money::fromCent($currency, 0));
-
         return $ticketsSubTotal;
     }
 
@@ -98,5 +94,4 @@ class Cart
     {
         return $this->subTotal();
     }
-
 }
