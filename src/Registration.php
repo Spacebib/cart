@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Rules\RuleNric;
 
 class Registration
 {
@@ -32,6 +33,8 @@ class Registration
 
     /**
      * return a list of form fields
+     * @param $trackId
+     * @return mixed
      */
     public function renderParticipantForm($trackId)
     {
@@ -61,8 +64,16 @@ class Registration
 
         $form = $participant->getForm();
 
-        if (!$form->fill($data)) {
+        $form->setRules(array_map(function ($rule) use ($participant, $trackId) {
+            if ($rule instanceof RuleNric) {
+                $rule->setRegistration($this);
+                $rule->setCategoryId($participant->getCategoryId());
+                $rule->setTrackId($trackId);
+            }
+            return $rule;
+        }, $form->getRules()));
 
+        if (!$form->fill($data)) {
             $this->errors[$trackId] = $form->getErrors();
 
             return false;
@@ -113,6 +124,13 @@ class Registration
         return $this->getParticipantByTrackId($trackId)->isCompleted();
     }
 
+    public function getParticipantsByCategoryId($categoryId)
+    {
+        return array_filter($this->participants, function ($participant) use ($categoryId) {
+            return $participant->getCategoryId()  === $categoryId;
+        });
+    }
+
     /**
      * @param $trackId
      * @return Participant
@@ -147,5 +165,4 @@ class Registration
             array_fill(0, count($participant->getForm()->getFields()), '')
         );
     }
-
 }
