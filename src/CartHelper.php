@@ -23,7 +23,7 @@ trait CartHelper
 
     public static function getAge($dob)
     {
-        list ('year'=>$year, 'month'=>$month, 'year'=>$day) = $dob;
+        list ('year' => $year, 'month' => $month, 'year' => $day) = $dob;
         $age = date('Y') - $year + 1;
 
         if (date('n') < $month) {
