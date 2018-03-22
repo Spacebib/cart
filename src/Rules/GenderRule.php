@@ -35,6 +35,10 @@ class GenderRule
 
     public function match($gender)
     {
+        if (! in_array($gender, [self::MALE, self::FEMALE])) {
+            return false;
+        }
+
         if ($this->allowedGender == self::ALL) {
             return true;
         }
