@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 class Category
 {
     private $id;

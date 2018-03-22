@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 trait CartHelper
 {
     public static function getWithException($data, $path)

@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 interface Rule
 {
     public function valid($data);

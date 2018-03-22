@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 class RuleException extends \RuntimeException
 {
     public static function invalidAgeRuleString($ageAllowedString)
@@ -24,7 +23,5 @@ class RuleException extends \RuntimeException
     public static function invalidDescription($msg)
     {
         return new static($msg);
-
     }
-
 }

@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 use Zumba\JsonSerializer\JsonSerializer;
 
 trait Serializable

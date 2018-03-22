@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart;
 
-
 class Rule
 {
     private $name;
@@ -25,5 +24,4 @@ class Rule
         $this->name = $name;
         $this->condition = $condition;
     }
-
 }

@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 class AgeRule
 {
     const INFINITE = '~';

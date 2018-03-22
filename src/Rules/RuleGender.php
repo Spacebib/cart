@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 class RuleGender implements Rule
 {
     private $allowedGender;
