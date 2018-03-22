@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart\Rules;
 
+use Dilab\Cart\Participant;
 use Dilab\Cart\Registration;
 
 class RuleNric implements Rule
@@ -49,7 +50,9 @@ class RuleNric implements Rule
     public function valid($data)
     {
         $nric = $data['nric'];
-
+        /**
+         * @var Participant[] $participants
+         */
         $participants = $this->registration->getParticipantsByCategoryId($this->category_id);
 
         foreach ($participants as $participant) {
@@ -57,7 +60,13 @@ class RuleNric implements Rule
                 isset($participant->getForm()->getData()['nric']) &&
                 $participant->getForm()->getData()['nric'] === $nric
             ) {
-                $this->errors = ['nric'=>'nric'];
+                $this->errors = [
+                    'nric' => sprintf(
+                        'It seems like %s has already been used to register for this category. 
+                        Please check your email inbox to get the confirmation slip.',
+                        $nric
+                    )
+                ];
                 return false;
             }
         }
