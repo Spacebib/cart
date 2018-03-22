@@ -9,6 +9,9 @@
 namespace Dilab\Cart;
 
 
+use Dilab\Cart\Rules\RuleGender;
+use Dilab\Cart\Rules\RuleLength;
+
 class Form
 {
     use CartHelper;
@@ -104,10 +107,13 @@ class Form
 
     private function valid($data)
     {
+        // truncate errors before validate
+        $this->errors = [];
+
         if (! $this->fieldsNotBeEmpty($data)) {
             return false;
         }
-        $usingRules = $this->rules;
+
         return $this->validateRules($data);
     }
 
@@ -131,12 +137,13 @@ class Form
 
     private function validateRules($data)
     {
+        $flag = true;
         foreach ($this->rules as $rule) {
             if (!$this->validateRule($rule, $data)) {
-                return false;
+                $flag = false;
             }
         }
-        return true;
+        return $flag;
     }
 
     /**
@@ -146,11 +153,9 @@ class Form
      */
     private function validateRule($rule, $data)
     {
-        if (! $rule->valid($data)) {
-            $this->setErrors(array_merge($this->errors, $rule->errors()));
-            return false;
-        }
-        return true;
+        $isValid = $rule->valid($data);
+        $this->setErrors(array_merge($this->errors, $rule->errors()));
+        return $isValid;
     }
 
     private function transformFields($fields)

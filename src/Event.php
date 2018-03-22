@@ -12,6 +12,7 @@ namespace Dilab\Cart;
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Rules\RuleGender;
+use Dilab\Cart\Rules\RuleLength;
 
 class Event
 {
@@ -111,6 +112,7 @@ class Event
             array_keys($rules)
         );
         $rules[] = new RuleEmail();
+        $rules[] = new RuleLength();
         return $rules;
     }
 
