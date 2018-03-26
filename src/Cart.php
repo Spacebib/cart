@@ -60,7 +60,8 @@ class Cart
                 $participant->getName(),
                 $participant->getCategoryId(),
                 $participant->getRules(),
-                clone $participant->getForm()
+                clone $participant->getForm(),
+                $participant->getEntitlements()
             );
 
             $newParticipant->setTrackId($key);

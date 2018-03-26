@@ -20,6 +20,8 @@ class Participant
 
     private $form;
 
+    private $entitlements;
+
     private $isTouched = false;
 
     private $isDirty = false;
@@ -35,14 +37,22 @@ class Participant
      * @param $category_id
      * @param array $rules
      * @param Form $form
+     * @param array $entitlements
      */
-    public function __construct($id, $name, $category_id, array $rules, Form $form)
-    {
+    public function __construct(
+        $id,
+        $name,
+        $category_id,
+        array $rules,
+        Form $form,
+        array $entitlements
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->rules = $rules;
         $this->form = $form;
         $this->category_id = $category_id;
+        $this->entitlements = $entitlements;
     }
 
     /**
@@ -156,5 +166,27 @@ class Participant
     public function setCategoryId($category_id)
     {
         $this->category_id = $category_id;
+    }
+
+    /**
+     * @return Entitlement[]
+     */
+    public function getEntitlements(): array
+    {
+        return $this->entitlements;
+    }
+
+    /**
+     * @param $id
+     * @return bool|Entitlement
+     */
+    public function getEntitlement($id)
+    {
+        foreach ($this->entitlements as $entitlement) {
+            if ($entitlement->getId() === $id) {
+                return $entitlement;
+            }
+        }
+        return false;
     }
 }

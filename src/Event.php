@@ -71,7 +71,23 @@ class Event
                                     self::getWithException($participant, 'rules')
                                 ),
                                 self::getWithException($participant, 'fields')
-                            )
+                            ),
+                            array_map(function ($entitlement) {
+                                return new Entitlement(
+                                    self::getWithException($entitlement, 'id'),
+                                    self::getWithException($entitlement, 'name'),
+                                    self::getWithException($entitlement, 'description'),
+                                    self::getWithException($entitlement, 'image_small'),
+                                    self::getWithException($entitlement, 'image_large'),
+                                    array_map(function ($variant) {
+                                        return new Variant(
+                                            self::getWithException($variant, 'id'),
+                                            self::getWithException($variant, 'name'),
+                                            self::getWithException($variant, 'status')
+                                        );
+                                    }, self::getWithException($entitlement, 'variants'))
+                                );
+                            }, self::getWithException($participant, 'entitlements'))
                         );
                     },
                     $participantsData,
@@ -96,6 +112,30 @@ class Event
         }
 
         return $first = array_shift($found);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
     }
 
     /**

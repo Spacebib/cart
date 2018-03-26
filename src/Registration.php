@@ -131,6 +131,44 @@ class Registration
         });
     }
 
+    public function renderParticipantEntitlements($trackId)
+    {
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $entitlements = $participant->getEntitlements();
+
+        return $entitlements;
+    }
+
+    public function fillParticipantsEntitlements($trackId, array $data)
+    {
+        $flag = true;
+
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $entitlementIds = array_map(function ($entitlement) {
+            return $entitlement->getId();
+        }, $participant->getEntitlements());
+        $requestIds = array_keys($data);
+
+        if (array_diff($entitlementIds, $requestIds)) {
+            $this->errors[$trackId] = ['entitlements'=>'Please select an option for each item'];
+            $flag = false;
+        }
+
+        foreach ($data as $entitlementId => $variantId) {
+            $entitlement = $participant->getEntitlement($entitlementId);
+            if ($entitlement === false || !$variantId) {
+                $this->errors[$trackId] = ['entitlements'=>'Please select an option for each item'];
+                $flag = false;
+                continue;
+            }
+            $entitlement->setSelectedVariantId($variantId);
+        }
+
+        return $flag;
+    }
+
     /**
      * @param $trackId
      * @return Participant
@@ -152,17 +190,5 @@ class Registration
                 json_encode($trackIds)
             ));
         }
-    }
-
-    /**
-     * @param Participant $participant
-     * @return array
-     */
-    private function initialViewData($participant)
-    {
-        return array_combine(
-            $participant->getForm()->getFields(),
-            array_fill(0, count($participant->getForm()->getFields()), '')
-        );
     }
 }
