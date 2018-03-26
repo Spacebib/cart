@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Rules;
 
-
 class RuleLength implements Rule
 {
     private $errors = [];
