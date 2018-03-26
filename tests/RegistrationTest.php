@@ -9,8 +9,8 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
-use Dilab\Cart\DataStore;
 use Dilab\Cart\Registration;
+use Dilab\Cart\Test\Factory\EntitlementFactory;
 use Dilab\Cart\Test\Factory\EventFactory;
 use Dilab\Cart\Test\Factory\FormDataFactory;
 
@@ -108,5 +108,45 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $serialized = $this->registration->serialize();
         $unserialized = Registration::deserialize($serialized);
         $this->assertEquals($unserialized, $this->registration);
+    }
+
+    public function testRenderForm()
+    {
+        $trackId = 0;
+        $expected = FormDataFactory::emptyData();
+        $result = $this->registration->renderParticipantForm($trackId);
+        $this->assertEquals($expected, $result);
+        $this->assertFalse($this->registration->isDirty($trackId));
+        $this->assertFalse($this->registration->isCompleted($trackId));
+        $this->assertTrue($this->registration->isTouched($trackId));
+    }
+
+    public function testRenderEntitlement()
+    {
+        $trackId = 0;
+        $expected = EntitlementFactory::entitlements();
+        $result = $this->registration->renderParticipantEntitlements($trackId);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testFillEntitlement()
+    {
+        $trackId = 0;
+        $expected = EntitlementFactory::entitlements();
+        $result = $this->registration->renderParticipantEntitlements($trackId);
+        $this->assertEquals($expected, $result);
+
+        $requestData = [
+            1 => ''
+        ];
+        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $this->assertFalse($result);
+        $this->assertArrayHasKey('entitlements', $this->registration->getErrors($trackId));
+
+        $requestData = [
+            1 => 1
+        ];
+        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $this->assertTrue($result);
     }
 }

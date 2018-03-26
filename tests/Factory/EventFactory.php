@@ -32,6 +32,13 @@ class EventFactory
                                 'gender' => 'male',
                                 'nric' => '',
                             ],
+                            'donation' => [
+                                'id' => 1,
+                                'min' => 10,
+                                'max' => 100,
+                                'name' => 'donation',
+                                'required' => true
+                            ],
                             'fields' => [
                                 'email',
                                 'dob',
@@ -52,7 +59,33 @@ class EventFactory
                                 'name_on_bib',
                                 'kin_contact_name',
                                 'kin_contact_no'
-                            ]
+                            ],
+                            'entitlements'=> [
+                                [
+                                    'id'=> 1,
+                                    'name'=> 'shorts',
+                                    'description' => 'Running Singlet',
+                                    'image_small' => '',
+                                    'image_large' => '',
+                                    'variants'=> [
+                                        [
+                                            'id'=>1,
+                                            'status'=>1,
+                                            'name'=>'size:s'
+                                        ],
+                                        [
+                                            'id'=>2,
+                                            'status'=>1,
+                                            'name'=>'size:m'
+                                        ],
+                                        [
+                                            'id'=>3,
+                                            'status'=>1,
+                                            'name'=>'size:l'
+                                        ]
+                                    ]
+                                ]
+                            ],
                         ],
                         [
                             'id' => 2,
@@ -69,7 +102,33 @@ class EventFactory
                                 'nationality',
                                 'name_on_bib',
                                 'gender'
-                            ]
+                            ],
+                            'entitlements'=> [
+                                [
+                                    'id'=> 1,
+                                    'name'=> 'shorts',
+                                    'description' => 'Running Singlet',
+                                    'image_small' => '',
+                                    'image_large' => '',
+                                    'variants'=> [
+                                        [
+                                            'id'=>1,
+                                            'status'=>0,
+                                            'name'=>'size:s'
+                                        ],
+                                        [
+                                            'id'=>2,
+                                            'status'=>0,
+                                            'name'=>'size:m'
+                                        ],
+                                        [
+                                            'id'=>3,
+                                            'status'=>0,
+                                            'name'=>'size:l'
+                                        ]
+                                    ]
+                                ]
+                            ],
                         ]
                     ]
                 ],
@@ -90,7 +149,33 @@ class EventFactory
                                 'dob',
                                 'first_name',
                                 'last_name'
-                            ]
+                            ],
+                            'entitlements'=> [
+                                [
+                                    'id'=> 1,
+                                    'name'=> 'shorts',
+                                    'description' => 'Running Singlet',
+                                    'image_small' => '',
+                                    'image_large' => '',
+                                    'variants'=> [
+                                        [
+                                            'id'=>1,
+                                            'status'=>0,
+                                            'name'=>'size:s'
+                                        ],
+                                        [
+                                            'id'=>2,
+                                            'status'=>0,
+                                            'name'=>'size:m'
+                                        ],
+                                        [
+                                            'id'=>3,
+                                            'status'=>0,
+                                            'name'=>'size:l'
+                                        ]
+                                    ]
+                                ]
+                            ],
                         ],
                         [
                             'id' => 3,
@@ -104,7 +189,33 @@ class EventFactory
                                 'dob',
                                 'first_name',
                                 'last_name'
-                            ]
+                            ],
+                            'entitlements'=> [
+                                [
+                                    'id'=> 1,
+                                    'name'=> 'shorts',
+                                    'description' => 'Running Singlet',
+                                    'image_small' => '',
+                                    'image_large' => '',
+                                    'variants'=> [
+                                        [
+                                            'id'=>1,
+                                            'status'=>0,
+                                            'name'=>'size:s'
+                                        ],
+                                        [
+                                            'id'=>2,
+                                            'status'=>0,
+                                            'name'=>'size:m'
+                                        ],
+                                        [
+                                            'id'=>3,
+                                            'status'=>0,
+                                            'name'=>'size:l'
+                                        ]
+                                    ]
+                                ]
+                            ],
                         ]
                     ]
                 ],
