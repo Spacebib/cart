@@ -12,13 +12,13 @@ $event = Event::init($data)
 + Create Cart
 
 ```php
-$cart = new Cart('xuding@spacebib.com',new DataStore())
+$cart = new Cart('xuding@spacebib.com')
 ```
 
 + Create Registration Form
 
 ```php
-$registration = new Registration($cart->getParticipants(), new DataStore());
+$registration = new Registration($cart->getParticipants());
 ```
 
 ## Cart API
@@ -50,12 +50,6 @@ $total = $cart->total()
 ```
 
 ## Registration API
-
-+ Get participants' track IDs
-
-```php
-$registration->getParticipantsTrackIds();
-```
 
 + Render a form
 
