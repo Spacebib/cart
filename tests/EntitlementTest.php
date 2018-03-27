@@ -27,6 +27,7 @@ class EntitlementTest extends \PHPUnit_Framework_TestCase
             'run xxx',
             '',
             '',
+            '',
             [
                 new Variant(1, 'size:s', 1),
                 new Variant(2, 'size:m', 1)

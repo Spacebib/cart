@@ -16,9 +16,11 @@ class Entitlement
 
     private $description;
 
-    private $imageSmall;
+    private $imageChart;
 
     private $imageLarge;
+
+    private $imageThumb;
 
     private $variants;
 
@@ -26,15 +28,17 @@ class Entitlement
         $id,
         $name,
         $description,
-        $imageSmall,
+        $imageChart,
         $imageLarge,
+        $imageThumb,
         array $variants
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
-        $this->imageSmall = $imageSmall;
+        $this->imageChart = $imageChart;
         $this->imageLarge = $imageLarge;
+        $this->imageThumb = $imageThumb;
         $this->variants = $variants;
     }
 
@@ -65,9 +69,9 @@ class Entitlement
     /**
      * @return mixed
      */
-    public function getImageSmall()
+    public function getImageChart()
     {
-        return $this->imageSmall;
+        return $this->imageChart;
     }
 
     /**

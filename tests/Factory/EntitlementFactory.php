@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Test\Factory;
 
-
 use Dilab\Cart\Entitlement;
 use Dilab\Cart\Variant;
 
@@ -19,8 +18,9 @@ class EntitlementFactory
             'id'=> 1,
             'name'=> 'shorts',
             'description' => 'Running Singlet',
-            'image_small' => '',
+            'image_chart' => '',
             'image_large' => '',
+            'image_thumb' => '',
             'variants'=> [
                 [
                     'id'=>1,
@@ -39,6 +39,31 @@ class EntitlementFactory
                 ]
             ]
         ],
+        [
+            'id'=> 2,
+            'name'=> 't-shirt',
+            'description' => 'Running Singlet',
+            'image_chart' => '',
+            'image_large' => '',
+            'image_thumb' => '',
+            'variants'=> [
+                [
+                    'id'=>3,
+                    'status'=>1,
+                    'name'=>'size:s'
+                ],
+                [
+                    'id'=>4,
+                    'status'=>1,
+                    'name'=>'size:m'
+                ],
+                [
+                    'id'=>5,
+                    'status'=>1,
+                    'name'=>'size:l'
+                ]
+            ]
+        ]
 
     ];
 
@@ -49,8 +74,9 @@ class EntitlementFactory
                 $data['id'],
                 $data['name'],
                 $data['description'],
-                $data['image_small'],
+                $data['image_chart'],
                 $data['image_large'],
+                $data['image_thumb'],
                 array_map(function ($v) {
                     return new Variant($v['id'], $v['name'], $v['status']);
                 }, $data['variants'])
@@ -58,5 +84,14 @@ class EntitlementFactory
         }, self::$data);
 
         return $entitlements;
+    }
+
+    public static function postData()
+    {
+        return [
+            1 => 1,
+            2 => 4
+        ];
+
     }
 }
