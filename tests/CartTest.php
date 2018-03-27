@@ -14,7 +14,11 @@ use Dilab\Cart\DataStore;
 use Dilab\Cart\Form;
 use Dilab\Cart\Money;
 use Dilab\Cart\Participant;
+use Dilab\Cart\Registration;
+use Dilab\Cart\Test\Factory\DonationFactory;
+use Dilab\Cart\Test\Factory\EntitlementFactory;
 use Dilab\Cart\Test\Factory\EventFactory;
+use Dilab\Cart\Test\Factory\FormDataFactory;
 
 class CartTest extends \PHPUnit_Framework_TestCase
 {
@@ -70,6 +74,17 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->subTotal();
         $this->assertEquals(Money::fromCent('SGD', 101000), $result);
+
+        $registration = new Registration($this->cart->getParticipants());
+        $data = [
+            'form' => FormDataFactory::correctData(),
+            'entitlements' => EntitlementFactory::postData(),
+            'donation' => DonationFactory::postData()
+
+        ];
+        $registration->fillParticipant(0, $data);
+        $donation = $this->cart->donation();
+        $this->assertEquals(Money::fromCent('SGD', 20), $donation);
     }
 
     public function testTotal()
