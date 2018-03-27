@@ -8,7 +8,6 @@
 
 namespace Dilab\Cart\Test\Factory;
 
-
 class FormDataFactory
 {
     public static function correctData()

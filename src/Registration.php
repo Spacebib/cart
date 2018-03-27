@@ -53,6 +53,41 @@ class Registration
 //        return $this->initialViewData($participant);
     }
 
+    public function renderParticipant($trackId)
+    {
+        $form = $this->renderParticipantForm($trackId);
+
+        $entitlements = $this->renderParticipantEntitlements($trackId);
+
+        $donation = $this->renderParticipantDonation($trackId);
+
+        return [
+            'form' => $form,
+            'entitlements' => $entitlements,
+            'donation' => $donation
+        ];
+    }
+
+    public function fillParticipant($trackId, array $data)
+    {
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $fillForm = $this->fillParticipantForm($trackId, $data['form']);
+        $fillEntitlements = $this->fillParticipantsEntitlements($trackId, $data['entitlements']);
+        $fillDonation = $this->fillParticipantDonation($trackId, $data['donation']);
+
+        if ($fillForm && $fillEntitlements && $fillDonation) {
+            $participant->setIsDirty(true);
+
+            $participant->setIsCompleted(true);
+
+            $this->errors[$trackId] = [];
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @param $trackId
      * @param array $data
@@ -74,16 +109,9 @@ class Registration
         }, $form->getRules()));
 
         if (!$form->fill($data)) {
-            $this->errors[$trackId] = $form->getErrors();
-
+            $this->setErrorsByTrackId($trackId, $form->getErrors());
             return false;
         }
-
-        $participant->setIsDirty(true);
-
-        $participant->setIsCompleted(true);
-
-        $this->errors[$trackId] = [];
 
         return true;
     }
@@ -152,14 +180,19 @@ class Registration
         $requestIds = array_keys($data);
 
         if (array_diff($entitlementIds, $requestIds)) {
-            $this->errors[$trackId] = ['entitlements'=>'Please select an option for each item'];
+            $error = ['entitlements'=>'Please select an option for each item'];
+            $this->setErrorsByTrackId($trackId, $error);
             $flag = false;
         }
 
         foreach ($data as $entitlementId => $variantId) {
             $entitlement = $participant->getEntitlement($entitlementId);
-            if ($entitlement === false || !$variantId) {
-                $this->errors[$trackId] = ['entitlements'=>'Please select an option for each item'];
+            if ($entitlement === false) {
+                continue;
+            }
+            if (! $variantId) {
+                $error = ['entitlements'=>'Please select an option for each item'];
+                $this->setErrorsByTrackId($trackId, $error);
                 $flag = false;
                 continue;
             }
@@ -167,6 +200,31 @@ class Registration
         }
 
         return $flag;
+    }
+
+    public function renderParticipantDonation($trackId)
+    {
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $donation = $participant->getDonation();
+
+        return $donation;
+    }
+
+    public function fillParticipantDonation($trackId, array $data)
+    {
+        $participant = $this->getParticipantByTrackId($trackId);
+        $donation = $participant->getDonation();
+        if (is_null($donation)) {
+            return true;
+        }
+        $form = $donation->getForm();
+
+        if (! $form->fill($data)) {
+            $this->setErrorsByTrackId($trackId, $form->getErrors());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -189,6 +247,18 @@ class Registration
                 'Invalid track IDs: %s',
                 json_encode($trackIds)
             ));
+        }
+    }
+
+    private function setErrorsByTrackId($trackId, $error)
+    {
+        if (isset($this->errors[$trackId])) {
+            $this->errors[$trackId] = array_merge(
+                $this->errors[$trackId],
+                $error
+            );
+        } else {
+            $this->errors[$trackId] = $error;
         }
     }
 }
