@@ -61,7 +61,8 @@ class Cart
                 $participant->getCategoryId(),
                 $participant->getRules(),
                 clone $participant->getForm(),
-                $participant->getEntitlements()
+                $participant->getEntitlements(),
+                $participant->getDonation() ? clone $participant->getDonation() : null
             );
 
             $newParticipant->setTrackId($key);
@@ -88,7 +89,21 @@ class Cart
         $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
             return $category->getPrice()->plus($carry);
         }, Money::fromCent($currency, 0));
+
+
         return $ticketsSubTotal;
+    }
+
+    public function donation()
+    {
+        $currency = $this->tickets[0]->getPrice()->getCurrency();
+
+        $donationSubTotal = array_reduce(
+            $this->getParticipants(),
+            function ($carry, Participant $participant) use ($currency) {
+                return Money::fromCent($currency, $participant->getDonationAmount())->plus($carry);
+            }, Money::fromCent($currency, 0));
+        return $donationSubTotal;
     }
 
     public function total()

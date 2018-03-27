@@ -8,6 +8,8 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Donation\Donation;
+
 class Participant
 {
     private $trackId = 0;
@@ -30,6 +32,8 @@ class Participant
 
     private $category_id;
 
+    private $donation;
+
     /**
      * Participant constructor.
      * @param $id
@@ -38,6 +42,7 @@ class Participant
      * @param array $rules
      * @param Form $form
      * @param array $entitlements
+     * @param null | Donation $donation
      */
     public function __construct(
         $id,
@@ -45,7 +50,8 @@ class Participant
         $category_id,
         array $rules,
         Form $form,
-        array $entitlements
+        array $entitlements = [],
+        Donation $donation = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -53,6 +59,7 @@ class Participant
         $this->form = $form;
         $this->category_id = $category_id;
         $this->entitlements = $entitlements;
+        $this->donation = $donation;
     }
 
     /**
@@ -188,5 +195,23 @@ class Participant
             }
         }
         return false;
+    }
+
+    /**
+     * @return Donation|null
+     */
+    public function getDonation()
+    {
+        return $this->donation;
+    }
+
+    public function getDonationAmount()
+    {
+        if (! $this->donation instanceof Donation) {
+            return 0;
+        }
+        $amount = $this->donation->getForm()->getData()['fundraise_amount_in_dollar'];
+
+        return is_numeric($amount) ? $amount : 0;
     }
 }

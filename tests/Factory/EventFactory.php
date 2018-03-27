@@ -37,7 +37,11 @@ class EventFactory
                                 'min' => 10,
                                 'max' => 100,
                                 'name' => 'donation',
-                                'required' => true
+                                'required' => true,
+                                'fields' => [
+                                    'fundraise_amount_in_dollar' => '',
+                                    'fundraise_remark' => ''
+                                ]
                             ],
                             'fields' => [
                                 'email',
@@ -65,8 +69,9 @@ class EventFactory
                                     'id'=> 1,
                                     'name'=> 'shorts',
                                     'description' => 'Running Singlet',
-                                    'image_small' => '',
+                                    'image_chart' => '',
                                     'image_large' => '',
+                                    'image_thumb' => '',
                                     'variants'=> [
                                         [
                                             'id'=>1,
@@ -80,6 +85,31 @@ class EventFactory
                                         ],
                                         [
                                             'id'=>3,
+                                            'status'=>1,
+                                            'name'=>'size:l'
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    'id'=> 2,
+                                    'name'=> 't-shirt',
+                                    'description' => 'Running Singlet',
+                                    'image_chart' => '',
+                                    'image_large' => '',
+                                    'image_thumb' => '',
+                                    'variants'=> [
+                                        [
+                                            'id'=>3,
+                                            'status'=>1,
+                                            'name'=>'size:s'
+                                        ],
+                                        [
+                                            'id'=>4,
+                                            'status'=>1,
+                                            'name'=>'size:m'
+                                        ],
+                                        [
+                                            'id'=>5,
                                             'status'=>1,
                                             'name'=>'size:l'
                                         ]
@@ -103,32 +133,32 @@ class EventFactory
                                 'name_on_bib',
                                 'gender'
                             ],
-                            'entitlements'=> [
-                                [
-                                    'id'=> 1,
-                                    'name'=> 'shorts',
-                                    'description' => 'Running Singlet',
-                                    'image_small' => '',
-                                    'image_large' => '',
-                                    'variants'=> [
-                                        [
-                                            'id'=>1,
-                                            'status'=>0,
-                                            'name'=>'size:s'
-                                        ],
-                                        [
-                                            'id'=>2,
-                                            'status'=>0,
-                                            'name'=>'size:m'
-                                        ],
-                                        [
-                                            'id'=>3,
-                                            'status'=>0,
-                                            'name'=>'size:l'
-                                        ]
-                                    ]
-                                ]
-                            ],
+//                            'entitlements'=> [
+//                                [
+//                                    'id'=> 1,
+//                                    'name'=> 'shorts',
+//                                    'description' => 'Running Singlet',
+//                                    'image_small' => '',
+//                                    'image_large' => '',
+//                                    'variants'=> [
+//                                        [
+//                                            'id'=>1,
+//                                            'status'=>0,
+//                                            'name'=>'size:s'
+//                                        ],
+//                                        [
+//                                            'id'=>2,
+//                                            'status'=>0,
+//                                            'name'=>'size:m'
+//                                        ],
+//                                        [
+//                                            'id'=>3,
+//                                            'status'=>0,
+//                                            'name'=>'size:l'
+//                                        ]
+//                                    ]
+//                                ]
+//                            ],
                         ]
                     ]
                 ],
@@ -155,8 +185,9 @@ class EventFactory
                                     'id'=> 1,
                                     'name'=> 'shorts',
                                     'description' => 'Running Singlet',
-                                    'image_small' => '',
+                                    'image_chart' => '',
                                     'image_large' => '',
+                                    'image_thumb' => '',
                                     'variants'=> [
                                         [
                                             'id'=>1,
@@ -195,8 +226,9 @@ class EventFactory
                                     'id'=> 1,
                                     'name'=> 'shorts',
                                     'description' => 'Running Singlet',
-                                    'image_small' => '',
+                                    'image_chart' => '',
                                     'image_large' => '',
+                                    'image_thumb' => '',
                                     'variants'=> [
                                         [
                                             'id'=>1,

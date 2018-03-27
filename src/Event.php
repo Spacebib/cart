@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Rules\RuleGender;
@@ -61,6 +62,8 @@ class Event
                 Money::fromCent($currency, self::getWithException($category, 'price')),
                 array_map(
                     function ($participant) use ($category) {
+                        $donation = self::getOrNull($participant, 'donation');
+
                         return new Participant(
                             self::getWithException($participant, 'id'),
                             self::getWithException($participant, 'name'),
@@ -77,8 +80,9 @@ class Event
                                     self::getWithException($entitlement, 'id'),
                                     self::getWithException($entitlement, 'name'),
                                     self::getWithException($entitlement, 'description'),
-                                    self::getWithException($entitlement, 'image_small'),
+                                    self::getWithException($entitlement, 'image_chart'),
                                     self::getWithException($entitlement, 'image_large'),
+                                    self::getWithException($entitlement, 'image_thumb'),
                                     array_map(function ($variant) {
                                         return new Variant(
                                             self::getWithException($variant, 'id'),
@@ -87,7 +91,19 @@ class Event
                                         );
                                     }, self::getWithException($entitlement, 'variants'))
                                 );
-                            }, self::getWithException($participant, 'entitlements'))
+                            }, self::getOrEmptyArray($participant, 'entitlements')),
+                            $donation ? new Donation(
+                                self::getWithException($donation, 'id'),
+                                self::getWithException($donation, 'name'),
+                                new \Dilab\Cart\Donation\Form(
+                                    self::getWithException($donation, 'fields'),
+                                    [
+                                        'min' => self::getWithException($donation, 'min'),
+                                        'max' => self::getWithException($donation, 'max'),
+                                        'required' => self::getWithException($donation, 'required'),
+                                    ]
+                                )
+                            ) : null
                         );
                     },
                     $participantsData,
