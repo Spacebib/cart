@@ -73,6 +73,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->subTotal();
+        $this->assertFalse($this->cart->hasDonation());
         $this->assertEquals(Money::fromCent('SGD', 101000), $result);
 
         $registration = new Registration($this->cart->getParticipants());
@@ -84,6 +85,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         ];
         $registration->fillParticipant(0, $data);
         $donation = $this->cart->donation();
+        $this->assertTrue($this->cart->hasDonation());
         $this->assertEquals(Money::fromCent('SGD', 20), $donation);
     }
 

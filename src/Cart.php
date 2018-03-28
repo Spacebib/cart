@@ -90,8 +90,8 @@ class Cart
             return $category->getPrice()->plus($carry);
         }, Money::fromCent($currency, 0));
 
-
-        return $ticketsSubTotal;
+        $donationSubTotal = $this->donation();
+        return $ticketsSubTotal->plus($donationSubTotal);
     }
 
     public function donation()
@@ -104,6 +104,12 @@ class Cart
                 return Money::fromCent($currency, $participant->getDonationAmount())->plus($carry);
             }, Money::fromCent($currency, 0));
         return $donationSubTotal;
+    }
+
+    public function hasDonation()
+    {
+        $donation = $this->donation();
+        return $donation->toCent() > 0;
     }
 
     public function total()
