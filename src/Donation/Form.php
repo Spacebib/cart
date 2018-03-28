@@ -34,30 +34,42 @@ class Form
 
     private function valid(array $data)
     {
-        if (! (isset($data['fundraise_amount_in_dollar']) || isset($data['fundraise_remark']))) {
-            return false;
-        }
-        if ($this->rules['required'] && !$data['fundraise_amount_in_dollar']) {
-            return false;
-        }
-
-        if (! is_numeric($data['fundraise_amount_in_dollar'])) {
-
+        if ($this->isEmpty($data)) {
+            $this->errors['fundraise_amount'] = 'Amount can not be empty';
             return false;
         }
 
-        if ($data['fundraise_amount_in_dollar'] < $this->rules['min']) {
+        if (! is_numeric($data['fundraise_amount'])) {
+            $this->errors['fundraise_amount'] = 'Amount should be a number';
             return false;
         }
 
-        if ($data['fundraise_amount_in_dollar'] > $this->rules['max']) {
+        if ($data['fundraise_amount'] < $this->rules['min']) {
+            $this->errors['fundraise_amount'] = sprintf('Minimum %s', $this->rules['min']);
+            return false;
+        }
+
+        if ($data['fundraise_amount'] > $this->rules['max']) {
+            $this->errors['fundraise_amount'] = 'Amount is too large';
             return false;
         }
 
         if (strlen($data['fundraise_remark']) > 250) {
+            $this->errors['fundraise_remark'] = 'remark is too long';
             return false;
         }
         return true;
+    }
+
+    private function isEmpty(array $data)
+    {
+        if (! (isset($data['fundraise_amount']) || isset($data['fundraise_remark']))) {
+            return true;
+        }
+        if ($this->rules['required'] && !$data['fundraise_amount']) {
+            return true;
+        }
+        return false;
     }
 
     /**

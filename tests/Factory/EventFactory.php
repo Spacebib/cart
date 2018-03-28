@@ -39,7 +39,7 @@ class EventFactory
                                 'name' => 'donation',
                                 'required' => true,
                                 'fields' => [
-                                    'fundraise_amount_in_dollar' => '',
+                                    'fundraise_amount' => '',
                                     'fundraise_remark' => ''
                                 ]
                             ],

@@ -21,7 +21,7 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->form = new Form(
-            ['fundraise_amount_in_dollar', 'fundraise_remark'],
+            ['fundraise_amount', 'fundraise_remark'],
             [
                 'min' => 10,
                 'max' => 100,
@@ -35,35 +35,35 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [
-                    'fundraise_amount_in_dollar' => '',
+                    'fundraise_amount' => '',
                     'fundraise_remark' => '',
                 ],
                 false
             ],
             [
                 [
-                    'fundraise_amount_in_dollar' => 'fdfd',
+                    'fundraise_amount' => 'fdfd',
                     'fundraise_remark' => '',
                 ],
                 false
             ],
             [
                 [
-                    'fundraise_amount_in_dollar' => '0.1',
+                    'fundraise_amount' => '0.1',
                     'fundraise_remark' => '',
                 ],
                 false
             ],
             [
                 [
-                    'fundraise_amount_in_dollar' => '20',
+                    'fundraise_amount' => '20',
                     'fundraise_remark' => base64_encode(random_bytes(500)),
                 ],
                 false
             ],
             [
                 [
-                    'fundraise_amount_in_dollar' => '20',
+                    'fundraise_amount' => '20',
                     'fundraise_remark' => '',
                 ],
                 true

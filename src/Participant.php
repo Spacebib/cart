@@ -210,7 +210,7 @@ class Participant
         if (! $this->donation instanceof Donation) {
             return 0;
         }
-        $amount = $this->donation->getForm()->getData()['fundraise_amount_in_dollar'];
+        $amount = $this->donation->getForm()->getData()['fundraise_amount'];
 
         return is_numeric($amount) ? $amount : 0;
     }

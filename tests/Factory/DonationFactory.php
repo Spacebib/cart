@@ -20,7 +20,7 @@ class DonationFactory
         'name' => 'donation',
         'required' => true,
         'fields' => [
-            'fundraise_amount_in_dollar' => '',
+            'fundraise_amount' => '',
             'fundraise_remark' => ''
         ]
     ];
@@ -46,7 +46,7 @@ class DonationFactory
     public static function postData()
     {
         return [
-            'fundraise_amount_in_dollar' => '20',
+            'fundraise_amount' => '20',
             'fundraise_remark' => '',
         ];
     }
