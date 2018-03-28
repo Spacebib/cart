@@ -100,8 +100,11 @@ class Cart
 
         $donationSubTotal = array_reduce(
             $this->getParticipants(),
-            function ($carry, Participant $participant) use ($currency) {
-                return Money::fromCent($currency, $participant->getDonationAmount())->plus($carry);
+            function ($carry, Participant $participant) {
+                if ($participant->hasDonation()) {
+                    return $participant->getDonationAmount()->plus($carry);
+                }
+                return $carry;
             }, Money::fromCent($currency, 0));
         return $donationSubTotal;
     }

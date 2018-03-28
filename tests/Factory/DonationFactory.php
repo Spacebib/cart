@@ -37,7 +37,8 @@ class DonationFactory
                     'max' => self::$data['max'],
                     'required' => self::$data['required'],
                 ]
-            )
+            ),
+            'SGD'
         );
 
         return $donation;

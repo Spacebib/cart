@@ -205,13 +205,13 @@ class Participant
         return $this->donation;
     }
 
+    public function hasDonation()
+    {
+        return $this->donation instanceof Donation;
+    }
+
     public function getDonationAmount()
     {
-        if (! $this->donation instanceof Donation) {
-            return 0;
-        }
-        $amount = $this->donation->getForm()->getData()['fundraise_amount'];
-
-        return is_numeric($amount) ? $amount : 0;
+        return $this->donation->getAmount();
     }
 }

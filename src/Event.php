@@ -61,7 +61,7 @@ class Event
                 self::getWithException($category, 'name'),
                 Money::fromCent($currency, self::getWithException($category, 'price')),
                 array_map(
-                    function ($participant) use ($category) {
+                    function ($participant) use ($category, &$currency) {
                         $donation = self::getOrNull($participant, 'donation');
 
                         return new Participant(
@@ -75,7 +75,7 @@ class Event
                                 ),
                                 self::getWithException($participant, 'fields')
                             ),
-                            array_map(function ($entitlement) {
+                            array_map(function ($entitlement) use (&$currency) {
                                 return new Entitlement(
                                     self::getWithException($entitlement, 'id'),
                                     self::getWithException($entitlement, 'name'),
@@ -102,7 +102,8 @@ class Event
                                         'max' => self::getWithException($donation, 'max'),
                                         'required' => self::getWithException($donation, 'required'),
                                     ]
-                                )
+                                ),
+                                $currency
                             ) : null
                         );
                     },
