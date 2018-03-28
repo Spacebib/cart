@@ -53,7 +53,10 @@ class Money
     public function plus(Money $b)
     {
         if ($b->getCurrency() !== $this->getCurrency()) {
-            throw new \LogicException('Invalid plus operation between two different currencies');
+            throw new \LogicException(
+                sprintf('Invalid plus operation between two different currencies, %s, %s',
+                    $b->getCurrency(), $this->getCurrency())
+            );
         }
 
         return Money::fromCent(
