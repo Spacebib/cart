@@ -20,6 +20,10 @@ class RuleGender implements Rule
 
     public function valid($data)
     {
+        if (!isset($data['gender'])) {
+            return true;
+        }
+
         $genderRule = new GenderRule($this->allowedGender);
         if ($genderRule->match($data['gender'])) {
             $this->errors = [];

@@ -71,7 +71,8 @@ class Event
                             self::getWithException($participant, 'rules'),
                             new Form(
                                 self::generateRules(
-                                    self::getWithException($participant, 'rules')
+                                    self::getWithException($participant, 'rules'),
+                                    self::getWithException($participant, 'fields')
                                 ),
                                 self::getWithException($participant, 'fields')
                             ),
@@ -159,7 +160,7 @@ class Event
      * @param array $rules
      * @return mixed
      */
-    private static function generateRules($rules)
+    private static function generateRules($rules, $fields)
     {
         $rules = array_map(
             function ($condition, $name) {
@@ -170,6 +171,9 @@ class Event
         );
         $rules[] = new RuleEmail();
         $rules[] = new RuleLength();
+        if (in_array('nric', $fields)) {
+            $rules[] = new RuleNric();
+        }
         return $rules;
     }
 
@@ -180,8 +184,6 @@ class Event
                 return new RuleAge($condition);
             case 'gender':
                 return new RuleGender($condition);
-            case 'nric':
-                return new RuleNric();
             default:
                 return null;
         }

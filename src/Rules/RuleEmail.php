@@ -14,6 +14,10 @@ class RuleEmail implements Rule
 
     public function valid($data)
     {
+        if (!isset($data['email'])) {
+            return true;
+        }
+
         if (! $this->validateEmailFormat($data['email'])) {
             $this->errors = ['email' => 'Invalid email address format'];
             return false;

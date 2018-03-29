@@ -23,6 +23,10 @@ class RuleAge implements Rule
 
     public function valid($data)
     {
+        if (!isset($data['dob'])) {
+            return true;
+        }
+
         $age = self::getAge($data['dob']);
         $ageRule = new AgeRule($this->allowedAge);
 
