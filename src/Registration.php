@@ -84,7 +84,7 @@ class Registration
             $this->errors[$trackId] = [];
             return true;
         }
-
+        $participant->setIsCompleted(false);
         return false;
     }
 
