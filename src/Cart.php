@@ -105,7 +105,9 @@ class Cart
                     return $participant->getDonationAmount()->plus($carry);
                 }
                 return $carry;
-            }, Money::fromCent($currency, 0));
+            },
+            Money::fromCent($currency, 0)
+        );
         return $donationSubTotal;
     }
 
