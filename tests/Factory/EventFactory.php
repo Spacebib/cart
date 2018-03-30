@@ -51,7 +51,7 @@ class EventFactory
                                 'gender',
                                 'nationality',
                                 'mobile_number',
-                                'address_standard',
+                                'address',
                                 'blood_type',
                                 'is_med_cond',
                                 'med_cond',

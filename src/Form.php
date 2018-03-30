@@ -173,7 +173,7 @@ class Form
                 case 'kin_contact_no':
                     $newFields[$field] = ['code'=>'', 'number'=>''];
                     break;
-                case 'address_standard':
+                case 'address':
                     $newFields['address'] = [
                         'address'=>'',
                         'city'=>'',
