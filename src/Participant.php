@@ -214,4 +214,15 @@ class Participant
     {
         return $this->donation->getAmount();
     }
+
+    public function getShowName()
+    {
+        $data = $this->form->getData();
+
+        if ($data['first_name']) {
+            return $data['first_name'].' '.$data['last_name'];
+        }
+
+        return $this->name;
+    }
 }

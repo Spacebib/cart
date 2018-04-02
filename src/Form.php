@@ -182,7 +182,7 @@ class Form
                     ];
                     break;
                 case 'address_sg_standard':
-                    $newFields['address'] = [
+                    $newFields['address_sg_standard'] = [
                         'block' => '',
                         'unit_prefix' => '',
                         'unit_suffix' => '',
@@ -206,11 +206,12 @@ class Form
     private function getNotRequiredFields($data)
     {
         /**
+         *  middle_name
          *  medical condition when it is false
          *  address -> state
          *  age > 18: kin_contact_name, kin_contact_no
          */
-        $notRequiredFields = ['address.state'];
+        $notRequiredFields = ['address.state', 'middle_name'];
         if (isset($data['is_med_cond']) && $data['is_med_cond']==0) {
             $notRequiredFields = array_merge(
                 $notRequiredFields,

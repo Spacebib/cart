@@ -61,7 +61,7 @@ class Event
                 self::getWithException($category, 'name'),
                 Money::fromCent($currency, self::getWithException($category, 'price')),
                 array_map(
-                    function ($participant) use ($category, &$currency) {
+                    function ($participant) use ($category, $currency) {
                         $donation = self::getOrNull($participant, 'donation');
 
                         return new Participant(
@@ -76,7 +76,7 @@ class Event
                                 ),
                                 self::getWithException($participant, 'fields')
                             ),
-                            array_map(function ($entitlement) use (&$currency) {
+                            array_map(function ($entitlement) use ($currency) {
                                 return new Entitlement(
                                     self::getWithException($entitlement, 'id'),
                                     self::getWithException($entitlement, 'name'),
@@ -158,6 +158,7 @@ class Event
 
     /**
      * @param array $rules
+     * @param $fields
      * @return mixed
      */
     private static function generateRules($rules, $fields)

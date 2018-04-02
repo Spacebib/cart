@@ -46,12 +46,15 @@ class EventFactory
                             'fields' => [
                                 'email',
                                 'dob',
+                                'salutation',
                                 'first_name',
                                 'last_name',
                                 'gender',
                                 'nationality',
                                 'mobile_number',
+                                'address_type',
                                 'address',
+                                'country_of_red',
                                 'blood_type',
                                 'is_med_cond',
                                 'med_cond',
@@ -59,10 +62,11 @@ class EventFactory
                                 'emy_contact_name',
                                 'emy_relationship',
                                 'emy_contact_no',
+                                'id_type',
                                 'nric',
                                 'name_on_bib',
                                 'kin_contact_name',
-                                'kin_contact_no'
+                                'kin_contact_no',
                             ],
                             'entitlements'=> [
                                 [
