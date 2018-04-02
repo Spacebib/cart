@@ -78,6 +78,11 @@ class Cart
         return $this->tickets;
     }
 
+    public function getBuyerEmail()
+    {
+        return $this->buyerEmail;
+    }
+
     public function subTotal()
     {
         if (empty($this->tickets)) {
