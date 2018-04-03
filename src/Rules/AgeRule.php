@@ -18,6 +18,8 @@ class AgeRule
 
     const BETWEEN_AND_EQUAL = '><=';
 
+    const EQUALS = '=';
+
     private $allowedAge;
 
     private $comp = '';
@@ -62,6 +64,10 @@ class AgeRule
                 $this->from = $compVal[0];
                 $this->to = $compVal[1];
                 break;
+            case self::EQUALS:
+                $this->from = intval($compareTo);
+                $this->to = intval($compareTo);
+                break;
             default:
                 throw RuleException::invalidAgeRuleString($this->allowedAge);
         }
@@ -105,6 +111,9 @@ class AgeRule
                 return sprintf('%s years old & below', $this->to());
                 break;
             case self::BETWEEN_AND_EQUAL:
+                return sprintf('From %s years old to %s years old', $this->from(), $this->to());
+                break;
+            case self::EQUALS:
                 return sprintf('From %s years old to %s years old', $this->from(), $this->to());
                 break;
             default:
