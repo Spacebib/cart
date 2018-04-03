@@ -39,6 +39,15 @@ trait CartHelper
         return $data[$path];
     }
 
+    public static function getOrEmpty($data, $path)
+    {
+        if (!isset($data[$path])) {
+            return '';
+        }
+
+        return $data[$path];
+    }
+
     public static function getAge($dob)
     {
         list ('year' => $year, 'month' => $month, 'year' => $day) = $dob;

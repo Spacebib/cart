@@ -12,6 +12,8 @@ use Dilab\Cart\Donation\Donation;
 
 class Participant
 {
+    use CartHelper;
+
     private $trackId = 0;
 
     private $id;
@@ -219,8 +221,12 @@ class Participant
     {
         $data = $this->form->getData();
 
-        if ($data['first_name']) {
-            return $data['first_name'].' '.$data['last_name'];
+        if (isset($data['first_name'])) {
+            return implode(" ", [
+                self::getOrEmpty($data, 'first_name'),
+                self::getOrEmpty($data, 'middle_name'),
+                self::getOrEmpty($data, 'last_name'),
+            ]);
         }
 
         return $this->name;
