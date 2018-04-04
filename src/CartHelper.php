@@ -12,7 +12,7 @@ trait CartHelper
 {
     public static function getWithException($data, $path)
     {
-        if (!isset($data[$path])) {
+        if (! array_key_exists($path, $data)) {
             throw new \LogicException(
                 sprintf('Data %s is not set in %s', $path, json_encode($data, true))
             );

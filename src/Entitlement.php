@@ -92,7 +92,7 @@ class Entitlement
 
     public function getSelectedVariantId()
     {
-        $selectedVariants = array_filter($this->variants, function ($variant) {
+        $selectedVariants = array_filter($this->variants, function (Variant $variant) {
             return $variant->getSelected();
         });
 
