@@ -83,6 +83,9 @@ class Cart
         return $this->buyerEmail;
     }
 
+    /**
+     * @return null | Money
+     */
     public function subTotal()
     {
         if (empty($this->tickets)) {
