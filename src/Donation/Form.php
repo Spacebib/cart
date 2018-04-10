@@ -22,40 +22,40 @@ class Form
         $this->rules = $rules;
     }
 
-    public function fill($data)
+    public function fill($data, $donationId)
     {
         $this->fields = $data;
 
-        if ($this->valid($data)) {
+        if ($this->valid($data, $donationId)) {
             return true;
         }
         return false;
     }
 
-    private function valid(array $data)
+    private function valid(array $data, $donationId)
     {
         if ($this->isEmpty($data)) {
-            $this->errors['fundraise_amount'] = 'Amount can not be empty';
+            $this->errors['fundraise_amount'][$donationId] = 'Amount can not be empty';
             return false;
         }
 
         if (! is_numeric($data['fundraise_amount'])) {
-            $this->errors['fundraise_amount'] = 'Amount should be a number';
+            $this->errors['fundraise_amount'][$donationId] = 'Amount should be a number';
             return false;
         }
 
         if ($data['fundraise_amount'] < $this->rules['min']) {
-            $this->errors['fundraise_amount'] = sprintf('Minimum %s', $this->rules['min']);
+            $this->errors['fundraise_amount'][$donationId] = sprintf('Minimum %s', $this->rules['min']);
             return false;
         }
 
         if ($data['fundraise_amount'] > $this->rules['max']) {
-            $this->errors['fundraise_amount'] = 'Amount is too large';
+            $this->errors['fundraise_amount'][$donationId] = 'Amount is too large';
             return false;
         }
 
         if (strlen($data['fundraise_remark']) > 250) {
-            $this->errors['fundraise_remark'] = 'remark is too long';
+            $this->errors['fundraise_remark'][$donationId] = 'remark is too long';
             return false;
         }
         return true;

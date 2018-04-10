@@ -32,16 +32,18 @@ class EventFactory
                                 'gender' => 'male',
                                 'nric' => '',
                             ],
-                            'donation' => [
-                                'id' => 1,
-                                'min' => 10,
-                                'max' => 100,
-                                'name' => 'donation',
-                                'required' => true,
-                                'fields' => [
-                                    'fundraise_amount' => '',
-                                    'fundraise_remark' => ''
-                                ]
+                            'fundraises' => [
+                                [
+                                    'id' => 1,
+                                    'min' => 10,
+                                    'max' => 100,
+                                    'name' => 'donation',
+                                    'required' => true,
+                                    'fields' => [
+                                        'fundraise_amount' => '',
+                                        'fundraise_remark' => ''
+                                    ]
+                                ],
                             ],
                             'fields' => [
                                 'email',

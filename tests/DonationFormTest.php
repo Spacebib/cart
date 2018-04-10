@@ -38,6 +38,7 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
                     'fundraise_amount' => '',
                     'fundraise_remark' => '',
                 ],
+                1,
                 false
             ],
             [
@@ -45,6 +46,7 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
                     'fundraise_amount' => 'fdfd',
                     'fundraise_remark' => '',
                 ],
+                1,
                 false
             ],
             [
@@ -52,6 +54,7 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
                     'fundraise_amount' => '0.1',
                     'fundraise_remark' => '',
                 ],
+                1,
                 false
             ],
             [
@@ -59,6 +62,7 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
                     'fundraise_amount' => '20',
                     'fundraise_remark' => base64_encode(random_bytes(500)),
                 ],
+                1,
                 false
             ],
             [
@@ -66,6 +70,7 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
                     'fundraise_amount' => '20',
                     'fundraise_remark' => '',
                 ],
+                1,
                 true
             ],
         ];
@@ -77,9 +82,9 @@ class DonationFormTest extends \PHPUnit_Framework_TestCase
      * @param $data
      * @param $expected
      */
-    public function testFill($data, $expected)
+    public function testFill($data, $donationId, $expected)
     {
-        $result = $this->form->fill($data);
+        $result = $this->form->fill($data, $donationId);
 
         $this->assertEquals($expected, $result);
 

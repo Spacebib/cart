@@ -93,19 +93,21 @@ class Event
                                     }, self::getWithException($entitlement, 'variants'))
                                 );
                             }, self::getOrEmptyArray($participant, 'entitlements')),
-                            $donation ? new Donation(
-                                self::getWithException($donation, 'id'),
-                                self::getWithException($donation, 'name'),
-                                new \Dilab\Cart\Donation\Form(
-                                    self::getWithException($donation, 'fields'),
-                                    [
-                                        'min' => self::getWithException($donation, 'min'),
-                                        'max' => self::getWithException($donation, 'max'),
-                                        'required' => self::getWithException($donation, 'required'),
-                                    ]
-                                ),
-                                $currency
-                            ) : null
+                            array_map(function ($fundraise) use ($currency) {
+                                return new Donation(
+                                    self::getWithException($fundraise, 'id'),
+                                    self::getWithException($fundraise, 'name'),
+                                    new \Dilab\Cart\Donation\Form(
+                                        self::getWithException($fundraise, 'fields'),
+                                        [
+                                            'min' => self::getWithException($fundraise, 'min'),
+                                            'max' => self::getWithException($fundraise, 'max'),
+                                            'required' => self::getWithException($fundraise, 'required'),
+                                        ]
+                                    ),
+                                    $currency
+                                );
+                            }, self::getOrEmptyArray($participant, 'fundraises'))
                         );
                     },
                     $participantsData,

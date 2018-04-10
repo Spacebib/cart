@@ -40,7 +40,7 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
         $expected = [
             'form' => FormDataFactory::emptyData(),
             'entitlements' => EntitlementFactory::entitlements(),
-            'donation' => DonationFactory::emptyDonation()
+            'fundraises' => DonationFactory::emptyDonation()
         ];
         $result = $this->registration->renderParticipant($trackId);
         $this->assertFalse($this->registration->isDirty($trackId));

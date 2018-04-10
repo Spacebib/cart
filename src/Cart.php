@@ -62,7 +62,7 @@ class Cart
                 $participant->getRules(),
                 clone $participant->getForm(),
                 $participant->getEntitlements(),
-                $participant->getDonation() ? clone $participant->getDonation() : null
+                $participant->getFundraises()
             );
 
             $newParticipant->setTrackId($key);
@@ -109,8 +109,8 @@ class Cart
         $donationSubTotal = array_reduce(
             $this->getParticipants(),
             function ($carry, Participant $participant) {
-                if ($participant->hasDonation()) {
-                    return $participant->getDonationAmount()->plus($carry);
+                if ($participant->hasFundraises()) {
+                    return $participant->getFundraisesAmount()->plus($carry);
                 }
                 return $carry;
             },

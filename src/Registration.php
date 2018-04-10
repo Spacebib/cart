@@ -8,11 +8,14 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Rules\RuleNric;
 
 class Registration
 {
     use Serializable;
+
+    use CartHelper;
 
     const SUMMARY = 'summary';
 
@@ -59,12 +62,12 @@ class Registration
 
         $entitlements = $this->renderParticipantEntitlements($trackId);
 
-        $donation = $this->renderParticipantDonation($trackId);
+        $fundraises = $this->renderParticipantDonation($trackId);
 
         return [
             'form' => $form,
             'entitlements' => $entitlements,
-            'donation' => $donation
+            'fundraises' => $fundraises
         ];
     }
 
@@ -206,25 +209,31 @@ class Registration
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $donation = $participant->getDonation();
+        $fundraises = $participant->getFundraises();
 
-        return $donation;
+        return $fundraises;
     }
 
     public function fillParticipantDonation($trackId, array $data)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-        $donation = $participant->getDonation();
-        if (is_null($donation)) {
-            return true;
-        }
-        $form = $donation->getForm();
+        $flag = true;
 
-        if (! $form->fill($data)) {
-            $this->setErrorsByTrackId($trackId, $form->getErrors());
-            return false;
+        $participant = $this->getParticipantByTrackId($trackId);
+        $fundraises = $participant->getFundraises();
+
+        foreach ($fundraises as $donation) {
+            if (! $donation instanceof Donation) {
+                continue;
+            }
+
+            $form = $donation->getForm();
+            if (! $form->fill(self::getOrEmptyArray($data, $donation->getId()), $donation->getId())) {
+                $this->setErrorsByTrackId($trackId, $form->getErrors());
+                $flag = false;
+            }
         }
-        return true;
+
+        return $flag;
     }
 
     /**

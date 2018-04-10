@@ -34,7 +34,7 @@ class Participant
 
     private $category_id;
 
-    private $donation;
+    private $fundraises;
 
     /**
      * Participant constructor.
@@ -44,7 +44,8 @@ class Participant
      * @param array $rules
      * @param Form $form
      * @param array $entitlements
-     * @param null | Donation $donation
+     * @param array $fundraises
+     * @internal param Donation|null $donation
      */
     public function __construct(
         $id,
@@ -53,7 +54,7 @@ class Participant
         array $rules,
         Form $form,
         array $entitlements = [],
-        Donation $donation = null
+        array $fundraises = []
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -61,7 +62,7 @@ class Participant
         $this->form = $form;
         $this->category_id = $category_id;
         $this->entitlements = $entitlements;
-        $this->donation = $donation;
+        $this->fundraises = $fundraises;
     }
 
     /**
@@ -200,21 +201,29 @@ class Participant
     }
 
     /**
-     * @return Donation|null
+     * @return Donation[]
      */
-    public function getDonation()
+    public function getFundraises()
     {
-        return $this->donation;
+        return $this->fundraises;
     }
 
-    public function hasDonation()
+    public function hasFundraises()
     {
-        return $this->donation instanceof Donation;
+        if (! isset($this->fundraises[0])) {
+            return false;
+        }
+        $donation = $this->fundraises[0];
+        return $donation instanceof Donation;
     }
 
-    public function getDonationAmount()
+    public function getFundraisesAmount()
     {
-        return $this->donation->getAmount();
+        $donation = $this->fundraises[0];
+
+        return array_reduce($this->fundraises, function($carry, Donation $donation) {
+            return $donation->getAmount()->plus($carry);
+        }, Money::fromCent($donation->getCurrency(), 0));
     }
 
     public function getShowName()

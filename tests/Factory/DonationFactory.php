@@ -27,7 +27,7 @@ class DonationFactory
 
     public static function emptyDonation()
     {
-        $donation = new Donation(
+        $donation[] = new Donation(
             self::$data['id'],
             self::$data['name'],
             new Form(
@@ -47,8 +47,14 @@ class DonationFactory
     public static function postData()
     {
         return [
-            'fundraise_amount' => '20',
-            'fundraise_remark' => '',
+                [
+                    'fundraise_amount' => '20',
+                    'fundraise_remark' => '',
+                ],
+                [
+                    'fundraise_amount' => '20',
+                    'fundraise_remark' => '',
+                ],
         ];
     }
 }
