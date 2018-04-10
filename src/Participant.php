@@ -221,7 +221,7 @@ class Participant
     {
         $donation = $this->fundraises[0];
 
-        return array_reduce($this->fundraises, function($carry, Donation $donation) {
+        return array_reduce($this->fundraises, function ($carry, Donation $donation) {
             return $donation->getAmount()->plus($carry);
         }, Money::fromCent($donation->getCurrency(), 0));
     }
