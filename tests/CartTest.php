@@ -10,7 +10,9 @@ namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
 use Dilab\Cart\Category;
+use Dilab\Cart\Coupon;
 use Dilab\Cart\DataStore;
+use Dilab\Cart\DiscountType;
 use Dilab\Cart\Form;
 use Dilab\Cart\Money;
 use Dilab\Cart\Participant;
@@ -109,5 +111,25 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $serialized = $this->cart->serialize();
         $unserialized = Cart::deserialize($serialized);
         $this->assertEquals($unserialized, $this->cart);
+    }
+
+    public function testApplyCoupon()
+    {
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
+        $result = $this->cart->total();
+        $this->assertEquals(Money::fromCent('SGD', 100000), $result);
+
+        // apply coupon
+        $this->setExpectedException(\RuntimeException::class);
+        $this->cart->applyCoupon();
+
+        $coupon = new Coupon(
+            1,
+            1,
+            DiscountType::FIXVALUE,
+            10
+        );
+        $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
+        $this->assertEquals(100000-10, $this->cart->total()->toCent());
     }
 }

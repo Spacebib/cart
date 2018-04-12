@@ -18,6 +18,8 @@ class Category
 
     private $participants;
 
+    private $originalPrice;
+
     /**
      * Category constructor.
      * @param $id
@@ -31,6 +33,16 @@ class Category
         $this->name = $name;
         $this->price = $price;
         $this->participants = $participants;
+        $this->originalPrice = $price;
+    }
+
+    public function applyCoupon(Coupon $coupon)
+    {
+        if (!in_array($this->id, $coupon->getCategoryIds())) {
+            return false;
+        }
+        $this->price = $coupon->apply($this->originalPrice);
+        return true;
     }
 
     /**

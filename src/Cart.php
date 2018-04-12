@@ -15,6 +15,8 @@ class Cart
     private $buyerEmail;
 
     private $tickets;
+    /** @var  Coupon */
+    private $coupon;
 
     /**
      * Cart constructor.
@@ -128,5 +130,25 @@ class Cart
     public function total()
     {
         return $this->subTotal();
+    }
+
+    public function setCoupon(Coupon $coupon)
+    {
+        $this->coupon = $coupon;
+        return $this;
+    }
+
+    public function applyCoupon()
+    {
+        if (! $this->coupon instanceof Coupon) {
+            throw new \RuntimeException('please call setCoupon first');
+        }
+        array_map(function (Category $ticket) {
+            if ($ticket->getId() == $this->coupon->getCategoryId()) {
+                $ticket->applyCoupon($this->coupon);
+            }
+            return $ticket;
+        }, $this->tickets());
+        return true;
     }
 }

@@ -52,6 +52,25 @@ class Money
 
     public function plus(Money $b)
     {
+        $this->validateMoney($b);
+
+        return Money::fromCent(
+            $this->getCurrency(),
+            $this->toCent() + $b->toCent()
+        );
+    }
+
+    public function minus(Money $b)
+    {
+        $this->validateMoney($b);
+        return Money::fromCent(
+            $this->getCurrency(),
+            $this->toCent() - $b->toCent()
+        );
+    }
+
+    private function validateMoney(Money $b)
+    {
         if ($b->getCurrency() !== $this->getCurrency()) {
             throw new \LogicException(
                 sprintf(
@@ -61,10 +80,5 @@ class Money
                 )
             );
         }
-
-        return Money::fromCent(
-            $this->getCurrency(),
-            $this->toCent() + $b->toCent()
-        );
     }
 }
