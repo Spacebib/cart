@@ -143,12 +143,18 @@ class Cart
         if (! $this->coupon instanceof Coupon) {
             throw new \RuntimeException('please call setCoupon first');
         }
-        array_map(function (Category $ticket) {
-            if ($ticket->getId() == $this->coupon->getCategoryId()) {
-                $ticket->applyCoupon($this->coupon);
+        // coupon 按顺序给每张票都尝试着用一次， 若成功了则结束并返回
+        $flag = false;
+        array_map(function (Category $ticket) use (&$flag) {
+            if($flag) {
+                return $ticket;
+            }
+            if ($ticket->applyCoupon($this->coupon)) {
+                $flag = true;
             }
             return $ticket;
         }, $this->tickets());
-        return true;
+
+        return $flag;
     }
 }
