@@ -10,6 +10,6 @@ namespace Dilab\Cart;
 
 class DiscountType
 {
-    const FIXVALUE = 'FixValue';
+    const FIXVALUE = 'fixed';
     const PERCENTAGEOFF = 'PercentageOff';
 }
