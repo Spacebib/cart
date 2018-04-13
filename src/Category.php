@@ -38,10 +38,11 @@ class Category
 
     public function applyCoupon(Coupon $coupon)
     {
-        if (!in_array($this->id, $coupon->getCategoryIds())) {
+        if (! in_array($this->id, $coupon->getCategoryIds())) {
             return false;
         }
         $this->price = $coupon->apply($this->originalPrice);
+
         return true;
     }
 
