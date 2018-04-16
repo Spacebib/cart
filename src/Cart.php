@@ -18,6 +18,8 @@ class Cart
     /** @var  Coupon */
     private $coupon;
 
+    private $products=[];
+
     /**
      * Cart constructor.
      * @param $buyerEmail
@@ -182,5 +184,32 @@ class Cart
         return array_reduce($this->tickets(), function ($carry, Category $ticket) {
             return $ticket->getDiscount()->toCent() + $carry;
         }, 0);
+    }
+
+    public function addProduct($product_variant_id, $participant_id)
+    {
+        $this->products[] = compact('product_variant_id', 'participant_id');
+        return true;
+    }
+
+    public function removeProduct($product_variant_id, $participant_id)
+    {
+        $removeProduct = compact('product_variant_id', 'participant_id');
+        $this->products = array_map(function ($product) use ($removeProduct) {
+            if (empty(array_diff($product, $removeProduct))) {
+                return $product;
+            }
+        }, $this->products);
+        return true;
+    }
+
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    public function countProducts()
+    {
+        return count($this->products);
     }
 }
