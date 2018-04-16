@@ -23,7 +23,8 @@ class CouponTest extends \PHPUnit_Framework_TestCase
             1,
             [1, 2],
             DiscountType::FIXVALUE,
-            10
+            10,
+            '1101'
         );
     }
 
@@ -39,7 +40,8 @@ class CouponTest extends \PHPUnit_Framework_TestCase
             1,
             [1],
             DiscountType::PERCENTAGEOFF,
-            0.9
+            0.9,
+            '1101'
         );
 
         $discountedPrice = $this->coupon->apply($originPrice);

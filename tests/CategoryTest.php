@@ -34,7 +34,8 @@ class CategoryTest extends \PHPUnit_Framework_TestCase
             1,
             [2],
             DiscountType::FIXVALUE,
-            10
+            10,
+            '1101'
         );
 
         $this->assertFalse($this->category->applyCoupon($coupon));
