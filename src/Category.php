@@ -46,6 +46,11 @@ class Category
         return true;
     }
 
+    public function getDiscount()
+    {
+        return $this->originalPrice->minus($this->price);
+    }
+
     /**
      * @return mixed
      */

@@ -138,6 +138,11 @@ class Cart
         return $this;
     }
 
+    public function getCoupon()
+    {
+        return $this->coupon;
+    }
+
     public function applyCoupon()
     {
         if (! $this->coupon instanceof Coupon) {
@@ -156,5 +161,17 @@ class Cart
         }, $this->tickets());
 
         return $flag;
+    }
+
+    public function getDiscount()
+    {
+        return $this->coupon;
+    }
+
+    public function getDiscountAmt()
+    {
+        return array_reduce($this->tickets(), function ($carry, Category $ticket) {
+            return $ticket->getDiscount()->toCent() + $carry;
+        }, 0);
     }
 }
