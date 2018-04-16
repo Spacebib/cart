@@ -132,7 +132,7 @@ class Cart
         return $this->subTotal();
     }
 
-    public function setCoupon(Coupon $coupon)
+    public function setCoupon($coupon)
     {
         $this->coupon = $coupon;
         return $this;
@@ -161,6 +161,15 @@ class Cart
         }, $this->tickets());
 
         return $flag;
+    }
+
+    public function cancelCoupon()
+    {
+        array_map(function (Category $ticket) {
+            $ticket->cancelCoupon();
+            return $ticket;
+        }, $this->tickets());
+        return true;
     }
 
     public function getDiscount()
