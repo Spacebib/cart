@@ -151,7 +151,7 @@ class Cart
         // coupon 按顺序给每张票都尝试着用一次， 若成功了则结束并返回
         $flag = false;
         array_map(function (Category $ticket) use (&$flag) {
-            if($flag) {
+            if ($flag) {
                 return $ticket;
             }
             if ($ticket->applyCoupon($this->coupon)) {
