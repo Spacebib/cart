@@ -12,7 +12,7 @@ class Coupon
 {
     private $id;
 
-    private $categoryId;
+    private $categoryIds;
 
     private $discountType;
 
