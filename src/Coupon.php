@@ -18,19 +18,23 @@ class Coupon
 
     private $discountRate;
 
+    private $code;
+
     /**
      * Coupon constructor.
      * @param $id
-     * @param $categoryIds
+     * @param array $categoryIds
      * @param $discountType
      * @param $discountRate
+     * @param $code
      */
-    public function __construct($id, array $categoryIds, $discountType, $discountRate)
+    public function __construct($id, array $categoryIds, $discountType, $discountRate, $code)
     {
         $this->id = $id;
         $this->categoryIds = $categoryIds;
         $this->discountType = $discountType;
         $this->discountRate = $discountRate;
+        $this->code = $code;
     }
 
     public function apply(Money $amount)
@@ -114,5 +118,21 @@ class Coupon
     public function setDiscountRate($discountRate)
     {
         $this->discountRate = $discountRate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param mixed $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
     }
 }
