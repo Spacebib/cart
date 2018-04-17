@@ -159,6 +159,25 @@ class Event
     }
 
     /**
+     * @param $productId
+     * @return Product
+     */
+    public function getProductById($productId)
+    {
+        $found = array_filter($this->products, function (Product $product) use ($productId) {
+            return $product->getId() === intval($productId);
+        });
+
+        if (count($found) == 0) {
+            throw new \LogicException(
+                sprintf('Product with ID %s is not found', $productId)
+            );
+        }
+
+        return $first = array_shift($found);
+    }
+
+    /**
      * @return mixed
      */
     public function getId()

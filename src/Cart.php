@@ -8,6 +8,8 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Products\Product;
+
 class Cart
 {
     use Serializable;
@@ -17,7 +19,7 @@ class Cart
     private $tickets;
     /** @var  Coupon */
     private $coupon;
-
+    /** @var Product[] */
     private $products=[];
 
     /**
@@ -104,7 +106,7 @@ class Cart
 
         $donationSubTotal = $this->donation();
         $productsSubTotal = $this->productsSubTotal();
-        return $ticketsSubTotal->plus($donationSubTotal);
+        return $ticketsSubTotal->plus($donationSubTotal)->plus($productsSubTotal);
     }
 
     public function donation()
@@ -187,20 +189,23 @@ class Cart
         }, 0);
     }
 
-    public function addProduct($product_variant_id, $participant_id)
+    public function addProduct(Product $product)
     {
-        $this->products[] = compact('product_variant_id', 'participant_id');
+        $this->products[] = $product;
         return true;
     }
 
-    public function removeProduct($product_variant_id, $participant_id)
+    public function removeProduct($productId, $productVariantId)
     {
-        $removeProduct = compact('product_variant_id', 'participant_id');
-        $this->products = array_map(function ($product) use ($removeProduct) {
-            if (empty(array_diff($product, $removeProduct))) {
-                return $product;
+        foreach ($this->products as $i => $product) {
+            if ($product->getId() == $productId &&
+                $product->getSelectedVariantId() == $productVariantId
+            ) {
+                unset($this->products[$i]);
+                break;
             }
-        }, $this->products);
+        }
+
         return true;
     }
 
@@ -216,5 +221,9 @@ class Cart
 
     public function productsSubTotal()
     {
+        $currency = $this->tickets[0]->getPrice()->getCurrency();
+        return array_reduce($this->products, function ($carry, Product $product) use ($currency) {
+            return $product->getSelectedVariantPrice()->plus($carry);
+        }, Money::fromCent($currency, 0));
     }
 }

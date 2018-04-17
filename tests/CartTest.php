@@ -113,7 +113,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($unserialized, $this->cart);
     }
 
-    public function testApplyCoupon()
+    public function testCouponDiscount()
     {
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->total();
@@ -127,9 +127,37 @@ class CartTest extends \PHPUnit_Framework_TestCase
             1,
             1,
             DiscountType::FIXVALUE,
-            10
+            10,
+            1101
         );
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
         $this->assertEquals(100000-10, $this->cart->total()->toCent());
+        $this->assertEquals(10, $this->cart->getDiscountAmt());
+        // cancel coupon
+        $this->assertTrue($this->cart->setCoupon(null)->cancelCoupon());
+        $this->assertEquals(100000, $this->cart->total()->toCent());
+        $this->assertEquals(0, $this->cart->getDiscountAmt());
+    }
+
+    public function testProducts()
+    {
+        // add ticket
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
+        $this->assertEquals(Money::fromCent('SGD', 100000), $this->cart->total());
+
+        // add products
+        $event = EventFactory::create();
+        $product = $event->getProductById(1)->setSelectedVariantId(1);
+        $this->cart->addProduct($product);
+        $this->assertEquals(Money::fromCent('SGD', 100100), $this->cart->total());
+
+        $this->cart->addProduct($product);
+        $this->assertEquals(Money::fromCent('SGD', 100200), $this->cart->total());
+        // remove products
+        $this->cart->removeProduct(1, 1);
+        $this->assertEquals(Money::fromCent('SGD', 100100), $this->cart->total());
+
+        $this->cart->removeProduct(1, 1);
+        $this->assertEquals(Money::fromCent('SGD', 100000), $this->cart->total());
     }
 }

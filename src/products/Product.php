@@ -8,6 +8,8 @@
 
 namespace Dilab\Cart\Products;
 
+use Dilab\Cart\Money;
+
 class Product
 {
     private $id;
@@ -21,8 +23,10 @@ class Product
     private $imageLarge;
 
     private $imageThumb;
-
+    /** @var Variant[] */
     private $variants;
+
+    private $participantId=null;
 
     public function __construct(
         $id,
@@ -60,8 +64,12 @@ class Product
                 $variant->setSelected(false);
             }
         }
+        return $this;
     }
 
+    /**
+     * @return null | Money
+     */
     public function getSelectedVariantPrice()
     {
         $variant = $this->getSelectedVariant();
@@ -71,7 +79,7 @@ class Product
         return null;
     }
 
-    private function getSelectedVariant()
+    public function getSelectedVariant()
     {
         $selectedVariants = array_filter($this->variants, function (Variant $variant) {
             return $variant->getSelected();
@@ -82,6 +90,11 @@ class Product
         }
 
         return array_pop($selectedVariants);
+    }
+
+    public function getCurrency()
+    {
+        return $this->variants[0]->getPrice()->getCurrency();
     }
 
     /**
@@ -130,5 +143,23 @@ class Product
     public function getVariants(): array
     {
         return $this->variants;
+    }
+
+    /**
+     * @return null
+     */
+    public function getParticipantId()
+    {
+        return $this->participantId;
+    }
+
+    /**
+     * @param int|string $participantId
+     * @return $this
+     */
+    public function setParticipantId($participantId)
+    {
+        $this->participantId = $participantId;
+        return $this;
     }
 }
