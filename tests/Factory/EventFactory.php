@@ -257,7 +257,65 @@ class EventFactory
                         ]
                     ]
                 ],
-            ]
+            ],
+            'products'=> [
+                [
+                    'id'=> 1,
+                    'name'=> 'shorts',
+                    'description' => 'Running Singlet',
+                    'image_chart' => '',
+                    'image_large' => '',
+                    'image_thumb' => '',
+                    'variants'=> [
+                        [
+                            'id'=>1,
+                            'status'=>1,
+                            'name'=>'size:s',
+                            'price' => 100
+                        ],
+                        [
+                            'id'=>2,
+                            'status'=>1,
+                            'name'=>'size:m',
+                            'price' => 100
+                        ],
+                        [
+                            'id'=>3,
+                            'status'=>1,
+                            'name'=>'size:l',
+                            'price' => 100
+                        ]
+                    ]
+                ],
+                [
+                    'id'=> 2,
+                    'name'=> 't-shirt',
+                    'description' => 'Running Singlet',
+                    'image_chart' => '',
+                    'image_large' => '',
+                    'image_thumb' => '',
+                    'variants'=> [
+                        [
+                            'id'=>3,
+                            'status'=>1,
+                            'name'=>'size:s',
+                            'price' => 100
+                        ],
+                        [
+                            'id'=>4,
+                            'status'=>1,
+                            'name'=>'size:m',
+                            'price' => 100
+                        ],
+                        [
+                            'id'=>5,
+                            'status'=>1,
+                            'name'=>'size:l',
+                            'price' => 100
+                        ]
+                    ]
+                ]
+        ]
         ];
 
         return Event::init($data);

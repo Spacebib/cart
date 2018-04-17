@@ -9,6 +9,7 @@
 namespace Dilab\Cart;
 
 use Dilab\Cart\Donation\Donation;
+use Dilab\Cart\Products\Product;
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Rules\RuleGender;
@@ -27,19 +28,23 @@ class Event
 
     private $categories;
 
+    private $products;
+
     /**
      * Event constructor.
      * @param $id
      * @param $name
      * @param $currency
      * @param $categories
+     * @param $products
      */
-    public function __construct($id, $name, $currency, $categories)
+    public function __construct($id, $name, $currency, $categories, $products)
     {
         $this->id = $id;
         $this->name = $name;
         $this->currency = $currency;
         $this->categories = $categories;
+        $this->products = $products;
     }
 
     public static function init($data)
@@ -116,7 +121,26 @@ class Event
             );
         }, $categoriesData, array_keys($categoriesData));
 
-        return new self($id, $name, $currency, $categories);
+        $products = array_map(function ($product) use ($currency) {
+            return new Product(
+                self::getWithException($product, 'id'),
+                self::getWithException($product, 'name'),
+                self::getWithException($product, 'description'),
+                self::getWithException($product, 'image_chart'),
+                self::getWithException($product, 'image_large'),
+                self::getWithException($product, 'image_thumb'),
+                array_map(function ($variant) use ($currency) {
+                    return new \Dilab\Cart\Products\Variant(
+                        self::getWithException($variant, 'id'),
+                        self::getWithException($variant, 'name'),
+                        self::getWithException($variant, 'status'),
+                        Money::fromCent($currency, self::getWithException($variant, 'price'))
+                    );
+                }, self::getWithException($product, 'variants'))
+            );
+        }, self::getWithException($data, 'products'));
+
+        return new self($id, $name, $currency, $categories, $products);
     }
 
     public function getCategoryById($categoryId)
@@ -156,6 +180,14 @@ class Event
     public function getCurrency()
     {
         return $this->currency;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProducts()
+    {
+        return $this->products;
     }
 
     /**

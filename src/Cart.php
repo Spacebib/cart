@@ -103,6 +103,7 @@ class Cart
         }, Money::fromCent($currency, 0));
 
         $donationSubTotal = $this->donation();
+        $productsSubTotal = $this->productsSubTotal();
         return $ticketsSubTotal->plus($donationSubTotal);
     }
 
@@ -211,5 +212,9 @@ class Cart
     public function countProducts()
     {
         return count($this->products);
+    }
+
+    public function productsSubTotal()
+    {
     }
 }
