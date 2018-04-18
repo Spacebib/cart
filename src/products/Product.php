@@ -162,4 +162,12 @@ class Product
         $this->participantId = $participantId;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImageThumb()
+    {
+        return $this->imageThumb;
+    }
 }

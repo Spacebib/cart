@@ -19,19 +19,25 @@ class Registration
 
     const SUMMARY = 'summary';
 
+    const ADDON = 'add-on';
+
     private $participants;
 
     private $errors;
 
+    private $hasProducts;
+
     /**
      * Registration constructor.
      * @param array $participants
+     * @param $hasProducts
      */
-    public function __construct(array $participants)
+    public function __construct(array $participants, bool $hasProducts = false)
     {
         $this->guardParticipants($participants);
 
         $this->participants = $participants;
+        $this->hasProducts = $hasProducts;
     }
 
     /**
@@ -134,7 +140,7 @@ class Registration
         });
 
         if (empty($inCompletedParticipants)) {
-            return self::SUMMARY;
+            return $this->hasProducts ? self::ADDON : self::SUMMARY;
         }
 
         return ($first = array_shift($inCompletedParticipants))->getTrackId();

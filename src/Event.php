@@ -67,7 +67,6 @@ class Event
                 Money::fromCent($currency, self::getWithException($category, 'price')),
                 array_map(
                     function ($participant) use ($category, $currency) {
-                        $donation = self::getOrNull($participant, 'donation');
 
                         return new Participant(
                             self::getWithException($participant, 'id'),
