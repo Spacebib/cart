@@ -31,4 +31,18 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         $moneyA->plus($moneyB);
     }
 
+    public function testDollar()
+    {
+        $currency = 'USD';
+        $cent = 10000100000;
+        $money = Money::fromCent($currency, $cent);
+        $dollar = $money->toDollar();
+        $this->assertEquals(
+            number_format($cent/100, 2, '.', ','),
+            $dollar
+        );
+        
+        $money = Money::fromDollar($currency, $dollar);
+        $this->assertEquals($cent, $money->toCent());
+    }
 }

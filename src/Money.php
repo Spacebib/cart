@@ -37,6 +37,19 @@ class Money
         );
     }
 
+    public static function fromDollar($currency, $amountInDollar)
+    {
+        return new self(
+            $currency,
+            intval(str_replace(',', '', $amountInDollar)*100)
+        );
+    }
+
+    public function toDollar()
+    {
+        return number_format($this->amountInCent/100, 2, '.', ',');
+    }
+
     public function toCent()
     {
         return $this->amountInCent;
@@ -52,7 +65,7 @@ class Money
 
     public function plus(Money $b)
     {
-        $this->validateMoney($b);
+        $this->canCalculate($b);
 
         return Money::fromCent(
             $this->getCurrency(),
@@ -62,14 +75,14 @@ class Money
 
     public function minus(Money $b)
     {
-        $this->validateMoney($b);
+        $this->canCalculate($b);
         return Money::fromCent(
             $this->getCurrency(),
             $this->toCent() - $b->toCent()
         );
     }
 
-    private function validateMoney(Money $b)
+    private function canCalculate(Money $b)
     {
         if ($b->getCurrency() !== $this->getCurrency()) {
             throw new \LogicException(
