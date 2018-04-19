@@ -79,6 +79,9 @@ class Registration
 
     public function fillParticipant($trackId, array $data)
     {
+        // truncate errors first
+        $this->errors[$trackId] = [];
+
         $participant = $this->getParticipantByTrackId($trackId);
 
         $fillForm = $this->fillParticipantForm($trackId, $data['form']);
@@ -90,7 +93,6 @@ class Registration
 
             $participant->setIsCompleted(true);
 
-            $this->errors[$trackId] = [];
             return true;
         }
         $participant->setIsCompleted(false);
