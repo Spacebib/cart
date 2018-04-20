@@ -208,6 +208,13 @@ class Event
         return $this->products;
     }
 
+    public function getProductsHasVariant()
+    {
+        return array_filter($this->products, function (Product $product) {
+            return !empty($product->getVariants());
+        });
+    }
+
     /**
      * @param array $rules
      * @param $fields

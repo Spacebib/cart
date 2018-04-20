@@ -186,6 +186,13 @@ class Participant
         return $this->entitlements;
     }
 
+    public function getEntitlementsHasVariant()
+    {
+        return array_filter($this->entitlements, function (Entitlement $entitlement) {
+            return !empty($entitlement->getVariants());
+        });
+    }
+
     /**
      * @param $id
      * @return bool|Entitlement
@@ -230,7 +237,7 @@ class Participant
     {
         $data = $this->form->getData();
 
-        if (isset($data['first_name'])) {
+        if (isset($data['first_name']) && !empty($data['first_name'])) {
             return implode(" ", [
                 self::getOrEmpty($data, 'first_name'),
                 self::getOrEmpty($data, 'middle_name'),

@@ -174,7 +174,7 @@ class Registration
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $entitlements = $participant->getEntitlements();
+        $entitlements = $participant->getEntitlementsHasVariant();
 
         return $entitlements;
     }
@@ -187,7 +187,7 @@ class Registration
 
         $entitlementIds = array_map(function ($entitlement) {
             return $entitlement->getId();
-        }, $participant->getEntitlements());
+        }, $participant->getEntitlementsHasVariant());
         $requestIds = array_keys($data);
 
         if (array_diff($entitlementIds, $requestIds)) {
