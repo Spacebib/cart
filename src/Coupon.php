@@ -49,7 +49,7 @@ class Coupon
         if ($this->discountType === DiscountType::PERCENTAGEOFF) {
             return Money::fromCent(
                 $amount->getCurrency(),
-                intval($amount->toCent()*$this->discountRate)
+                intval($amount->toCent()*$this->discountRate/100)
             );
         }
 

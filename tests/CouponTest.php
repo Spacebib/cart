@@ -40,7 +40,7 @@ class CouponTest extends \PHPUnit_Framework_TestCase
             1,
             [1],
             DiscountType::PERCENTAGEOFF,
-            0.9,
+            90,
             '1101'
         );
 
