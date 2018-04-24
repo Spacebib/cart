@@ -254,6 +254,11 @@ class Registration
         });
     }
 
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
     /**
      * @param $trackId
      * @return Participant
