@@ -47,5 +47,15 @@ class CouponTest extends \PHPUnit_Framework_TestCase
         $discountedPrice = $this->coupon->apply($originPrice);
 
         $this->assertEquals(intval(1000*0.9), $discountedPrice->toCent());
+        // fix value discount above of original price, should return 0
+        $this->coupon = new Coupon(
+            1,
+            [1],
+            DiscountType::FIXVALUE,
+            1000000,
+            '1101'
+        );
+        $discountedPrice = $this->coupon->apply($originPrice);
+        $this->assertEquals(0, $discountedPrice->toCent());
     }
 }
