@@ -40,26 +40,14 @@ class Registration
         $this->hasProducts = $hasProducts;
     }
 
-    /**
-     * return a list of form fields
-     * @param $trackId
-     * @return mixed
-     */
-    public function renderParticipantForm($trackId)
+    public function getTrackIdByParticipantId($participantId)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
-        $form = $participant->getForm();
-
-        $wasTouched = $participant->isTouched();
-
-        $participant->setIsTouched(true);
-
-        if ($wasTouched) {
-            return $form->getData();
+        foreach ($this->participants as $participant) {
+            if ($participant->getId() === $participantId) {
+                return $participant->getTrackId();
+            }
         }
-        return $form->getFields();
-//        return $this->initialViewData($participant);
+        return null;
     }
 
     public function renderParticipant($trackId)
@@ -100,6 +88,28 @@ class Registration
     }
 
     /**
+     * return a list of form fields
+     * @param $trackId
+     * @return mixed
+     */
+    public function renderParticipantForm($trackId)
+    {
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $form = $participant->getForm();
+
+        $wasTouched = $participant->isTouched();
+
+        $participant->setIsTouched(true);
+
+        if ($wasTouched) {
+            return $form->getData();
+        }
+        return $form->getFields();
+//        return $this->initialViewData($participant);
+    }
+
+    /**
      * @param $trackId
      * @param array $data
      * @return boolean
@@ -125,49 +135,6 @@ class Registration
         }
 
         return true;
-    }
-
-    public function getErrors($trackId)
-    {
-        return $this->errors[$trackId];
-    }
-
-    /**
-     * @return integer / string
-     */
-    public function redirectTo()
-    {
-        $inCompletedParticipants = array_filter($this->participants, function (Participant $participant) {
-            return !$participant->isCompleted();
-        });
-
-        if (empty($inCompletedParticipants)) {
-            return $this->hasProducts ? self::ADDON : self::SUMMARY;
-        }
-
-        return ($first = array_shift($inCompletedParticipants))->getTrackId();
-    }
-
-    public function isDirty($trackId)
-    {
-        return $this->getParticipantByTrackId($trackId)->isDirty();
-    }
-
-    public function isTouched($trackId)
-    {
-        return $this->getParticipantByTrackId($trackId)->isTouched();
-    }
-
-    public function isCompleted($trackId)
-    {
-        return $this->getParticipantByTrackId($trackId)->isCompleted();
-    }
-
-    public function getParticipantsByCategoryId($categoryId)
-    {
-        return array_filter($this->participants, function ($participant) use ($categoryId) {
-            return $participant->getCategoryId()  === $categoryId;
-        });
     }
 
     public function renderParticipantEntitlements($trackId)
@@ -242,6 +209,49 @@ class Registration
         }
 
         return $flag;
+    }
+
+    public function getErrors($trackId)
+    {
+        return $this->errors[$trackId];
+    }
+
+    /**
+     * @return integer / string
+     */
+    public function redirectTo()
+    {
+        $inCompletedParticipants = array_filter($this->participants, function (Participant $participant) {
+            return !$participant->isCompleted();
+        });
+
+        if (empty($inCompletedParticipants)) {
+            return $this->hasProducts ? self::ADDON : self::SUMMARY;
+        }
+
+        return ($first = array_shift($inCompletedParticipants))->getTrackId();
+    }
+
+    public function isDirty($trackId)
+    {
+        return $this->getParticipantByTrackId($trackId)->isDirty();
+    }
+
+    public function isTouched($trackId)
+    {
+        return $this->getParticipantByTrackId($trackId)->isTouched();
+    }
+
+    public function isCompleted($trackId)
+    {
+        return $this->getParticipantByTrackId($trackId)->isCompleted();
+    }
+
+    public function getParticipantsByCategoryId($categoryId)
+    {
+        return array_filter($this->participants, function ($participant) use ($categoryId) {
+            return $participant->getCategoryId()  === $categoryId;
+        });
     }
 
     /**
