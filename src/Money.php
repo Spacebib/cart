@@ -76,9 +76,10 @@ class Money
     public function minus(Money $b)
     {
         $this->canCalculate($b);
+        $amount = ($this->toCent() - $b->toCent())>0 ? $this->toCent() - $b->toCent() : 0;
         return Money::fromCent(
             $this->getCurrency(),
-            $this->toCent() - $b->toCent()
+            $amount
         );
     }
 
