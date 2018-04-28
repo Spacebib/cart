@@ -89,4 +89,12 @@ class Category
     {
         return $this->participants;
     }
+
+    /**
+     * @return Money
+     */
+    public function getOriginalPrice(): Money
+    {
+        return $this->originalPrice;
+    }
 }
