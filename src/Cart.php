@@ -101,7 +101,7 @@ class Cart
         $currency = $this->tickets[0]->getPrice()->getCurrency();
 
         $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
-            return $category->getPrice()->plus($carry);
+            return $category->getOriginalPrice()->plus($carry);
         }, Money::fromCent($currency, 0));
 
         $donationSubTotal = $this->donation();
@@ -134,7 +134,11 @@ class Cart
 
     public function total()
     {
-        return $this->subTotal();
+        $subTotal = $this->subTotal();
+        if ($subTotal && $this->getCoupon()) {
+            return $subTotal->minus(Money::fromCent($subTotal->getCurrency(), $this->getCoupon()->getDiscountAmount()));
+        }
+        return $subTotal;
     }
 
     public function setCoupon($coupon)

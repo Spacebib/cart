@@ -20,6 +20,8 @@ class Coupon
 
     private $code;
 
+    private $discountAmount;
+
     /**
      * Coupon constructor.
      * @param $id
@@ -40,6 +42,7 @@ class Coupon
     public function apply(Money $amount)
     {
         if ($this->discountType === DiscountType::FIXVALUE) {
+            $this->discountAmount = $this->discountRate;
             return $amount->minus(Money::fromCent(
                 $amount->getCurrency(),
                 $this->discountRate
@@ -47,6 +50,7 @@ class Coupon
         }
 
         if ($this->discountType === DiscountType::PERCENTAGEOFF) {
+            $this->discountAmount = $amount->toCent() - $amount->toCent()*$this->discountRate/100;
             return Money::fromCent(
                 $amount->getCurrency(),
                 intval($amount->toCent()*$this->discountRate/100)
@@ -54,6 +58,11 @@ class Coupon
         }
 
         return $amount;
+    }
+
+    public function getDiscountAmount()
+    {
+        return $this->discountAmount;
     }
 
     /**
