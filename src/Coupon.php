@@ -42,7 +42,10 @@ class Coupon
     public function apply(Money $amount)
     {
         if ($this->discountType === DiscountType::FIXVALUE) {
-            $this->discountAmount = $this->discountRate;
+            $this->discountAmount = $this->discountRate > $amount->toCent()
+                ? $amount->toCent()
+                : $this->discountRate;
+
             return $amount->minus(Money::fromCent(
                 $amount->getCurrency(),
                 $this->discountRate
