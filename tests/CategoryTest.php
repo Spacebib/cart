@@ -12,8 +12,9 @@ use Dilab\Cart\Category;
 use Dilab\Cart\Coupon;
 use Dilab\Cart\DiscountType;
 use Dilab\Cart\Money;
+use PHPUnit\Framework\TestCase;
 
-class CategoryTest extends \PHPUnit_Framework_TestCase
+class CategoryTest extends TestCase
 {
     /** @var  Category */
     private $category;

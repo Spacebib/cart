@@ -10,8 +10,9 @@ namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Rules\RuleGender;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class RuleGenderTest extends \PHPUnit_Framework_TestCase
+class RuleGenderTest extends TestCase
 {
     /**
      * @var RuleGender

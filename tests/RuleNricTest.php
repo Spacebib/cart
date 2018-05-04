@@ -13,8 +13,9 @@ use Dilab\Cart\Registration;
 use Dilab\Cart\Rules\RuleNric;
 use Dilab\Cart\Test\Factory\EventFactory;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class RuleNricTest extends \PHPUnit_Framework_TestCase
+class RuleNricTest extends TestCase
 {
     /**
      * @var  Registration

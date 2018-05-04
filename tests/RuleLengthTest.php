@@ -10,8 +10,9 @@ namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Rules\RuleLength;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class RuleLengthTest extends \PHPUnit_Framework_TestCase
+class RuleLengthTest extends TestCase
 {
     /**
      * @var RuleLength

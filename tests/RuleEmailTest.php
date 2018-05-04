@@ -10,8 +10,9 @@ namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class RuleEmailTest extends \PHPUnit_Framework_TestCase
+class RuleEmailTest extends TestCase
 {
     /**
      * @var RuleEmail

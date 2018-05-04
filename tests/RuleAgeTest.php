@@ -10,8 +10,9 @@ namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class RuleAgeTest extends \PHPUnit_Framework_TestCase
+class RuleAgeTest extends TestCase
 {
     /**
      * @var RuleAge

@@ -9,8 +9,9 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Donation\Form;
+use PHPUnit\Framework\TestCase;
 
-class DonationFormTest extends \PHPUnit_Framework_TestCase
+class DonationFormTest extends TestCase
 {
     /**
      * @var Form

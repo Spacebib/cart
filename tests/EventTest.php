@@ -12,8 +12,9 @@ use Dilab\Cart\Category;
 use Dilab\Cart\Event;
 use Dilab\Cart\Participant;
 use Dilab\Cart\Test\Factory\EventFactory;
+use PHPUnit\Framework\TestCase;
 
-class EventTest extends \PHPUnit_Framework_TestCase
+class EventTest extends TestCase
 {
     public function testInit()
     {
@@ -26,7 +27,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $result = $event->getCategoryById(1);
         $this->assertInstanceOf(Category::class, $result);
 
-        $this->setExpectedException(\LogicException::class);
+        $this->expectException(\LogicException::class);
         $event->getCategoryById(100000);
     }
 }

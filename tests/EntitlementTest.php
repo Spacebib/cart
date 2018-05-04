@@ -10,8 +10,9 @@ namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Entitlement;
 use Dilab\Cart\Variant;
+use PHPUnit\Framework\TestCase;
 
-class EntitlementTest extends \PHPUnit_Framework_TestCase
+class EntitlementTest extends TestCase
 {
     /**
      * @var Entitlement

@@ -9,8 +9,9 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Money;
+use PHPUnit\Framework\TestCase;
 
-class MoneyTest extends \PHPUnit_Framework_TestCase
+class MoneyTest extends TestCase
 {
     public function testInit()
     {
@@ -26,7 +27,7 @@ class MoneyTest extends \PHPUnit_Framework_TestCase
         $result = $moneyA->plus($moneyB);
         $this->assertEquals(Money::fromCent('SGD', 10050), $result);
 
-        $this->setExpectedException(\LogicException::class);
+        $this->expectException(\LogicException::class);
         $moneyB = Money::fromCent('USD', 50);
         $moneyA->plus($moneyB);
     }

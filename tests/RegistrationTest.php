@@ -14,8 +14,9 @@ use Dilab\Cart\Test\Factory\DonationFactory;
 use Dilab\Cart\Test\Factory\EntitlementFactory;
 use Dilab\Cart\Test\Factory\EventFactory;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class RegistrationTest extends \PHPUnit_Framework_TestCase
+class RegistrationTest extends TestCase
 {
     /**
      * @var  Registration

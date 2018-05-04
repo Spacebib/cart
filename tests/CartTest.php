@@ -9,11 +9,8 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
-use Dilab\Cart\Category;
 use Dilab\Cart\Coupon;
-use Dilab\Cart\DataStore;
 use Dilab\Cart\DiscountType;
-use Dilab\Cart\Form;
 use Dilab\Cart\Money;
 use Dilab\Cart\Participant;
 use Dilab\Cart\Registration;
@@ -21,8 +18,9 @@ use Dilab\Cart\Test\Factory\DonationFactory;
 use Dilab\Cart\Test\Factory\EntitlementFactory;
 use Dilab\Cart\Test\Factory\EventFactory;
 use Dilab\Cart\Test\Factory\FormDataFactory;
+use PHPUnit\Framework\TestCase;
 
-class CartTest extends \PHPUnit_Framework_TestCase
+class CartTest extends TestCase
 {
     /**
      * @var Cart $cart
@@ -120,7 +118,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Money::fromCent('SGD', 100000), $result);
 
         // apply coupon
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->cart->applyCoupon();
 
         $coupon = new Coupon(
@@ -132,11 +130,11 @@ class CartTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
         $this->assertEquals(100000-10, $this->cart->total()->toCent());
-        $this->assertEquals(10, $this->cart->getDiscountAmt());
+        $this->assertEquals(10, $this->cart->getDiscount()->toCent());
         // cancel coupon
         $this->assertTrue($this->cart->setCoupon(null)->cancelCoupon());
         $this->assertEquals(100000, $this->cart->total()->toCent());
-        $this->assertEquals(0, $this->cart->getDiscountAmt());
+        $this->assertEquals(0, $this->cart->getDiscount()->toCent());
     }
 
     public function testProducts()
