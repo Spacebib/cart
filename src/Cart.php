@@ -22,13 +22,17 @@ class Cart
     /** @var Product[] */
     private $products=[];
 
+    private $event;
+
     /**
      * Cart constructor.
      * @param $buyerEmail
+     * @param Event $event
      */
-    public function __construct($buyerEmail)
+    public function __construct($buyerEmail, Event $event)
     {
         $this->buyerEmail = $buyerEmail;
+        $this->event = $event;
         $this->tickets = [];
     }
 
@@ -233,6 +237,6 @@ class Cart
 
     private function currency()
     {
-        return $this->tickets[0]->getPrice()->getCurrency();
+        return $this->event->getCurrency();
     }
 }

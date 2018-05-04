@@ -26,9 +26,11 @@ class RuleNricTest extends TestCase
     {
         parent::setUp();
 
-        $cart = new Cart('xuding@spacebib.com');
+        $event = EventFactory::create();
 
-        $cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        $cart = new Cart('xuding@spacebib.com', $event);
+
+        $cart->addTicket($event->getCategoryById(1), 2);
 
         $this->registration = new Registration($cart->getParticipants());
     }

@@ -31,9 +31,10 @@ class CartTest extends TestCase
     {
         parent::setUp();
 
+        $event = EventFactory::create();
         $this->cart = new Cart(
             'xuding@spacebib.com',
-            $this->getMockBuilder(DataStore::class)->getMock()
+            $event
         );
     }
 
