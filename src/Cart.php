@@ -235,7 +235,7 @@ class Cart
         }, Money::fromCent($currency, 0));
     }
 
-    private function currency()
+    public function currency()
     {
         return $this->event->getCurrency();
     }
