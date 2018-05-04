@@ -98,7 +98,7 @@ class Cart
             return null;
         }
 
-        $currency = $this->tickets[0]->getPrice()->getCurrency();
+        $currency = $this->currency();
 
         $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
             return $category->getOriginalPrice()->plus($carry);
@@ -111,7 +111,7 @@ class Cart
 
     public function donation()
     {
-        $currency = $this->tickets[0]->getPrice()->getCurrency();
+        $currency = $this->currency();
 
         $donationSubTotal = array_reduce(
             $this->getParticipants(),
@@ -135,9 +135,11 @@ class Cart
     public function total()
     {
         $subTotal = $this->subTotal();
+
         if ($subTotal && $this->getCoupon()) {
-            return $subTotal->minus(Money::fromCent($subTotal->getCurrency(), $this->getCoupon()->getDiscountAmount()));
+            return $subTotal->minus($this->getDiscount());
         }
+
         return $subTotal;
     }
 
@@ -183,14 +185,11 @@ class Cart
 
     public function getDiscount()
     {
-        return $this->coupon;
-    }
+        $currency = $this->currency();
 
-    public function getDiscountAmt()
-    {
         return array_reduce($this->tickets(), function ($carry, Category $ticket) {
-            return $ticket->getDiscount()->toCent() + $carry;
-        }, 0);
+            return $ticket->getDiscount()->plus($carry);
+        }, Money::fromCent($currency, 0));
     }
 
     public function addProduct(Product $product)
@@ -225,9 +224,15 @@ class Cart
 
     public function productsSubTotal()
     {
-        $currency = $this->tickets[0]->getPrice()->getCurrency();
+        $currency = $this->currency();
+
         return array_reduce($this->products, function ($carry, Product $product) use ($currency) {
             return $product->getSelectedVariantPrice()->plus($carry);
         }, Money::fromCent($currency, 0));
+    }
+
+    private function currency()
+    {
+        return $this->tickets[0]->getPrice()->getCurrency();
     }
 }
