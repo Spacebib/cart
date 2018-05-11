@@ -39,7 +39,7 @@ class MoneyTest extends TestCase
         $money = Money::fromCent($currency, $cent);
         $dollar = $money->toDollar();
         $this->assertEquals(
-            number_format($cent/100, 2, '.', ','),
+            $cent/100,
             $dollar
         );
         

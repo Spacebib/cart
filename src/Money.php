@@ -47,7 +47,7 @@ class Money
 
     public function toDollar()
     {
-        return number_format($this->amountInCent/100, 2, '.', ',');
+        return $this->amountInCent/100;
     }
 
     public function toCent()
