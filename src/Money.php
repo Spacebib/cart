@@ -21,7 +21,7 @@ class Money
      */
     private function __construct($currency, $amountInCent)
     {
-        if ($amountInCent < 0) {
+        if ($amountInCent < 0 || !is_numeric($amountInCent)) {
             throw new \LogicException('Invalid cent value');
         }
 

@@ -57,6 +57,8 @@ class Event
 
         $categoriesData = self::getWithException($data, 'categories');
 
+        $categoriesData = self::filterNoPriceCategories($categoriesData);
+
         $categories = array_map(function ($category) use ($currency) {
             $participantsData = self::getWithException($category, 'participants');
 
@@ -208,6 +210,14 @@ class Event
         return $this->products;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
     public function getProductsHasVariant()
     {
         return array_filter($this->products, function (Product $product) {
@@ -247,5 +257,12 @@ class Event
             default:
                 return null;
         }
+    }
+
+    private static function filterNoPriceCategories($categories)
+    {
+        return array_filter($categories, function ($category) {
+            return isset($category['price']) && !is_null($category['price']);
+        });
     }
 }
