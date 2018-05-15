@@ -101,16 +101,19 @@ class EventTest extends TestCase
                                         [
                                             'id'=>1,
                                             'status'=>1,
+                                            'stock'=>10,
                                             'name'=>'size:s'
                                         ],
                                         [
                                             'id'=>2,
                                             'status'=>1,
+                                            'stock'=>10,
                                             'name'=>'size:m'
                                         ],
                                         [
                                             'id'=>3,
                                             'status'=>1,
+                                            'stock'=>10,
                                             'name'=>'size:l'
                                         ]
                                     ]
@@ -126,16 +129,19 @@ class EventTest extends TestCase
                                         [
                                             'id'=>3,
                                             'status'=>1,
+                                            'stock'=>10,
                                             'name'=>'size:s'
                                         ],
                                         [
                                             'id'=>4,
                                             'status'=>1,
+                                            'stock'=>10,
                                             'name'=>'size:m'
                                         ],
                                         [
                                             'id'=>5,
                                             'status'=>1,
+                                            'stock'=>10,
                                             'name'=>'size:l'
                                         ]
                                     ]
@@ -191,16 +197,19 @@ class EventTest extends TestCase
                                         [
                                             'id'=>1,
                                             'status'=>0,
+                                            'stock'=>10,
                                             'name'=>'size:s'
                                         ],
                                         [
                                             'id'=>2,
                                             'status'=>0,
+                                            'stock'=>10,
                                             'name'=>'size:m'
                                         ],
                                         [
                                             'id'=>3,
                                             'status'=>0,
+                                            'stock'=>10,
                                             'name'=>'size:l'
                                         ]
                                     ]
@@ -232,16 +241,19 @@ class EventTest extends TestCase
                                         [
                                             'id'=>1,
                                             'status'=>0,
+                                            'stock'=>10,
                                             'name'=>'size:s'
                                         ],
                                         [
                                             'id'=>2,
                                             'status'=>0,
+                                            'stock'=>10,
                                             'name'=>'size:m'
                                         ],
                                         [
                                             'id'=>3,
                                             'status'=>0,
+                                            'stock'=>10,
                                             'name'=>'size:l'
                                         ]
                                     ]
@@ -264,18 +276,21 @@ class EventTest extends TestCase
                             'id'=>1,
                             'status'=>1,
                             'name'=>'size:s',
+                            'stock'=>10,
                             'price' => 100
                         ],
                         [
                             'id'=>2,
                             'status'=>1,
                             'name'=>'size:m',
+                            'stock'=>10,
                             'price' => 100
                         ],
                         [
                             'id'=>3,
                             'status'=>1,
                             'name'=>'size:l',
+                            'stock'=>10,
                             'price' => 100
                         ]
                     ]
@@ -292,18 +307,21 @@ class EventTest extends TestCase
                             'id'=>3,
                             'status'=>1,
                             'name'=>'size:s',
+                            'stock'=>10,
                             'price' => 100
                         ],
                         [
                             'id'=>4,
                             'status'=>1,
                             'name'=>'size:m',
+                            'stock'=>10,
                             'price' => 100
                         ],
                         [
                             'id'=>5,
                             'status'=>1,
                             'name'=>'size:l',
+                            'stock'=>10,
                             'price' => 100
                         ]
                     ]

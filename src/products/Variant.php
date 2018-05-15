@@ -18,14 +18,17 @@ class Variant
 
     private $name;
 
+    private $stock;
+
     private $price;
 
     private $selected = false;
 
-    public function __construct($id, $name, $status, Money $price, $selected = false)
+    public function __construct($id, $name, $stock, $status, Money $price, $selected = false)
     {
         $this->id = $id;
         $this->name = $name;
+        $this->stock = $stock;
         $this->status = $status;
         $this->price = $price;
         $this->selected = $selected;
@@ -85,5 +88,13 @@ class Variant
     public function setPrice(Money $price)
     {
         $this->price = $price;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStock()
+    {
+        return $this->stock;
     }
 }

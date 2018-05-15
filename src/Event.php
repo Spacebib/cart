@@ -94,7 +94,9 @@ class Event
                                         return new Variant(
                                             self::getWithException($variant, 'id'),
                                             self::getWithException($variant, 'name'),
-                                            self::getWithException($variant, 'status')
+                                            self::getWithException($variant, 'status'),
+                                            self::getWithException($variant, 'stock')
+
                                         );
                                     }, self::getWithException($entitlement, 'variants'))
                                 );
@@ -134,6 +136,7 @@ class Event
                     return new \Dilab\Cart\Products\Variant(
                         self::getWithException($variant, 'id'),
                         self::getWithException($variant, 'name'),
+                        self::getWithException($variant, 'stock'),
                         self::getWithException($variant, 'status'),
                         Money::fromCent($currency, self::getWithException($variant, 'price'))
                     );

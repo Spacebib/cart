@@ -30,8 +30,8 @@ class EntitlementTest extends TestCase
             '',
             '',
             [
-                new Variant(1, 'size:s', 1),
-                new Variant(2, 'size:m', 1)
+                new Variant(1, 'size:s', 1, 10),
+                new Variant(2, 'size:m', 1, 10)
             ]
         );
     }

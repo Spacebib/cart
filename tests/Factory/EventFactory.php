@@ -82,17 +82,20 @@ class EventFactory
                                         [
                                             'id'=>1,
                                             'status'=>1,
-                                            'name'=>'size:s'
+                                            'name'=>'size:s',
+                                            'stock'=>10,
                                         ],
                                         [
                                             'id'=>2,
                                             'status'=>1,
-                                            'name'=>'size:m'
+                                            'name'=>'size:m',
+                                            'stock'=>10,
                                         ],
                                         [
                                             'id'=>3,
                                             'status'=>1,
-                                            'name'=>'size:l'
+                                            'name'=>'size:l',
+                                            'stock'=>0,
                                         ]
                                     ]
                                 ],
@@ -107,17 +110,20 @@ class EventFactory
                                         [
                                             'id'=>3,
                                             'status'=>1,
-                                            'name'=>'size:s'
+                                            'name'=>'size:s',
+                                            'stock'=>10,
                                         ],
                                         [
                                             'id'=>4,
                                             'status'=>1,
-                                            'name'=>'size:m'
+                                            'name'=>'size:m',
+                                            'stock'=>10,
                                         ],
                                         [
                                             'id'=>5,
                                             'status'=>1,
-                                            'name'=>'size:l'
+                                            'name'=>'size:l',
+                                            'stock'=>0,
                                         ]
                                     ]
                                 ]
@@ -198,17 +204,20 @@ class EventFactory
                                         [
                                             'id'=>1,
                                             'status'=>0,
-                                            'name'=>'size:s'
+                                            'name'=>'size:s',
+                                            'stock'=>10
                                         ],
                                         [
                                             'id'=>2,
                                             'status'=>0,
-                                            'name'=>'size:m'
+                                            'name'=>'size:m',
+                                            'stock'=>10
                                         ],
                                         [
                                             'id'=>3,
                                             'status'=>0,
-                                            'name'=>'size:l'
+                                            'name'=>'size:l',
+                                            'stock'=>10
                                         ]
                                     ]
                                 ]
@@ -239,17 +248,20 @@ class EventFactory
                                         [
                                             'id'=>1,
                                             'status'=>0,
-                                            'name'=>'size:s'
+                                            'name'=>'size:s',
+                                            'stock'=>10,
                                         ],
                                         [
                                             'id'=>2,
                                             'status'=>0,
-                                            'name'=>'size:m'
+                                            'name'=>'size:m',
+                                            'stock'=>10,
                                         ],
                                         [
                                             'id'=>3,
                                             'status'=>0,
-                                            'name'=>'size:l'
+                                            'name'=>'size:l',
+                                            'stock'=>10,
                                         ]
                                     ]
                                 ]
@@ -270,18 +282,21 @@ class EventFactory
                         [
                             'id'=>1,
                             'status'=>1,
+                            'stock'=>10,
                             'name'=>'size:s',
                             'price' => 100
                         ],
                         [
                             'id'=>2,
                             'status'=>1,
+                            'stock'=>10,
                             'name'=>'size:m',
                             'price' => 100
                         ],
                         [
                             'id'=>3,
                             'status'=>1,
+                            'stock'=>10,
                             'name'=>'size:l',
                             'price' => 100
                         ]
@@ -298,18 +313,21 @@ class EventFactory
                         [
                             'id'=>3,
                             'status'=>1,
+                            'stock'=>10,
                             'name'=>'size:s',
                             'price' => 100
                         ],
                         [
                             'id'=>4,
                             'status'=>1,
+                            'stock'=>10,
                             'name'=>'size:m',
                             'price' => 100
                         ],
                         [
                             'id'=>5,
                             'status'=>1,
+                            'stock'=>10,
                             'name'=>'size:l',
                             'price' => 100
                         ]

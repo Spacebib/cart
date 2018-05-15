@@ -13,16 +13,24 @@ class Variant
     private $id;
 
     private $status;
+    
+    private $stock;
 
     private $name;
 
     private $selected = false;
 
-    public function __construct($id, $name, $status, $selected = false)
-    {
+    public function __construct(
+        $id,
+        $name,
+        $status,
+        $stock,
+        $selected = false
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->status = $status;
+        $this->stock = $stock;
         $this->selected = $selected;
     }
 
@@ -64,5 +72,13 @@ class Variant
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStock()
+    {
+        return $this->stock;
     }
 }

@@ -25,16 +25,19 @@ class EntitlementFactory
                 [
                     'id'=>1,
                     'status'=>1,
+                    'stock'=>10,
                     'name'=>'size:s'
                 ],
                 [
                     'id'=>2,
                     'status'=>1,
+                    'stock'=>10,
                     'name'=>'size:m'
                 ],
                 [
                     'id'=>3,
                     'status'=>1,
+                    'stock'=>0,
                     'name'=>'size:l'
                 ]
             ]
@@ -50,16 +53,19 @@ class EntitlementFactory
                 [
                     'id'=>3,
                     'status'=>1,
+                    'stock'=>10,
                     'name'=>'size:s'
                 ],
                 [
                     'id'=>4,
                     'status'=>1,
+                    'stock'=>10,
                     'name'=>'size:m'
                 ],
                 [
                     'id'=>5,
                     'status'=>1,
+                    'stock'=>0,
                     'name'=>'size:l'
                 ]
             ]
@@ -78,7 +84,7 @@ class EntitlementFactory
                 $data['image_large'],
                 $data['image_thumb'],
                 array_map(function ($v) {
-                    return new Variant($v['id'], $v['name'], $v['status']);
+                    return new Variant($v['id'], $v['name'], $v['status'], $v['stock']);
                 }, $data['variants'])
             );
         }, self::$data);
