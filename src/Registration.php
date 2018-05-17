@@ -9,7 +9,10 @@
 namespace Dilab\Cart;
 
 use Dilab\Cart\Donation\Donation;
+use Dilab\Cart\Entitlements\Entitlement;
 use Dilab\Cart\Rules\RuleNric;
+use Dilab\Cart\Traits\CartHelper;
+use Dilab\Cart\Traits\Serializable;
 
 class Registration
 {
@@ -152,9 +155,10 @@ class Registration
 
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $entitlementIds = array_map(function ($entitlement) {
+        $entitlementIds = array_map(function (Entitlement $entitlement) {
             return $entitlement->getId();
-        }, $participant->getEntitlementsHasVariant());
+        }, $participant->getEntitlementsHasVariantHasStock());
+        
         $requestIds = array_keys($data);
 
         if (array_diff($entitlementIds, $requestIds)) {
@@ -249,7 +253,7 @@ class Registration
 
     public function getParticipantsByCategoryId($categoryId)
     {
-        return array_filter($this->participants, function ($participant) use ($categoryId) {
+        return array_filter($this->participants, function (Participant $participant) use ($categoryId) {
             return $participant->getCategoryId()  === $categoryId;
         });
     }

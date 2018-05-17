@@ -6,7 +6,7 @@
  * Time: 上午11:39
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Rules;
 
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Test\Factory\FormDataFactory;

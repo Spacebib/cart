@@ -9,8 +9,8 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Category;
-use Dilab\Cart\Coupon;
-use Dilab\Cart\DiscountType;
+use Dilab\Cart\Coupons\Coupon;
+use Dilab\Cart\Coupons\DiscountType;
 use Dilab\Cart\Money;
 use PHPUnit\Framework\TestCase;
 

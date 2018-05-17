@@ -6,7 +6,7 @@
  * Time: 10:42 AM
  */
 
-namespace Dilab\Cart;
+namespace Dilab\Cart\Traits;
 
 trait CartHelper
 {

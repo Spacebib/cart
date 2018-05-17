@@ -6,7 +6,7 @@
  * Time: 上午10:36
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Rules;
 
 use Dilab\Cart\Cart;
 use Dilab\Cart\Registration;

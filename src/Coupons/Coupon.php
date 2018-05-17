@@ -6,7 +6,9 @@
  * Time: 下午2:21
  */
 
-namespace Dilab\Cart;
+namespace Dilab\Cart\Coupons;
+
+use Dilab\Cart\Money;
 
 class Coupon
 {

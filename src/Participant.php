@@ -9,6 +9,8 @@
 namespace Dilab\Cart;
 
 use Dilab\Cart\Donation\Donation;
+use Dilab\Cart\Entitlements\Entitlement;
+use Dilab\Cart\Traits\CartHelper;
 
 class Participant
 {
@@ -190,6 +192,13 @@ class Participant
     {
         return array_filter($this->entitlements, function (Entitlement $entitlement) {
             return !empty($entitlement->getVariants());
+        });
+    }
+
+    public function getEntitlementsHasVariantHasStock()
+    {
+        return array_filter($this->entitlements, function (Entitlement $entitlement) {
+            return !empty($entitlement->getVariantsHasStock());
         });
     }
 

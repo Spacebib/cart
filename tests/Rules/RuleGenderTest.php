@@ -6,7 +6,7 @@
  * Time: 下午12:02
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Rules;
 
 use Dilab\Cart\Rules\RuleGender;
 use Dilab\Cart\Test\Factory\FormDataFactory;

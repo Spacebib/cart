@@ -6,7 +6,7 @@
  * Time: 下午5:12
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Rules;
 
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Test\Factory\FormDataFactory;

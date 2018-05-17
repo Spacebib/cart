@@ -6,7 +6,7 @@
  * Time: 下午3:13
  */
 
-namespace Dilab\Cart;
+namespace Dilab\Cart\Coupons;
 
 class DiscountType
 {

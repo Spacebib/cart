@@ -6,7 +6,7 @@
  * Time: 2:32 PM
  */
 
-namespace Dilab\Cart;
+namespace Dilab\Cart\Traits;
 
 use Zumba\JsonSerializer\JsonSerializer;
 

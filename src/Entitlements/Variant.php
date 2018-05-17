@@ -6,7 +6,7 @@
  * Time: 上午11:02
  */
 
-namespace Dilab\Cart;
+namespace Dilab\Cart\Entitlements;
 
 class Variant
 {
@@ -32,6 +32,11 @@ class Variant
         $this->status = $status;
         $this->stock = $stock;
         $this->selected = $selected;
+    }
+
+    public function hasStock()
+    {
+        return $this->stock > 1;
     }
 
     /**

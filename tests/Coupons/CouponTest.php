@@ -6,10 +6,10 @@
  * Time: 下午3:35
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Coupons;
 
-use Dilab\Cart\Coupon;
-use Dilab\Cart\DiscountType;
+use Dilab\Cart\Coupons\Coupon;
+use Dilab\Cart\Coupons\DiscountType;
 use Dilab\Cart\Money;
 use PHPUnit\Framework\TestCase;
 

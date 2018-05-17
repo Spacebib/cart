@@ -8,12 +8,14 @@
 
 namespace Dilab\Cart\Rules;
 
-use Dilab\Cart\CartHelper;
+use Dilab\Cart\Traits\CartHelper;
 
 class RuleAge implements Rule
 {
     use CartHelper;
+
     private $allowedAge;
+
     private $errors = [];
 
     public function __construct($allowedAge)

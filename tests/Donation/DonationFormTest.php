@@ -6,7 +6,7 @@
  * Time: 上午11:59
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Donation;
 
 use Dilab\Cart\Donation\Form;
 use PHPUnit\Framework\TestCase;

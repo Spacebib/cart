@@ -9,12 +9,15 @@
 namespace Dilab\Cart;
 
 use Dilab\Cart\Donation\Donation;
+use Dilab\Cart\Entitlements\Entitlement;
+use Dilab\Cart\Entitlements\Variant;
 use Dilab\Cart\Products\Product;
 use Dilab\Cart\Rules\RuleAge;
 use Dilab\Cart\Rules\RuleEmail;
 use Dilab\Cart\Rules\RuleGender;
 use Dilab\Cart\Rules\RuleLength;
 use Dilab\Cart\Rules\RuleNric;
+use Dilab\Cart\Traits\CartHelper;
 
 class Event
 {
@@ -96,7 +99,6 @@ class Event
                                             self::getWithException($variant, 'name'),
                                             self::getWithException($variant, 'status'),
                                             self::getWithException($variant, 'stock')
-
                                         );
                                     }, self::getWithException($entitlement, 'variants'))
                                 );

@@ -8,8 +8,8 @@
 
 namespace Dilab\Cart\Test\Factory;
 
-use Dilab\Cart\Entitlement;
-use Dilab\Cart\Variant;
+use Dilab\Cart\Entitlements\Entitlement;
+use Dilab\Cart\Entitlements\Variant;
 
 class EntitlementFactory
 {

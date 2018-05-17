@@ -8,6 +8,8 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Coupons\Coupon;
+
 class Category
 {
     private $id;

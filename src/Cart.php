@@ -8,7 +8,9 @@
 
 namespace Dilab\Cart;
 
+use Dilab\Cart\Coupons\Coupon;
 use Dilab\Cart\Products\Product;
+use Dilab\Cart\Traits\Serializable;
 
 class Cart
 {

@@ -6,10 +6,10 @@
  * Time: 下午4:03
  */
 
-namespace Dilab\Cart\Test;
+namespace Dilab\Cart\Test\Entitlements;
 
-use Dilab\Cart\Entitlement;
-use Dilab\Cart\Variant;
+use Dilab\Cart\Entitlements\Entitlement;
+use Dilab\Cart\Entitlements\Variant;
 use PHPUnit\Framework\TestCase;
 
 class EntitlementTest extends TestCase
@@ -31,12 +31,13 @@ class EntitlementTest extends TestCase
             '',
             [
                 new Variant(1, 'size:s', 1, 10),
-                new Variant(2, 'size:m', 1, 10)
+                new Variant(2, 'size:m', 1, 10),
+                new Variant(2, 'size:m', 1, 0)
             ]
         );
     }
 
-    public function testSelected()
+    public function test_select_variant()
     {
         $selectedId = $this->entitlement->getSelectedVariantId();
         $this->assertEquals('', $selectedId);
@@ -52,5 +53,11 @@ class EntitlementTest extends TestCase
         $this->entitlement->setSelectedVariantId('');
         $selectedId = $this->entitlement->getSelectedVariantId();
         $this->assertEquals('', $selectedId);
+    }
+
+    public function test_get_variants_has_stock()
+    {
+        $this->assertCount(3, $this->entitlement->getVariants());
+        $this->assertCount(2, $this->entitlement->getVariantsHasStock());
     }
 }

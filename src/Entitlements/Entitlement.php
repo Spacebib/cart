@@ -6,7 +6,7 @@
  * Time: 上午10:49
  */
 
-namespace Dilab\Cart;
+namespace Dilab\Cart\Entitlements;
 
 class Entitlement
 {
@@ -88,6 +88,16 @@ class Entitlement
     public function getVariants(): array
     {
         return $this->variants;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVariantsHasStock(): array
+    {
+        return array_filter($this->variants, function (Variant $variant) {
+            return $variant->hasStock();
+        });
     }
 
     public function getSelectedVariantId()
