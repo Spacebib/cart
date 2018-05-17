@@ -9,6 +9,7 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
+use Dilab\Cart\Event;
 use Dilab\Cart\Registration;
 use Dilab\Cart\Test\Factory\DonationFactory;
 use Dilab\Cart\Test\Factory\EntitlementFactory;
@@ -175,6 +176,93 @@ class RegistrationTest extends TestCase
         $requestData = [
             1 => 1,
             2 => 3
+        ];
+        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $this->assertTrue($result);
+    }
+
+    public function test_fill_entitlement_with_disabled_variant()
+    {
+        // arrange data
+        $data = [
+            'id' => 1,
+            'name' => 'Changsha Marathon 2018',
+            'currency' => 'SGD',
+            'categories' => [
+                [
+                    'id' => 1,
+                    'name' => 'Men Open, 10km',
+                    'price' => 1000,
+                    'participants' => [
+                        [
+                            'id' => 1,
+                            'name' => 'Runner 1',
+                            'rules' => [
+                                'age' => '>=18',
+                                'gender' => 'male',
+                                'nric' => '',
+                            ],
+                            'fundraises' => [
+                            ],
+                            'fields' => [
+                                'email',
+                                'dob',
+                                'first_name',
+                                'last_name',
+                                'gender',
+                                'nationality',
+                            ],
+                            'entitlements'=> [
+                                [
+                                    'id'=> 1,
+                                    'name'=> 'shorts',
+                                    'description' => 'Running Singlet',
+                                    'image_chart' => '',
+                                    'image_large' => '',
+                                    'image_thumb' => '',
+                                    'variants'=> [
+                                        [
+                                            'id'=>1,
+                                            'status'=>0,
+                                            'name'=>'size:s',
+                                            'stock'=>100,
+                                        ],
+                                        [
+                                            'id'=>2,
+                                            'status'=>1,
+                                            'name'=>'size:m',
+                                            'stock'=>0,
+                                        ],
+                                        [
+                                            'id'=>3,
+                                            'status'=>1,
+                                            'name'=>'size:l',
+                                            'stock'=>0,
+                                        ]
+                                    ]
+                                ]
+                            ],
+                        ],
+                    ]
+                ],
+            ],
+            'products'=> [
+            ]
+        ];
+        $event = Event::init($data);
+        $cart = new Cart('xuding@spacebib.com', $event);
+        $cart->addTicket($event->getCategoryById(1), 1);
+        $this->registration = new Registration($cart->getParticipants());
+
+        $trackId = 0;
+        $this->registration->renderParticipantEntitlements($trackId);
+
+        $requestData = [];
+        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $this->assertTrue($result);
+
+        $requestData = [
+            1 => null
         ];
         $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
         $this->assertTrue($result);

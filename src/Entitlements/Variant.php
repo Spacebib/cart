@@ -36,7 +36,12 @@ class Variant
 
     public function hasStock()
     {
-        return $this->stock > 1;
+        return $this->stock > 0;
+    }
+
+    public function isAvailable()
+    {
+        return $this->hasStock() && $this->status == 1;
     }
 
     /**

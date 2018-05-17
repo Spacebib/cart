@@ -202,6 +202,13 @@ class Participant
         });
     }
 
+    public function getEntitlementsHasAvailableVariant()
+    {
+        return array_filter($this->entitlements, function (Entitlement $entitlement) {
+            return !empty($entitlement->getVariantsAvailable());
+        });
+    }
+
     /**
      * @param $id
      * @return bool|Entitlement

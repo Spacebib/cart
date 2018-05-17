@@ -23,4 +23,19 @@ class VariantTest extends TestCase
 
         $this->assertTrue($variant->hasStock());
     }
+
+    public function test_is_available()
+    {
+        $variant = new Variant(1, 't', 1, 0, false);
+
+        $this->assertFalse($variant->isAvailable());
+
+        $variant = new Variant(1, 't', 0, 2, false);
+
+        $this->assertFalse($variant->isAvailable());
+
+        $variant = new Variant(1, 't', 1, 2, false);
+
+        $this->assertTrue($variant->isAvailable());
+    }
 }

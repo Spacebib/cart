@@ -32,7 +32,7 @@ class ProductTest extends TestCase
             '',
             [
                 new Variant(1, 'v1', 10, 1, Money::fromCent('HKD', 100)),
-                new Variant(2, 'v2', 10, 1, Money::fromCent('HKD', 200)),
+                new Variant(2, 'v2', 10, 0, Money::fromCent('HKD', 200)),
                 new Variant(3, 'v3', 0, 1, Money::fromCent('HKD', 300)),
             ]
         );
@@ -56,15 +56,22 @@ class ProductTest extends TestCase
         $this->assertEquals('', $selectedId);
     }
 
+    public function test_can_not_select_is_not_available_variant()
+    {
+        $this->product->setSelectedVariantId(2);
+        $selectedId = $this->product->getSelectedVariantId();
+        $this->assertEquals('', $selectedId);
+
+        $this->product->setSelectedVariantId(3);
+        $selectedId = $this->product->getSelectedVariantId();
+        $this->assertEquals('', $selectedId);
+    }
+
     public function test_get_selected_variant_price()
     {
         $this->product->setSelectedVariantId(1);
         $price = $this->product->getSelectedVariantPrice();
         $this->assertEquals(Money::fromCent('HKD', 100), $price);
-
-        $this->product->setSelectedVariantId(2);
-        $price = $this->product->getSelectedVariantPrice();
-        $this->assertEquals(Money::fromCent('HKD', 200), $price);
 
         $this->product->setSelectedVariantId(0);
         $price = $this->product->getSelectedVariantPrice();
@@ -74,5 +81,11 @@ class ProductTest extends TestCase
     public function test_get_currency()
     {
         $this->assertEquals('HKD', $this->product->getCurrency());
+    }
+
+    public function test_get_variants_is_available()
+    {
+        $this->assertCount(3, $this->product->getVariants());
+        $this->assertCount(1, $this->product->getVariantsAvailable());
     }
 }

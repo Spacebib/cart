@@ -58,7 +58,7 @@ class Product
     public function setSelectedVariantId($variantId)
     {
         foreach ($this->variants as $variant) {
-            if ($variant->getId() == $variantId) {
+            if ($variant->getId() == $variantId && $variant->isAvailable()) {
                 $variant->setSelected(true);
             } else {
                 $variant->setSelected(false);
@@ -90,6 +90,16 @@ class Product
         }
 
         return array_pop($selectedVariants);
+    }
+
+    /**
+     * @return array
+     */
+    public function getVariantsAvailable(): array
+    {
+        return array_filter($this->variants, function (Variant $variant) {
+            return $variant->isAvailable();
+        });
     }
 
     public function getCurrency()

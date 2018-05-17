@@ -34,6 +34,16 @@ class Variant
         $this->selected = $selected;
     }
 
+    public function hasStock()
+    {
+        return $this->stock > 0;
+    }
+
+    public function isAvailable()
+    {
+        return $this->hasStock() && $this->status == 1;
+    }
+
     /**
      * @return mixed
      */

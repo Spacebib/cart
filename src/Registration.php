@@ -157,8 +157,8 @@ class Registration
 
         $entitlementIds = array_map(function (Entitlement $entitlement) {
             return $entitlement->getId();
-        }, $participant->getEntitlementsHasVariantHasStock());
-        
+        }, $participant->getEntitlementsHasAvailableVariant());
+
         $requestIds = array_keys($data);
 
         if (array_diff($entitlementIds, $requestIds)) {
@@ -168,7 +168,12 @@ class Registration
         }
 
         foreach ($data as $entitlementId => $variantId) {
+            if (! in_array($entitlementId, $entitlementIds)) {
+                continue;
+            }
+
             $entitlement = $participant->getEntitlement($entitlementId);
+
             if ($entitlement === false) {
                 continue;
             }

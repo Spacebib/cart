@@ -21,7 +21,7 @@ class Entitlement
     private $imageLarge;
 
     private $imageThumb;
-
+    /** @var Variant[] */
     private $variants;
 
     public function __construct(
@@ -100,6 +100,16 @@ class Entitlement
         });
     }
 
+    /**
+     * @return array
+     */
+    public function getVariantsAvailable(): array
+    {
+        return array_filter($this->variants, function (Variant $variant) {
+            return $variant->isAvailable();
+        });
+    }
+
     public function getSelectedVariantId()
     {
         $selectedVariants = array_filter($this->variants, function (Variant $variant) {
@@ -116,7 +126,7 @@ class Entitlement
     public function setSelectedVariantId($variantId)
     {
         foreach ($this->variants as $variant) {
-            if ($variant->getId() == $variantId) {
+            if ($variant->getId() == $variantId && $variant->isAvailable()) {
                 $variant->setSelected(true);
             } else {
                 $variant->setSelected(false);
