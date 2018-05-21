@@ -152,6 +152,7 @@ class Registration
     public function fillParticipantsEntitlements($trackId, array $data)
     {
         $flag = true;
+        $errors = null;
 
         $participant = $this->getParticipantByTrackId($trackId);
 
@@ -161,10 +162,12 @@ class Registration
 
         $requestIds = array_keys($data);
 
-        if (array_diff($entitlementIds, $requestIds)) {
-            $error = ['entitlements'=>'Please select an option for each item'];
-            $this->setErrorsByTrackId($trackId, $error);
-            $flag = false;
+        if ($lacks = array_diff($entitlementIds, $requestIds)) {
+            array_map(function ($lack) {
+                $errors[$lack] = 'Please select an option for each item';
+            }, $lacks);
+            $this->setErrorsByTrackId($trackId, ['entitlements' => $errors]);
+            return false;
         }
 
         foreach ($data as $entitlementId => $variantId) {
@@ -177,14 +180,17 @@ class Registration
             if ($entitlement === false) {
                 continue;
             }
+
             if (! $variantId) {
-                $error = ['entitlements'=>'Please select an option for each item'];
-                $this->setErrorsByTrackId($trackId, $error);
+                $errors[$entitlementId] = 'Please select an option for each item';
                 $flag = false;
                 continue;
+            } else {
+                $entitlement->setSelectedVariantId($variantId);
             }
-            $entitlement->setSelectedVariantId($variantId);
         }
+
+        $this->setErrorsByTrackId($trackId, ['entitlements' => $errors]);
 
         return $flag;
     }
