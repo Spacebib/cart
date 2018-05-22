@@ -10,6 +10,7 @@ namespace Dilab\Cart\Test\Coupons;
 
 use Dilab\Cart\Coupons\Coupon;
 use Dilab\Cart\Coupons\DiscountType;
+use Dilab\Cart\Exceptions\InvalidDiscountTypeException;
 use Dilab\Cart\Money;
 use PHPUnit\Framework\TestCase;
 
@@ -53,8 +54,8 @@ class CouponTest extends TestCase
 
         $discountedPrice = $this->coupon->apply($originPrice);
 
-        $this->assertEquals(100, $this->coupon->getDiscount()->toCent());
-        $this->assertEquals(intval(1000*0.9), $discountedPrice->toCent());
+        $this->assertEquals(900, $this->coupon->getDiscount()->toCent());
+        $this->assertEquals(intval(1000 - 1000*0.9), $discountedPrice->toCent());
     }
 
     public function test_fixed_discount_above_of_original_price()
@@ -73,5 +74,21 @@ class CouponTest extends TestCase
 
         $this->assertEquals(1000, $this->coupon->getDiscount()->toCent());
         $this->assertEquals(0, $discountedPrice->toCent());
+    }
+    
+    public function test_validate_discount_type()
+    {
+        $originPrice = Money::fromCent('VHD', 1000);
+
+        $this->coupon = new Coupon(
+            1,
+            [1],
+            'fdfd',
+            1000000,
+            '1101'
+        );
+        
+        $this->expectException(InvalidDiscountTypeException::class);
+        $this->coupon->apply($originPrice);
     }
 }

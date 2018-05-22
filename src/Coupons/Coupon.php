@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart\Coupons;
 
+use Dilab\Cart\Exceptions\InvalidDiscountTypeException;
 use Dilab\Cart\Money;
 
 class Coupon
@@ -43,30 +44,47 @@ class Coupon
 
     public function apply(Money $amount)
     {
+        $this->guardDiscount($amount);
+
         if ($this->discountType === DiscountType::FIXVALUE) {
-            $this->discount = $this->discountRate > $amount->toCent()
-                ? $amount
-                : Money::fromCent($amount->getCurrency(), $this->discountRate);
+            $this->discount =  Money::fromCent($amount->getCurrency(), $this->discountRate);
 
             return $amount->minus(Money::fromCent(
                 $amount->getCurrency(),
                 $this->discountRate
             ));
-        }
-
-        if ($this->discountType === DiscountType::PERCENTAGEOFF) {
+        } elseif ($this->discountType === DiscountType::PERCENTAGEOFF) {
             $this->discount = Money::fromCent(
                 $amount->getCurrency(),
-                $amount->toCent() - $amount->toCent()*$this->discountRate/100
+                $amount->toCent()*$this->discountRate/100
             );
 
             return Money::fromCent(
                 $amount->getCurrency(),
-                intval($amount->toCent()*$this->discountRate/100)
+                intval($amount->toCent() - $amount->toCent()*$this->discountRate/100)
             );
         }
 
         return $amount;
+    }
+
+    private function guardDiscount(Money $amount)
+    {
+        if (! in_array($this->discountType, DiscountType::types())) {
+            InvalidDiscountTypeException::throw(
+                sprintf('invalid discount type %s', $this->discountType)
+            );
+        }
+
+        if ($this->discountType === DiscountType::PERCENTAGEOFF) {
+            if ($this->discountRate > 100) {
+                $this->discountRate = 100;
+            }
+        } elseif ($this->discountType === DiscountType::FIXVALUE) {
+            if ($this->discountRate > $amount->toCent()) {
+                $this->discountRate = $amount->toCent();
+            }
+        }
     }
 
     public function getDiscount()

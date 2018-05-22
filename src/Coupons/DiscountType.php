@@ -12,4 +12,11 @@ class DiscountType
 {
     const FIXVALUE = 'fixed';
     const PERCENTAGEOFF = 'precentage';
+
+    public static function types()
+    {
+        $oClass = new \ReflectionClass(__CLASS__);
+
+        return $oClass->getConstants();
+    }
 }
