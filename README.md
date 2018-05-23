@@ -54,13 +54,13 @@ $total = $cart->total()
 + Render a form
 
 ```php
-$registration->renderParticipantForm($trackId);
+$registration->renderParticipant($trackId);
 ```
 
 + Fill a form
 
 ```php
-$registration->fillParticipantForm($trackId, $data);
+$registration->fillParticipant($trackId, $data);
 ```
 
 + Get errors of a participant form

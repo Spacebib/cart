@@ -40,6 +40,15 @@ class AgeRule
             $this->comp = $this->allowedAge['comp'];
             $this->from = $this->allowedAge['from'];
             $this->to = $this->allowedAge['to'];
+
+            if ($this->allowedAge['comp'] == self::GREATER_AND_EQUAL) {
+                $this->to = $this::INFINITE;
+            } elseif ($this->allowedAge['comp'] == self::LESS_AND_EQUAL) {
+                // regardless of compare's value it is 'from' while there is only one edge
+                $this->to = $this->from;
+                $this->from = 1;
+            }
+
             return true;
         }
 

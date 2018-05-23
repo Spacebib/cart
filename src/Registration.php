@@ -132,7 +132,7 @@ class Registration
             return $rule;
         }, $form->getRules()));
 
-        if (!$form->fill($data)) {
+        if (! $form->fill($data)) {
             $this->setErrorsByTrackId($trackId, $form->getErrors());
             return false;
         }
