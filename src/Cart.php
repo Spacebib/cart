@@ -256,10 +256,10 @@ class Cart
         $sortedTickets = $this->tickets();
 
         $sorted = usort($sortedTickets, function (Category $ticket1, Category $ticket2) {
-            if ($ticket1->getPrice() === $ticket2->getPrice()) {
+            if ($ticket1->getPrice()->toCent() === $ticket2->getPrice()->toCent()) {
                 return 0;
             }
-            return $ticket1->getPrice() < $ticket2->getPrice() ? 1 : -1;
+            return $ticket1->getPrice()->toCent() < $ticket2->getPrice()->toCent() ? 1 : -1;
         });
 
         if (! $sorted) {
