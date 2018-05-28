@@ -9,8 +9,8 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
-use Dilab\Cart\Coupon;
-use Dilab\Cart\DiscountType;
+use Dilab\Cart\Coupons\Coupon;
+use Dilab\Cart\Coupons\DiscountType;
 use Dilab\Cart\Money;
 use Dilab\Cart\Participant;
 use Dilab\Cart\Registration;
@@ -114,28 +114,32 @@ class CartTest extends TestCase
 
     public function testCouponDiscount()
     {
+        // price 1000
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
+        //price 10000
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
         $result = $this->cart->total();
-        $this->assertEquals(Money::fromCent('SGD', 100000), $result);
+        $this->assertEquals(Money::fromCent('SGD', 102000), $result);
 
         // apply coupon
-        $this->expectException(\RuntimeException::class);
-        $this->cart->applyCoupon();
-
         $coupon = new Coupon(
             1,
-            1,
+            [1, 2],
             DiscountType::FIXVALUE,
             10,
-            1101
+            1101,
+            10
         );
+
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(100000-10, $this->cart->total()->toCent());
-        $this->assertEquals(10, $this->cart->getDiscount()->toCent());
+        $this->assertEquals(102000-40, $this->cart->total()->toCent());
+        $this->assertEquals(40, $this->cart->getDiscount()->toCent());
+        $this->assertEquals(4, $this->cart->usedCouponQuantity());
         // cancel coupon
         $this->assertTrue($this->cart->setCoupon(null)->cancelCoupon());
-        $this->assertEquals(100000, $this->cart->total()->toCent());
+        $this->assertEquals(102000, $this->cart->total()->toCent());
         $this->assertEquals(0, $this->cart->getDiscount()->toCent());
+        $this->assertEquals(0, $this->cart->usedCouponQuantity());
     }
 
     public function testProducts()
@@ -158,5 +162,28 @@ class CartTest extends TestCase
 
         $this->cart->removeProduct(1, 1);
         $this->assertEquals(Money::fromCent('SGD', 100000), $this->cart->total());
+    }
+
+    public function test_will_apply_the_most_expensive_ticket_when_coupon_only_one()
+    {
+        // price 1000
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
+        //price 10000
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+
+        // apply coupon
+        $coupon = new Coupon(
+            1,
+            [1, 2],
+            DiscountType::FIXVALUE,
+            10000,
+            1101,
+            1
+        );
+
+        $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
+        $this->assertEquals(102000-10000, $this->cart->total()->toCent());
+        $this->assertEquals(10000, $this->cart->getDiscount()->toCent());
+        $this->assertEquals(1, $this->cart->usedCouponQuantity());
     }
 }

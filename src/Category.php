@@ -40,9 +40,10 @@ class Category
 
     public function applyCoupon(Coupon $coupon)
     {
-        if (! in_array($this->id, $coupon->getCategoryIds())) {
+        if (! $coupon->canApply($this->id)) {
             return false;
         }
+
         $this->price = $coupon->apply($this->originalPrice);
 
         return true;
@@ -58,6 +59,11 @@ class Category
     public function getDiscount()
     {
         return $this->originalPrice->minus($this->price);
+    }
+
+    public function isDiscounted()
+    {
+        return $this->getDiscount()->toCent() > 0;
     }
 
     /**

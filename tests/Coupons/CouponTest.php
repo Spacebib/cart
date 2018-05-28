@@ -26,7 +26,8 @@ class CouponTest extends TestCase
             [1, 2],
             DiscountType::FIXVALUE,
             10,
-            '1101'
+            '1101',
+            10
         );
     }
 
@@ -49,7 +50,8 @@ class CouponTest extends TestCase
             [1],
             DiscountType::PERCENTAGEOFF,
             90,
-            '1101'
+            '1101',
+            10
         );
 
         $discountedPrice = $this->coupon->apply($originPrice);
@@ -68,7 +70,8 @@ class CouponTest extends TestCase
             [1],
             DiscountType::FIXVALUE,
             1000000,
-            '1101'
+            '1101',
+            10
         );
         $discountedPrice = $this->coupon->apply($originPrice);
 
@@ -85,10 +88,47 @@ class CouponTest extends TestCase
             [1],
             'fdfd',
             1000000,
-            '1101'
+            '1101',
+            10
         );
         
         $this->expectException(InvalidDiscountTypeException::class);
         $this->coupon->apply($originPrice);
+    }
+
+    public function test_category_can_apply_this_coupon()
+    {
+        $this->coupon = new Coupon(
+            1,
+            [1],
+            'fdfd',
+            1000000,
+            '1101',
+            0
+        );
+
+        $this->assertFalse($this->coupon->canApply(1));
+
+        $this->coupon = new Coupon(
+            1,
+            [1],
+            'fdfd',
+            1000000,
+            '1101',
+            10
+        );
+
+        $this->assertFalse($this->coupon->canApply(2));
+
+        $this->coupon = new Coupon(
+            1,
+            [1],
+            'fdfd',
+            1000000,
+            '1101',
+            10
+        );
+
+        $this->assertTrue($this->coupon->canApply(1));
     }
 }

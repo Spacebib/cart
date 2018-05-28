@@ -25,6 +25,8 @@ class Coupon
     /** @var  Money */
     private $discount;
 
+    private $stock;
+
     /**
      * Coupon constructor.
      * @param $id
@@ -32,22 +34,32 @@ class Coupon
      * @param $discountType
      * @param $discountRate
      * @param $code
+     * @param $stock
      */
-    public function __construct($id, array $categoryIds, $discountType, $discountRate, $code)
-    {
+    public function __construct(
+        $id,
+        array $categoryIds,
+        $discountType,
+        $discountRate,
+        $code,
+        $stock
+    ) {
         $this->id = $id;
         $this->categoryIds = $categoryIds;
         $this->discountType = $discountType;
         $this->discountRate = $discountRate;
         $this->code = $code;
+        $this->stock = $stock;
     }
 
     public function apply(Money $amount)
     {
         $this->guardDiscount($amount);
 
+        $this->stock--;
+
         if ($this->discountType === DiscountType::FIXVALUE) {
-            $this->discount =  Money::fromCent($amount->getCurrency(), $this->discountRate);
+            $this->discount = Money::fromCent($amount->getCurrency(), $this->discountRate);
 
             return $amount->minus(Money::fromCent(
                 $amount->getCurrency(),
@@ -66,6 +78,11 @@ class Coupon
         }
 
         return $amount;
+    }
+
+    public function canApply($categoryId)
+    {
+        return $this->stock > 0 && in_array($categoryId, $this->getCategoryIds());
     }
 
     private function guardDiscount(Money $amount)
@@ -170,5 +187,13 @@ class Coupon
     public function setCode($code)
     {
         $this->code = $code;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStock()
+    {
+        return $this->stock;
     }
 }

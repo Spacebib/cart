@@ -165,17 +165,19 @@ class Cart
         if (! $this->coupon instanceof Coupon) {
             throw new \RuntimeException('please call setCoupon first');
         }
-        // coupon 按顺序给每张票都尝试着用一次， 若成功了则结束并返回
+        // 将票按价格降序排列，coupon 按顺序给每张票都尝试着用一次
+        $sortedTickets = $this->sortTicketsByPrice();
+
         $flag = false;
+
         array_map(function (Category $ticket) use (&$flag) {
-            if ($flag) {
-                return $ticket;
-            }
+
             if ($ticket->applyCoupon($this->coupon)) {
                 $flag = true;
             }
+
             return $ticket;
-        }, $this->tickets());
+        }, $sortedTickets);
 
         return $flag;
     }
@@ -196,6 +198,13 @@ class Cart
         return array_reduce($this->tickets(), function ($carry, Category $ticket) {
             return $ticket->getDiscount()->plus($carry);
         }, Money::fromCent($currency, 0));
+    }
+
+    public function usedCouponQuantity(): int
+    {
+        return array_reduce($this->tickets(), function ($carry, Category $ticket) {
+            return $carry + intval($ticket->isDiscounted());
+        }, 0);
     }
 
     public function addProduct(Product $product)
@@ -240,5 +249,23 @@ class Cart
     public function currency()
     {
         return $this->event->getCurrency();
+    }
+
+    private function sortTicketsByPrice()
+    {
+        $sortedTickets = $this->tickets();
+
+        $sorted = usort($sortedTickets, function (Category $ticket1, Category $ticket2) {
+            if ($ticket1->getPrice() === $ticket2->getPrice()) {
+                return 0;
+            }
+            return $ticket1->getPrice() < $ticket2->getPrice() ? 1 : -1;
+        });
+
+        if (! $sorted) {
+            throw new \RuntimeException('can not sort tickets');
+        }
+
+        return $sortedTickets;
     }
 }
