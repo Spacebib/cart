@@ -61,11 +61,9 @@ class Registration
 
         $fundraises = $this->renderParticipantDonation($trackId);
 
-        return [
-            'form' => $form,
-            'entitlements' => $entitlements,
-            'fundraises' => $fundraises
-        ];
+        $customFields = $this->renderCustomFields($trackId);
+
+        return compact('form', 'entitlements', 'fundraises', 'customFields');
     }
 
     public function fillParticipant($trackId, array $data)
@@ -76,18 +74,64 @@ class Registration
         $participant = $this->getParticipantByTrackId($trackId);
 
         $fillForm = $this->fillParticipantForm($trackId, $data['form']);
-        $fillEntitlements = $this->fillParticipantsEntitlements($trackId, $data['entitlements']);
-        $fillDonation = $this->fillParticipantDonation($trackId, $data['donation']);
+        $fillEntitlements = $this->fillParticipantsEntitlements($trackId, self::getOrEmptyArray($data, 'entitlements'));
+        $fillDonation = $this->fillParticipantDonation($trackId, self::getOrEmptyArray($data, 'donation'));
+        $fillCustomFields = $this->fillCustomFields($trackId, self::getOrEmptyArray($data, 'customFields'));
 
-        if ($fillForm && $fillEntitlements && $fillDonation) {
+        if ($fillForm && $fillEntitlements && $fillDonation && $fillCustomFields) {
             $participant->setIsDirty(true);
 
             $participant->setIsCompleted(true);
 
             return true;
         }
+
         $participant->setIsCompleted(false);
+
         return false;
+    }
+
+    public function getErrors($trackId)
+    {
+        return $this->errors[$trackId];
+    }
+
+    /**
+     * @return integer / string
+     */
+    public function redirectTo()
+    {
+        $inCompletedParticipants = array_filter($this->participants, function (Participant $participant) {
+            return !$participant->isCompleted();
+        });
+
+        if (empty($inCompletedParticipants)) {
+            return $this->hasProducts ? self::ADDON : self::SUMMARY;
+        }
+
+        return ($first = array_shift($inCompletedParticipants))->getTrackId();
+    }
+
+    public function isDirty($trackId)
+    {
+        return $this->getParticipantByTrackId($trackId)->isDirty();
+    }
+
+    public function isTouched($trackId)
+    {
+        return $this->getParticipantByTrackId($trackId)->isTouched();
+    }
+
+    public function isCompleted($trackId)
+    {
+        return $this->getParticipantByTrackId($trackId)->isCompleted();
+    }
+
+    public function getParticipantsByCategoryId($categoryId)
+    {
+        return array_filter($this->participants, function (Participant $participant) use ($categoryId) {
+            return $participant->getCategoryId()  === $categoryId;
+        });
     }
 
     /**
@@ -226,47 +270,22 @@ class Registration
         return $flag;
     }
 
-    public function getErrors($trackId)
+    private function renderCustomFields($trackId)
     {
-        return $this->errors[$trackId];
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $form = $participant->getCustomFields();
+
+        return $form->getFields();
     }
 
-    /**
-     * @return integer / string
-     */
-    public function redirectTo()
+    private function fillCustomFields($trackId, array $data)
     {
-        $inCompletedParticipants = array_filter($this->participants, function (Participant $participant) {
-            return !$participant->isCompleted();
-        });
+        $participant = $this->getParticipantByTrackId($trackId);
 
-        if (empty($inCompletedParticipants)) {
-            return $this->hasProducts ? self::ADDON : self::SUMMARY;
-        }
+        $form = $participant->getCustomFields();
 
-        return ($first = array_shift($inCompletedParticipants))->getTrackId();
-    }
-
-    public function isDirty($trackId)
-    {
-        return $this->getParticipantByTrackId($trackId)->isDirty();
-    }
-
-    public function isTouched($trackId)
-    {
-        return $this->getParticipantByTrackId($trackId)->isTouched();
-    }
-
-    public function isCompleted($trackId)
-    {
-        return $this->getParticipantByTrackId($trackId)->isCompleted();
-    }
-
-    public function getParticipantsByCategoryId($categoryId)
-    {
-        return array_filter($this->participants, function (Participant $participant) use ($categoryId) {
-            return $participant->getCategoryId()  === $categoryId;
-        });
+        return $form->fill($data);
     }
 
     public function getParticipants()

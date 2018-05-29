@@ -117,7 +117,8 @@ class Event
                                     ),
                                     $currency
                                 );
-                            }, self::getOrEmptyArray($participant, 'fundraises'))
+                            }, self::getOrEmptyArray($participant, 'fundraises')),
+                            new CustomFields(self::getOrEmptyArray($participant, 'custom_fields'))
                         );
                     },
                     $participantsData,

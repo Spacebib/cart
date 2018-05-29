@@ -44,12 +44,18 @@ class RegistrationTest extends TestCase
         $expected = [
             'form' => FormDataFactory::emptyData(),
             'entitlements' => EntitlementFactory::entitlements(),
-            'fundraises' => DonationFactory::emptyDonation()
+            'fundraises' => DonationFactory::emptyDonation(),
+            'customFields' => []
         ];
+
         $result = $this->registration->renderParticipant($trackId);
+
         $this->assertFalse($this->registration->isDirty($trackId));
+
         $this->assertFalse($this->registration->isCompleted($trackId));
+
         $this->assertTrue($this->registration->isTouched($trackId));
+
         $this->assertEquals($expected, $result);
     }
 
@@ -62,8 +68,11 @@ class RegistrationTest extends TestCase
             'entitlements' => EntitlementFactory::postData(),
             'donation' => []
         ];
+
         $this->registration->renderParticipant($trackId);
+
         $this->assertFalse($this->registration->fillParticipant($trackId, $data));
+
         $this->assertFalse($this->registration->isCompleted($trackId));
 
         $data = [
@@ -73,34 +82,48 @@ class RegistrationTest extends TestCase
 
         ];
         $this->registration->renderParticipant($trackId);
+
         $this->assertTrue($this->registration->fillParticipant($trackId, $data));
+
         $this->assertTrue($this->registration->isCompleted($trackId));
     }
 
     public function testRedirectTo()
     {
         $trackId = 0;
+
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => EntitlementFactory::postData(),
             'donation' => DonationFactory::postData()
         ];
-        $this->assertFalse($this->registration->isCompleted($trackId));
-        $this->registration->renderParticipant($trackId);
-        $this->assertTrue($this->registration->fillParticipant($trackId, $data));
-        $this->assertTrue($this->registration->isCompleted($trackId));
-        $this->assertEquals(1, $this->registration->redirectTo());
 
+        $this->assertFalse($this->registration->isCompleted($trackId));
+
+        $this->registration->renderParticipant($trackId);
+
+        $this->assertTrue($this->registration->fillParticipant($trackId, $data));
+
+        $this->assertTrue($this->registration->isCompleted($trackId));
+
+        $this->assertEquals(1, $this->registration->redirectTo());
+        // next participant
         $trackId = 1;
+
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => [],
             'donation' => []
         ];
+
         $this->assertFalse($this->registration->isCompleted($trackId));
+
         $this->registration->renderParticipant($trackId);
+
         $this->assertTrue($this->registration->fillParticipant($trackId, $data));
+
         $this->assertTrue($this->registration->isCompleted($trackId));
+
         $this->assertEquals(Registration::SUMMARY, $this->registration->redirectTo());
     }
 
@@ -181,7 +204,7 @@ class RegistrationTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_fill_entitlement_with_disabled_variant()
+    public function test_fill_entitlement_without_available_variant_should_not_valid()
     {
         // arrange data
         $data = [
@@ -249,22 +272,31 @@ class RegistrationTest extends TestCase
             'products'=> [
             ]
         ];
+
         $event = Event::init($data);
+
         $cart = new Cart('xuding@spacebib.com', $event);
+
         $cart->addTicket($event->getCategoryById(1), 1);
+
         $this->registration = new Registration($cart->getParticipants());
 
         $trackId = 0;
+
         $this->registration->renderParticipantEntitlements($trackId);
 
         $requestData = [];
+
         $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+
         $this->assertTrue($result);
 
         $requestData = [
             1 => null
         ];
+
         $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+
         $this->assertTrue($result);
     }
 }

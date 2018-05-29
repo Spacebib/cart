@@ -74,7 +74,8 @@ class Cart
                 $participant->getRules(),
                 clone $participant->getForm(),
                 $participant->getEntitlements(),
-                $participant->getFundraises()
+                $participant->getFundraises(),
+                clone $participant->getCustomFields()
             );
 
             $newParticipant->setTrackId($key);

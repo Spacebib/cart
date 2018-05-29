@@ -101,17 +101,6 @@ class CartTest extends TestCase
         $this->assertEquals(Money::fromCent('SGD', 100000), $result);
     }
 
-    public function testSerialization()
-    {
-        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
-        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
-        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-
-        $serialized = $this->cart->serialize();
-        $unserialized = Cart::deserialize($serialized);
-        $this->assertEquals($unserialized, $this->cart);
-    }
-
     public function testCouponDiscount()
     {
         // price 1000

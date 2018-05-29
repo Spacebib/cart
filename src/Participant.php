@@ -39,6 +39,11 @@ class Participant
     private $fundraises;
 
     /**
+     * @var CustomFields
+     */
+    private $customFields;
+
+    /**
      * Participant constructor.
      * @param $id
      * @param $name
@@ -47,6 +52,7 @@ class Participant
      * @param Form $form
      * @param array $entitlements
      * @param array $fundraises
+     * @param CustomFields $customFields
      * @internal param Donation|null $donation
      */
     public function __construct(
@@ -56,7 +62,8 @@ class Participant
         array $rules,
         Form $form,
         array $entitlements = [],
-        array $fundraises = []
+        array $fundraises = [],
+        CustomFields $customFields = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -65,6 +72,83 @@ class Participant
         $this->category_id = $category_id;
         $this->entitlements = $entitlements;
         $this->fundraises = $fundraises;
+        $this->customFields = $customFields;
+    }
+
+    public function getEntitlementsHasVariant()
+    {
+        return array_filter($this->entitlements, function (Entitlement $entitlement) {
+            return !empty($entitlement->getVariants());
+        });
+    }
+
+    public function getEntitlementsHasVariantHasStock()
+    {
+        return array_filter($this->entitlements, function (Entitlement $entitlement) {
+            return !empty($entitlement->getVariantsHasStock());
+        });
+    }
+
+    public function getEntitlementsHasAvailableVariant()
+    {
+        return array_filter($this->entitlements, function (Entitlement $entitlement) {
+            return !empty($entitlement->getVariantsAvailable());
+        });
+    }
+
+    /**
+     * @param $id
+     * @return bool|Entitlement
+     */
+    public function getEntitlement($id)
+    {
+        foreach ($this->entitlements as $entitlement) {
+            if ($entitlement->getId() === $id) {
+                return $entitlement;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return Donation[]
+     */
+    public function getFundraises()
+    {
+        return $this->fundraises;
+    }
+
+    public function hasFundraises()
+    {
+        if (! isset($this->fundraises[0])) {
+            return false;
+        }
+        $donation = $this->fundraises[0];
+        return $donation instanceof Donation;
+    }
+
+    public function getFundraisesAmount()
+    {
+        $donation = $this->fundraises[0];
+
+        return array_reduce($this->fundraises, function ($carry, Donation $donation) {
+            return $donation->getAmount()->plus($carry);
+        }, Money::fromCent($donation->getCurrency(), 0));
+    }
+
+    public function getShowName()
+    {
+        $data = $this->form->getData();
+
+        if (isset($data['first_name']) && !empty($data['first_name'])) {
+            return implode(" ", [
+                self::getOrEmpty($data, 'first_name'),
+                self::getOrEmpty($data, 'middle_name'),
+                self::getOrEmpty($data, 'last_name'),
+            ]);
+        }
+
+        return $this->name;
     }
 
     /**
@@ -90,7 +174,6 @@ class Participant
     {
         return $this->rules;
     }
-
 
     /**
      * @return mixed
@@ -188,79 +271,19 @@ class Participant
         return $this->entitlements;
     }
 
-    public function getEntitlementsHasVariant()
+    /**
+     * @return CustomFields
+     */
+    public function getCustomFields(): CustomFields
     {
-        return array_filter($this->entitlements, function (Entitlement $entitlement) {
-            return !empty($entitlement->getVariants());
-        });
-    }
-
-    public function getEntitlementsHasVariantHasStock()
-    {
-        return array_filter($this->entitlements, function (Entitlement $entitlement) {
-            return !empty($entitlement->getVariantsHasStock());
-        });
-    }
-
-    public function getEntitlementsHasAvailableVariant()
-    {
-        return array_filter($this->entitlements, function (Entitlement $entitlement) {
-            return !empty($entitlement->getVariantsAvailable());
-        });
+        return $this->customFields;
     }
 
     /**
-     * @param $id
-     * @return bool|Entitlement
+     * @param CustomFields $customFields
      */
-    public function getEntitlement($id)
+    public function setCustomFields(CustomFields $customFields)
     {
-        foreach ($this->entitlements as $entitlement) {
-            if ($entitlement->getId() === $id) {
-                return $entitlement;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return Donation[]
-     */
-    public function getFundraises()
-    {
-        return $this->fundraises;
-    }
-
-    public function hasFundraises()
-    {
-        if (! isset($this->fundraises[0])) {
-            return false;
-        }
-        $donation = $this->fundraises[0];
-        return $donation instanceof Donation;
-    }
-
-    public function getFundraisesAmount()
-    {
-        $donation = $this->fundraises[0];
-
-        return array_reduce($this->fundraises, function ($carry, Donation $donation) {
-            return $donation->getAmount()->plus($carry);
-        }, Money::fromCent($donation->getCurrency(), 0));
-    }
-
-    public function getShowName()
-    {
-        $data = $this->form->getData();
-
-        if (isset($data['first_name']) && !empty($data['first_name'])) {
-            return implode(" ", [
-                self::getOrEmpty($data, 'first_name'),
-                self::getOrEmpty($data, 'middle_name'),
-                self::getOrEmpty($data, 'last_name'),
-            ]);
-        }
-
-        return $this->name;
+        $this->customFields = $customFields;
     }
 }
