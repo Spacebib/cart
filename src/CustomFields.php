@@ -47,9 +47,6 @@ class CustomFields
 
     private function readWhatIsDefined($data)
     {
-        if (array_diff_key($this->fields, $data)) {
-            throw new \RuntimeException('invalid custom fields data');
-        }
         return array_filter($data, function ($key) {
             return in_array($key, array_keys($this->fields));
         }, ARRAY_FILTER_USE_KEY);
