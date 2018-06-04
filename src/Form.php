@@ -9,9 +9,6 @@
 namespace Dilab\Cart;
 
 use \Dilab\Cart\Rules\Rule as RuleInterface;
-
-use Dilab\Cart\Rules\RuleGender;
-use Dilab\Cart\Rules\RuleLength;
 use Dilab\Cart\Traits\CartHelper;
 
 class Form

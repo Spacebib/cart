@@ -23,6 +23,8 @@ class CustomFields
         $fields = $this->transformFields($fields);
 
         $this->fields = $fields;
+
+        $this->data = $fields;
     }
 
     public function fill($data)
@@ -82,5 +84,13 @@ class CustomFields
     public function getFields(): array
     {
         return $this->fields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

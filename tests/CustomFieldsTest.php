@@ -132,11 +132,11 @@ class CustomFieldsTest extends TestCase
 
     public function test_fill_with_invalid_key()
     {
-        $data = ['untitled' => 1, 'untitled_2' => 'First Choice'];
-
-        $this->expectException(\RuntimeException::class);
+        $data = ['untitled' => 1, 'unti' => 'First Choice'];
 
         $this->form->fill($data);
+
+        $this->assertArrayNotHasKey('unti', $this->form->getData());
     }
 
     public function test_fill_with_required()
