@@ -12,8 +12,6 @@ class CustomFields
 {
     private $fields;
 
-    private $data;
-
     /**
      * CustomFields constructor.
      * @param $fields
@@ -23,15 +21,11 @@ class CustomFields
         $fields = $this->transformFields($fields);
 
         $this->fields = $fields;
-
-        $this->data = $fields;
     }
 
     public function fill($data)
     {
         $data = $this->readWhatIsDefined($data);
-
-        $this->data = $data;
 
         return $this->valid($data);
     }
@@ -84,13 +78,5 @@ class CustomFields
     public function getFields(): array
     {
         return $this->fields;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 }

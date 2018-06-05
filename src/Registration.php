@@ -276,12 +276,6 @@ class Registration
 
         $form = $participant->getCustomFields();
 
-        $wasTouched = $participant->isTouched();
-
-        if ($wasTouched) {
-            return $form->getData();
-        }
-
         return $form->getFields();
     }
 

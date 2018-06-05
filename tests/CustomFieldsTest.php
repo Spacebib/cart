@@ -136,7 +136,7 @@ class CustomFieldsTest extends TestCase
 
         $this->form->fill($data);
 
-        $this->assertArrayNotHasKey('unti', $this->form->getData());
+        $this->assertArrayNotHasKey('unti', $this->form->getFields());
     }
 
     public function test_fill_with_required()
