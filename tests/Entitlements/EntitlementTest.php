@@ -55,17 +55,6 @@ class EntitlementTest extends TestCase
         $this->assertEquals('', $selectedId);
     }
 
-    public function test_can_not_select_is_not_available_variant()
-    {
-        $this->entitlement->setSelectedVariantId(2);
-        $selectedId = $this->entitlement->getSelectedVariantId();
-        $this->assertEquals('', $selectedId);
-
-        $this->entitlement->setSelectedVariantId(3);
-        $selectedId = $this->entitlement->getSelectedVariantId();
-        $this->assertEquals('', $selectedId);
-    }
-
     public function test_get_variants_has_stock()
     {
         $this->assertCount(3, $this->entitlement->getVariants());

@@ -153,7 +153,6 @@ class Registration
             return $form->getData();
         }
         return $form->getFields();
-//        return $this->initialViewData($participant);
     }
 
     /**

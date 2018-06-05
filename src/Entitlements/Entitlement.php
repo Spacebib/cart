@@ -125,8 +125,12 @@ class Entitlement
 
     public function setSelectedVariantId($variantId)
     {
+        /**
+         * For handling edit,
+         * don't deny to select unavailable variant here
+         */
         foreach ($this->variants as $variant) {
-            if ($variant->getId() == $variantId && $variant->isAvailable()) {
+            if ($variant->getId() == $variantId) {
                 $variant->setSelected(true);
             } else {
                 $variant->setSelected(false);
