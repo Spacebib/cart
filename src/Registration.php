@@ -55,11 +55,11 @@ class Registration
 
     public function renderParticipant($trackId)
     {
-        $form = $this->renderParticipantForm($trackId);
+        $form = $this->renderForm($trackId);
 
-        $entitlements = $this->renderParticipantEntitlements($trackId);
+        $entitlements = $this->renderEntitlements($trackId);
 
-        $fundraises = $this->renderParticipantDonation($trackId);
+        $fundraises = $this->renderDonation($trackId);
 
         $customFields = $this->renderCustomFields($trackId);
 
@@ -73,14 +73,14 @@ class Registration
 
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $fillForm = $this->fillParticipantForm($trackId, $data['form']);
-        $fillEntitlements = $this->fillParticipantsEntitlements($trackId, self::getOrEmptyArray($data, 'entitlements'));
-        $fillDonation = $this->fillParticipantDonation($trackId, self::getOrEmptyArray($data, 'donation'));
+        $fillForm = $this->fillForm($trackId, $data['form']);
+        $fillEntitlements = $this->fillEntitlements($trackId, self::getOrEmptyArray($data, 'entitlements'));
+        $fillDonation = $this->fillDonation($trackId, self::getOrEmptyArray($data, 'donation'));
         $fillCustomFields = $this->fillCustomFields($trackId, self::getOrEmptyArray($data, 'customFields'));
 
-        if ($fillForm && $fillEntitlements && $fillDonation && $fillCustomFields) {
-            $participant->setIsDirty(true);
+        $participant->setIsDirty(true);
 
+        if ($fillForm && $fillEntitlements && $fillDonation && $fillCustomFields) {
             $participant->setIsCompleted(true);
 
             return true;
@@ -139,7 +139,7 @@ class Registration
      * @param $trackId
      * @return mixed
      */
-    public function renderParticipantForm($trackId)
+    public function renderForm($trackId)
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
@@ -161,7 +161,7 @@ class Registration
      * @param array $data
      * @return boolean
      */
-    public function fillParticipantForm($trackId, array $data)
+    public function fillForm($trackId, array $data)
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
@@ -184,7 +184,7 @@ class Registration
         return true;
     }
 
-    public function renderParticipantEntitlements($trackId)
+    public function renderEntitlements($trackId)
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
@@ -193,7 +193,7 @@ class Registration
         return $entitlements;
     }
 
-    public function fillParticipantsEntitlements($trackId, array $data)
+    public function fillEntitlements($trackId, array $data)
     {
         $flag = true;
         $errors = null;
@@ -239,7 +239,7 @@ class Registration
         return $flag;
     }
 
-    public function renderParticipantDonation($trackId)
+    public function renderDonation($trackId)
     {
         $participant = $this->getParticipantByTrackId($trackId);
 
@@ -248,7 +248,7 @@ class Registration
         return $fundraises;
     }
 
-    public function fillParticipantDonation($trackId, array $data)
+    public function fillDonation($trackId, array $data)
     {
         $flag = true;
 

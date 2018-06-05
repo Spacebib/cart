@@ -39,28 +39,27 @@ class RuleNricTest extends TestCase
     {
         $trackId = 0;
         $data = FormDataFactory::correctData();
-        $this->registration->renderParticipantForm($trackId);
-        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
+        $this->registration->renderForm($trackId);
+        $this->assertTrue($this->registration->fillForm($trackId, $data));
 
         $trackId = 1;
         $data = FormDataFactory::correctData();
-        $this->registration->renderParticipantForm($trackId);
-        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
+        $this->registration->renderForm($trackId);
+        $this->assertTrue($this->registration->fillForm($trackId, $data));
 
         $trackId = 2;
         $data = FormDataFactory::correctData();
-        $this->registration->renderParticipantForm($trackId);
-        $this->assertFalse($this->registration->fillParticipantForm($trackId, $data));
+        $this->registration->renderForm($trackId);
+        $this->assertFalse($this->registration->fillForm($trackId, $data));
 
         $trackId = 3;
         $data = FormDataFactory::correctData();
-        $this->registration->renderParticipantForm($trackId);
-        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
+        $this->registration->renderForm($trackId);
+        $this->assertTrue($this->registration->fillForm($trackId, $data));
     }
 
     public function tearDown()
     {
         $this->registration=null;
     }
-
 }

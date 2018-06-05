@@ -67,4 +67,13 @@ trait CartHelper
         $age = self::getAge($dob);
         return $age >= 18;
     }
+
+    public static function allIsTrue(...$args)
+    {
+        if (count(array_unique($args)) === 1) {
+            return current($args);
+        }
+
+        return false;
+    }
 }

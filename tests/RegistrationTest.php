@@ -132,8 +132,8 @@ class RegistrationTest extends TestCase
         $trackId = 0;
         $data = FormDataFactory::correctData();
         $this->assertFalse($this->registration->isCompleted($trackId));
-        $this->registration->renderParticipantForm($trackId);
-        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
+        $this->registration->renderForm($trackId);
+        $this->assertTrue($this->registration->fillForm($trackId, $data));
 
         $serialized = $this->registration->serialize();
         $unserialized = Registration::deserialize($serialized);
@@ -153,11 +153,11 @@ class RegistrationTest extends TestCase
             'name_on_bib' => '',
             'gender' => '',
         ];
-        $this->assertEquals($expected, $this->registration->renderParticipantForm($trackId));
+        $this->assertEquals($expected, $this->registration->renderForm($trackId));
 
         $trackId = 0;
         $expected = FormDataFactory::emptyData();
-        $result = $this->registration->renderParticipantForm($trackId);
+        $result = $this->registration->renderForm($trackId);
         $this->assertEquals($expected, $result);
 
         $trackId = 1;
@@ -171,9 +171,9 @@ class RegistrationTest extends TestCase
             'name_on_bib' => 'Xu Ding',
             'gender' => 'male'
         ];
-        $this->registration->renderParticipantForm($trackId);
-        $this->assertTrue($this->registration->fillParticipantForm($trackId, $data));
-        $result = $this->registration->renderParticipantForm($trackId);
+        $this->registration->renderForm($trackId);
+        $this->assertTrue($this->registration->fillForm($trackId, $data));
+        $result = $this->registration->renderForm($trackId);
         $this->assertEquals($data, $result);
     }
 
@@ -181,18 +181,18 @@ class RegistrationTest extends TestCase
     {
         $trackId = 0;
         $expected = EntitlementFactory::entitlements();
-        $result = $this->registration->renderParticipantEntitlements($trackId);
+        $result = $this->registration->renderEntitlements($trackId);
         $this->assertEquals($expected, $result);
 
         $requestData = [];
-        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $result = $this->registration->fillEntitlements($trackId, $requestData);
         $this->assertFalse($result);
         $this->assertArrayHasKey('entitlements', $this->registration->getErrors($trackId));
 
         $requestData = [
             1 => ''
         ];
-        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $result = $this->registration->fillEntitlements($trackId, $requestData);
         $this->assertFalse($result);
         $this->assertArrayHasKey('entitlements', $this->registration->getErrors($trackId));
 
@@ -200,7 +200,7 @@ class RegistrationTest extends TestCase
             1 => 1,
             2 => 3
         ];
-        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $result = $this->registration->fillEntitlements($trackId, $requestData);
         $this->assertTrue($result);
     }
 
@@ -283,11 +283,11 @@ class RegistrationTest extends TestCase
 
         $trackId = 0;
 
-        $this->registration->renderParticipantEntitlements($trackId);
+        $this->registration->renderEntitlements($trackId);
 
         $requestData = [];
 
-        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $result = $this->registration->fillEntitlements($trackId, $requestData);
 
         $this->assertTrue($result);
 
@@ -295,7 +295,7 @@ class RegistrationTest extends TestCase
             1 => null
         ];
 
-        $result = $this->registration->fillParticipantsEntitlements($trackId, $requestData);
+        $result = $this->registration->fillEntitlements($trackId, $requestData);
 
         $this->assertTrue($result);
     }

@@ -12,7 +12,7 @@ $event = Event::init($data)
 + Create Cart
 
 ```php
-$cart = new Cart('xuding@spacebib.com')
+$cart = new Cart('xuding@spacebib.com', $event)
 ```
 
 + Create Registration Form
@@ -49,6 +49,43 @@ $subTotal = $cart->subTotal()
 $total = $cart->total()
 ```
 
++ Add product to cart 
+
+```php
+$cart->addProduct($product)
+```
+
++ Remove product from cart
+
+```php
+$cart->removeProduct($productId, $productVariantId)
+```
+
++ Get product details
+
+```php
+$cart->getProducts()
+$cart->countProducts()
+$cart->productsSubtotal()
+```
+
++ Coupon  
+
+The cart can only use one coupon, but a coupon can be used for multiple tickets 
+```php
+$cart->getCoupon()
+$cart->setCoupon($coupon)
+$cart->applyCoupon()
+$cart->canceloCoupon()
+$cart->getDiscount()
+$cart->usedCouponQuantity()
+```
+
++ Get currency
+
+```php
+$cart->currency()   
+```
 ## Registration API
 
 + Render a form
