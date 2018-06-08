@@ -52,18 +52,19 @@ class CustomFields
     {
         $flag = true;
 
-        foreach ($data as $key => $value) {
+        foreach ($this->fields as $key => $field) {
+            $value = data_get($data, $key);
             $this->fields[$key]['value'] = $value;
             $this->fields[$key]['valid'] = true;
 
-            if ($this->fields[$key]['validation']['required']['enabled'] && ! $value) {
+            if (data_get($field, 'validation.required.enabled') && ! $value) {
                 $this->fields[$key]['valid'] = false;
-                $this->fields[$key]['error'] = $this->fields[$key]['validation']['required']['error'];
+                $this->fields[$key]['error'] = data_get($field, 'validation.required.error');
                 $flag = false;
-            } elseif ($this->fields[$key]['validation']['regex']['enabled']) {
-                if (1 !== preg_match("/".$this->fields[$key]['validation']['regex']['pattern']."/", $value)) {
+            } elseif (data_get($field, 'validation.regex.enabled')) {
+                if (1 !== preg_match("/".data_get($field, 'validation.regex.pattern')."/", $value)) {
                     $this->fields[$key]['valid'] = false;
-                    $this->fields[$key]['error'] = $this->fields[$key]['validation']['regex']['error'];
+                    $this->fields[$key]['error'] = data_get($field, 'validation.regex.enabled');
                     $flag = false;
                 }
             }

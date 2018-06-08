@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "zumba/json-serializer": "^2.2"
+        "zumba/json-serializer": "^2.2",
+        "illuminate/support": "^5.6"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "3.2",
