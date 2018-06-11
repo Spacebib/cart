@@ -12,6 +12,9 @@ use Dilab\Cart\Money;
 
 class Variant
 {
+    const ACTIVE = 'active';
+    const INACTIVE = 'inactive';
+
     private $id;
 
     private $status;
@@ -41,7 +44,7 @@ class Variant
 
     public function isAvailable()
     {
-        return $this->hasStock() && $this->status == 1;
+        return $this->hasStock() && $this->status == self::ACTIVE;
     }
 
     /**

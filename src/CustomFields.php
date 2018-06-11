@@ -62,6 +62,9 @@ class CustomFields
                 $this->fields[$key]['error'] = data_get($field, 'validation.required.error');
                 $flag = false;
             } elseif (data_get($field, 'validation.regex.enabled')) {
+                if (in_array(data_get($field, 'type'), ['checkbox'])) {
+                    continue;
+                }
                 if (1 !== preg_match("/".data_get($field, 'validation.regex.pattern')."/", $value)) {
                     $this->fields[$key]['valid'] = false;
                     $this->fields[$key]['error'] = data_get($field, 'validation.regex.enabled');

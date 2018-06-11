@@ -9,6 +9,7 @@
 namespace Dilab\Cart\Test;
 
 use Dilab\Cart\Cart;
+use Dilab\Cart\Enum\VariantStatus;
 use Dilab\Cart\Event;
 use Dilab\Cart\Registration;
 use Dilab\Cart\Test\Factory\DonationFactory;
@@ -246,19 +247,19 @@ class RegistrationTest extends TestCase
                                     'variants'=> [
                                         [
                                             'id'=>1,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:s',
                                             'stock'=>100,
                                         ],
                                         [
                                             'id'=>2,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:m',
                                             'stock'=>0,
                                         ],
                                         [
                                             'id'=>3,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:l',
                                             'stock'=>0,
                                         ]

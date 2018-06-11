@@ -10,6 +10,7 @@ namespace Dilab\Cart\Test\Factory;
 
 use Dilab\Cart\Entitlements\Entitlement;
 use Dilab\Cart\Entitlements\Variant;
+use Dilab\Cart\Enum\VariantStatus;
 
 class EntitlementFactory
 {
@@ -24,19 +25,19 @@ class EntitlementFactory
             'variants'=> [
                 [
                     'id'=>1,
-                    'status'=>1,
+                    'status'=>VariantStatus::ACTIVE,
                     'stock'=>10,
                     'name'=>'size:s'
                 ],
                 [
                     'id'=>2,
-                    'status'=>1,
+                    'status'=>VariantStatus::ACTIVE,
                     'stock'=>10,
                     'name'=>'size:m'
                 ],
                 [
                     'id'=>3,
-                    'status'=>1,
+                    'status'=>VariantStatus::ACTIVE,
                     'stock'=>0,
                     'name'=>'size:l'
                 ]
@@ -52,19 +53,19 @@ class EntitlementFactory
             'variants'=> [
                 [
                     'id'=>3,
-                    'status'=>1,
+                    'status'=>VariantStatus::ACTIVE,
                     'stock'=>10,
                     'name'=>'size:s'
                 ],
                 [
                     'id'=>4,
-                    'status'=>1,
+                    'status'=>VariantStatus::ACTIVE,
                     'stock'=>10,
                     'name'=>'size:m'
                 ],
                 [
                     'id'=>5,
-                    'status'=>1,
+                    'status'=>VariantStatus::ACTIVE,
                     'stock'=>0,
                     'name'=>'size:l'
                 ]

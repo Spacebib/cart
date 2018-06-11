@@ -8,6 +8,8 @@
 
 namespace Dilab\Cart\Entitlements;
 
+use Dilab\Cart\Enum\VariantStatus;
+
 class Variant
 {
     private $id;
@@ -41,7 +43,7 @@ class Variant
 
     public function isAvailable()
     {
-        return $this->hasStock() && $this->status == 1;
+        return $this->hasStock() && $this->status == VariantStatus::ACTIVE;
     }
 
     /**

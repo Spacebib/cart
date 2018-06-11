@@ -8,13 +8,14 @@
 
 namespace Dilab\Cart\Test\Factory;
 
+use Dilab\Cart\Enum\VariantStatus;
 use Dilab\Cart\Event;
 
 class EventFactory
 {
-    public static function create()
+    public static function data()
     {
-        $data = [
+        return $data = [
             'id' => 1,
             'name' => 'Changsha Marathon 2018',
             'currency' => 'SGD',
@@ -81,19 +82,19 @@ class EventFactory
                                     'variants'=> [
                                         [
                                             'id'=>1,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:s',
                                             'stock'=>10,
                                         ],
                                         [
                                             'id'=>2,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:m',
                                             'stock'=>10,
                                         ],
                                         [
                                             'id'=>3,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:l',
                                             'stock'=>0,
                                         ]
@@ -109,19 +110,19 @@ class EventFactory
                                     'variants'=> [
                                         [
                                             'id'=>3,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:s',
                                             'stock'=>10,
                                         ],
                                         [
                                             'id'=>4,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:m',
                                             'stock'=>10,
                                         ],
                                         [
                                             'id'=>5,
-                                            'status'=>1,
+                                            'status'=>VariantStatus::ACTIVE,
                                             'name'=>'size:l',
                                             'stock'=>0,
                                         ]
@@ -165,7 +166,7 @@ class EventFactory
 //                                        ],
 //                                        [
 //                                            'id'=>3,
-//                                            'status'=>0,
+//                                            '``,
 //                                            'name'=>'size:l'
 //                                        ]
 //                                    ]
@@ -203,19 +204,19 @@ class EventFactory
                                     'variants'=> [
                                         [
                                             'id'=>1,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:s',
                                             'stock'=>10
                                         ],
                                         [
                                             'id'=>2,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:m',
                                             'stock'=>10
                                         ],
                                         [
                                             'id'=>3,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:l',
                                             'stock'=>10
                                         ]
@@ -247,19 +248,19 @@ class EventFactory
                                     'variants'=> [
                                         [
                                             'id'=>1,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:s',
                                             'stock'=>10,
                                         ],
                                         [
                                             'id'=>2,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:m',
                                             'stock'=>10,
                                         ],
                                         [
                                             'id'=>3,
-                                            'status'=>0,
+                                            'status'=>VariantStatus::INACTIVE,
                                             'name'=>'size:l',
                                             'stock'=>10,
                                         ]
@@ -281,21 +282,21 @@ class EventFactory
                     'variants'=> [
                         [
                             'id'=>1,
-                            'status'=>1,
+                            'status'=>VariantStatus::ACTIVE,
                             'stock'=>10,
                             'name'=>'size:s',
                             'price' => 100
                         ],
                         [
                             'id'=>2,
-                            'status'=>1,
+                            'status'=>VariantStatus::ACTIVE,
                             'stock'=>10,
                             'name'=>'size:m',
                             'price' => 100
                         ],
                         [
                             'id'=>3,
-                            'status'=>1,
+                            'status'=>VariantStatus::ACTIVE,
                             'stock'=>10,
                             'name'=>'size:l',
                             'price' => 100
@@ -312,29 +313,34 @@ class EventFactory
                     'variants'=> [
                         [
                             'id'=>3,
-                            'status'=>1,
+                            'status'=>VariantStatus::ACTIVE,
                             'stock'=>10,
                             'name'=>'size:s',
                             'price' => 100
                         ],
                         [
                             'id'=>4,
-                            'status'=>1,
+                            'status'=>VariantStatus::ACTIVE,
                             'stock'=>10,
                             'name'=>'size:m',
                             'price' => 100
                         ],
                         [
                             'id'=>5,
-                            'status'=>1,
+                            'status'=>VariantStatus::ACTIVE,
                             'stock'=>10,
                             'name'=>'size:l',
                             'price' => 100
                         ]
                     ]
                 ]
-        ]
+            ]
         ];
+    }
+
+    public static function create()
+    {
+        $data = self::data();
 
         return Event::init($data);
     }

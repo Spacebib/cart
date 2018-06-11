@@ -8,6 +8,7 @@
 
 namespace Dilab\Cart\Test\Products;
 
+use Dilab\Cart\Enum\VariantStatus;
 use Dilab\Cart\Money;
 use Dilab\Cart\Products\Product;
 use Dilab\Cart\Products\Variant;
@@ -31,9 +32,9 @@ class ProductTest extends TestCase
             '',
             '',
             [
-                new Variant(1, 'v1', 10, 1, Money::fromCent('HKD', 100)),
-                new Variant(2, 'v2', 10, 0, Money::fromCent('HKD', 200)),
-                new Variant(3, 'v3', 0, 1, Money::fromCent('HKD', 300)),
+                new Variant(1, 'v1', 10, VariantStatus::ACTIVE, Money::fromCent('HKD', 100)),
+                new Variant(2, 'v2', 10, VariantStatus::INACTIVE, Money::fromCent('HKD', 200)),
+                new Variant(3, 'v3', 0, VariantStatus::ACTIVE, Money::fromCent('HKD', 300)),
             ]
         );
     }
