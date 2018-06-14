@@ -11,7 +11,7 @@ namespace Dilab\Cart\Coupons;
 class DiscountType
 {
     const FIXVALUE = 'fixed';
-    const PERCENTAGEOFF = 'precentage';
+    const PERCENTAGEOFF = 'percentage';
 
     public static function types()
     {
