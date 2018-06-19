@@ -143,11 +143,11 @@ class Cart
 
     public function calcServiceFee()
     {
-        $subTotal = $this->subTotal();
+        $subTotalAfterDiscount = $this->subTotal()->minus($this->getDiscount());
 
         $serviceFee = $this->event->getServiceFee();
 
-        $serviceFeeA = $subTotal->product($serviceFee->getPercentage()/100);
+        $serviceFeeA = $subTotalAfterDiscount->product($serviceFee->getPercentage()/100);
 
         $serviceFeeB = $serviceFee->getFixed()->product(count($this->getParticipants()));
 

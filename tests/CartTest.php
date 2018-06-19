@@ -123,12 +123,13 @@ class CartTest extends TestCase
         );
 
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(120200-40, $this->cart->total()->toCent());
+        // service fee =  (102000-40)*0.1 + 8*1000 = 10160 + 8000 = 18196
+        $this->assertEquals(102000+18196-40, $this->cart->total()->toCent());
         $this->assertEquals(40, $this->cart->getDiscount()->toCent());
         $this->assertEquals(4, $this->cart->usedCouponQuantity());
         // cancel coupon
         $this->assertTrue($this->cart->setCoupon(null)->cancelCoupon());
-        $this->assertEquals(120200, $this->cart->total()->toCent());
+        $this->assertEquals(102000+18200, $this->cart->total()->toCent());
         $this->assertEquals(0, $this->cart->getDiscount()->toCent());
         $this->assertEquals(0, $this->cart->usedCouponQuantity());
     }
@@ -175,9 +176,9 @@ class CartTest extends TestCase
             1101,
             1
         );
-
+        // service fee =  (102000-10000)*0.1 + 8*1000 = 9200 + 8000 = 17200
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(102000+18200-10000, $this->cart->total()->toCent());
+        $this->assertEquals(102000+17200-10000, $this->cart->total()->toCent());
         $this->assertEquals(10000, $this->cart->getDiscount()->toCent());
         $this->assertEquals(1, $this->cart->usedCouponQuantity());
     }
@@ -208,9 +209,9 @@ class CartTest extends TestCase
             1101,
             2
         );
-
+        // service fee =  (52000-2000)*0.1 + 6*1000 = 5000 + 6000 = 11000
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(52000+11200-1000*2, $this->cart->total()->toCent());
+        $this->assertEquals(52000+11000-1000*2, $this->cart->total()->toCent());
         $this->assertEquals(2000, $this->cart->getDiscount()->toCent());
         $this->assertEquals(2, $this->cart->usedCouponQuantity());
     }
