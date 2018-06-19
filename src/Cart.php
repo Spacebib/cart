@@ -171,14 +171,11 @@ class Cart
 
         $flag = false;
 
-        array_map(function (Category $ticket) use (&$flag) {
-
+        foreach ($sortedTickets as $ticket) {
             if ($ticket->applyCoupon($this->coupon)) {
                 $flag = true;
             }
-
-            return $ticket;
-        }, $sortedTickets);
+        }
 
         return $flag;
     }

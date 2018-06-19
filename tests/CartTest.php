@@ -157,7 +157,7 @@ class CartTest extends TestCase
     {
         // price 1000
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-        //price 10000
+        //price 100000
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
 
         // apply coupon
@@ -174,5 +174,37 @@ class CartTest extends TestCase
         $this->assertEquals(102000-10000, $this->cart->total()->toCent());
         $this->assertEquals(10000, $this->cart->getDiscount()->toCent());
         $this->assertEquals(1, $this->cart->usedCouponQuantity());
+    }
+
+    /**
+     * https://github.com/Spacebib/starpodium/issues/171
+     *  coupon is applied per category basis.
+     *  e.g
+     *   coupon discount = 50 (applied to category A) ,
+     *   category A = 40,
+     *   category B = 30,
+     *   when buying three tickets (2 x A + 1 x B), it should only deduct 80 (40x2)
+     */
+    public function test_issue_171()
+    {
+        // price 50000
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 1);
+        //price 1000*2
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+
+        // apply coupon
+        $coupon = new Coupon(
+            1,
+            [1],
+            DiscountType::FIXVALUE,
+            10000,
+            1101,
+            2
+        );
+
+        $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
+        $this->assertEquals(52000-1000*2, $this->cart->total()->toCent());
+        $this->assertEquals(2000, $this->cart->getDiscount()->toCent());
+        $this->assertEquals(2, $this->cart->usedCouponQuantity());
     }
 }
