@@ -96,26 +96,6 @@ class Cart
         return $this->buyerEmail;
     }
 
-    /**
-     * @return null | Money
-     */
-    public function subTotal()
-    {
-        if (empty($this->tickets)) {
-            return null;
-        }
-
-        $currency = $this->currency();
-
-        $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
-            return $category->getOriginalPrice()->plus($carry);
-        }, Money::fromCent($currency, 0));
-
-        $donationSubTotal = $this->donation();
-        $productsSubTotal = $this->productsSubTotal();
-        return $ticketsSubTotal->plus($donationSubTotal)->plus($productsSubTotal);
-    }
-
     public function donation()
     {
         $currency = $this->currency();
@@ -139,15 +119,50 @@ class Cart
         return $donation->toCent() > 0;
     }
 
+    /**
+     * @return null | Money
+     */
+    public function subTotal()
+    {
+        if (empty($this->tickets)) {
+            return null;
+        }
+
+        $currency = $this->currency();
+
+        $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
+            return $category->getOriginalPrice()->plus($carry);
+        }, Money::fromCent($currency, 0));
+
+        $donationSubTotal = $this->donation();
+
+        $productsSubTotal = $this->productsSubTotal();
+
+        return $ticketsSubTotal->plus($donationSubTotal)->plus($productsSubTotal);
+    }
+
+    public function calcServiceFee()
+    {
+        $subTotal = $this->subTotal();
+
+        $serviceFee = $this->event->getServiceFee();
+
+        $serviceFeeA = $subTotal->product($serviceFee->getPercentage()/100);
+
+        $serviceFeeB = $serviceFee->getFixed()->product(count($this->getParticipants()));
+
+        return $serviceFeeA->plus($serviceFeeB);
+    }
+
     public function total()
     {
         $subTotal = $this->subTotal();
 
-        if ($subTotal && $this->getCoupon()) {
-            return $subTotal->minus($this->getDiscount());
+        if (!$subTotal) {
+            return $subTotal;
         }
 
-        return $subTotal;
+        return $subTotal->plus($this->calcServiceFee())->minus($this->getDiscount());
     }
 
     public function setCoupon($coupon)

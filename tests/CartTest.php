@@ -98,17 +98,19 @@ class CartTest extends TestCase
 
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->total();
-        $this->assertEquals(Money::fromCent('SGD', 100000), $result);
+        // service = 100000*0.1 + 4*1000 = 10000 + 4000 = 14000
+        $this->assertEquals(Money::fromCent('SGD', 114000), $result);
     }
 
     public function testCouponDiscount()
     {
-        // price 1000
+        // price 1000*2
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-        //price 10000
+        //price 50000*2
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
         $result = $this->cart->total();
-        $this->assertEquals(Money::fromCent('SGD', 102000), $result);
+        // service fee = 102000*0.1 + 8*1000 = 10200+8000 = 18200
+        $this->assertEquals(Money::fromCent('SGD', 120200), $result);
 
         // apply coupon
         $coupon = new Coupon(
@@ -121,36 +123,39 @@ class CartTest extends TestCase
         );
 
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(102000-40, $this->cart->total()->toCent());
+        $this->assertEquals(120200-40, $this->cart->total()->toCent());
         $this->assertEquals(40, $this->cart->getDiscount()->toCent());
         $this->assertEquals(4, $this->cart->usedCouponQuantity());
         // cancel coupon
         $this->assertTrue($this->cart->setCoupon(null)->cancelCoupon());
-        $this->assertEquals(102000, $this->cart->total()->toCent());
+        $this->assertEquals(120200, $this->cart->total()->toCent());
         $this->assertEquals(0, $this->cart->getDiscount()->toCent());
         $this->assertEquals(0, $this->cart->usedCouponQuantity());
     }
 
     public function testProducts()
     {
+        $event = EventFactory::create();
+
         // add ticket
-        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-        $this->assertEquals(Money::fromCent('SGD', 100000), $this->cart->total());
+        $this->cart->addTicket($event->getCategoryById(2), 2);
+        // service_fee = 100000 * 0.1 + 4*1000 = 10000+4000 = 140000
+        $this->assertEquals(Money::fromCent('SGD', 114000), $this->cart->total());
 
         // add products
-        $event = EventFactory::create();
         $product = $event->getProductById(1)->setSelectedVariantId(1);
         $this->cart->addProduct($product);
-        $this->assertEquals(Money::fromCent('SGD', 100100), $this->cart->total());
+        // service_fee = 140000 + 100*0.1 = 140010
+        $this->assertEquals(Money::fromCent('SGD', 114110), $this->cart->total());
 
         $this->cart->addProduct($product);
-        $this->assertEquals(Money::fromCent('SGD', 100200), $this->cart->total());
+        $this->assertEquals(Money::fromCent('SGD', 114220), $this->cart->total());
         // remove products
         $this->cart->removeProduct(1, 1);
-        $this->assertEquals(Money::fromCent('SGD', 100100), $this->cart->total());
+        $this->assertEquals(Money::fromCent('SGD', 114110), $this->cart->total());
 
         $this->cart->removeProduct(1, 1);
-        $this->assertEquals(Money::fromCent('SGD', 100000), $this->cart->total());
+        $this->assertEquals(Money::fromCent('SGD', 114000), $this->cart->total());
     }
 
     public function test_will_apply_the_most_expensive_ticket_when_coupon_only_one()
@@ -159,6 +164,7 @@ class CartTest extends TestCase
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         //price 100000
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        // service fee = 102000*0.1 + 8*1000 = 10200+8000 = 18200
 
         // apply coupon
         $coupon = new Coupon(
@@ -171,7 +177,7 @@ class CartTest extends TestCase
         );
 
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(102000-10000, $this->cart->total()->toCent());
+        $this->assertEquals(102000+18200-10000, $this->cart->total()->toCent());
         $this->assertEquals(10000, $this->cart->getDiscount()->toCent());
         $this->assertEquals(1, $this->cart->usedCouponQuantity());
     }
@@ -191,6 +197,7 @@ class CartTest extends TestCase
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 1);
         //price 1000*2
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        // service fee = 52000*0.1 + 6*1000 = 5200+6000 = 11200
 
         // apply coupon
         $coupon = new Coupon(
@@ -203,7 +210,7 @@ class CartTest extends TestCase
         );
 
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        $this->assertEquals(52000-1000*2, $this->cart->total()->toCent());
+        $this->assertEquals(52000+11200-1000*2, $this->cart->total()->toCent());
         $this->assertEquals(2000, $this->cart->getDiscount()->toCent());
         $this->assertEquals(2, $this->cart->usedCouponQuantity());
     }

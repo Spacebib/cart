@@ -212,6 +212,7 @@ class RegistrationTest extends TestCase
             'id' => 1,
             'name' => 'Changsha Marathon 2018',
             'currency' => 'SGD',
+            'service_fee' => ['percentage'=>0, 'fixed'=>0],
             'categories' => [
                 [
                     'id' => 1,

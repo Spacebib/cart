@@ -29,6 +29,8 @@ class Event
 
     private $currency;
 
+    private $serviceFee;
+
     private $categories;
 
     private $products;
@@ -38,14 +40,16 @@ class Event
      * @param $id
      * @param $name
      * @param $currency
+     * @param $serviceFee
      * @param $categories
      * @param $products
      */
-    public function __construct($id, $name, $currency, $categories, $products)
+    public function __construct($id, $name, $currency, $serviceFee, $categories, $products)
     {
         $this->id = $id;
         $this->name = $name;
         $this->currency = $currency;
+        $this->serviceFee = $serviceFee;
         $this->categories = $categories;
         $this->products = $products;
     }
@@ -58,9 +62,16 @@ class Event
 
         $currency = self::getWithException($data, 'currency');
 
+        $serviceFeeData = self::getWithException($data, 'service_fee');
+
         $categoriesData = self::getWithException($data, 'categories');
 
         $categoriesData = self::filterNoPriceCategories($categoriesData);
+
+        $serviceFee = new ServiceFee(
+            $serviceFeeData['percentage'],
+            Money::fromCent($currency, $serviceFeeData['fixed'])
+        );
 
         $categories = array_map(function ($category) use ($currency) {
             $participantsData = self::getWithException($category, 'participants');
@@ -147,7 +158,7 @@ class Event
             );
         }, self::getWithException($data, 'products'));
 
-        return new self($id, $name, $currency, $categories, $products);
+        return new self($id, $name, $currency, $serviceFee, $categories, $products);
     }
 
     public function getCategoryById($categoryId)
@@ -222,6 +233,14 @@ class Event
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * @return ServiceFee
+     */
+    public function getServiceFee()
+    {
+        return $this->serviceFee;
     }
 
     public function getProductsHasVariant()

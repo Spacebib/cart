@@ -76,11 +76,20 @@ class Money
     public function minus(Money $b)
     {
         $this->canCalculate($b);
+
         $amount = ($this->toCent() - $b->toCent())>0 ? $this->toCent() - $b->toCent() : 0;
+
         return Money::fromCent(
             $this->getCurrency(),
             $amount
         );
+    }
+
+    public function product($p)
+    {
+        $amount = $this->toCent()*$p;
+
+        return Money::fromCent($this->getCurrency(), $amount);
     }
 
     private function canCalculate(Money $b)

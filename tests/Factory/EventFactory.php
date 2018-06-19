@@ -19,6 +19,7 @@ class EventFactory
             'id' => 1,
             'name' => 'Changsha Marathon 2018',
             'currency' => 'SGD',
+            'service_fee' => ['percentage'=>10, 'fixed'=>1000],
             'categories' => [
                 [
                     'id' => 1,
