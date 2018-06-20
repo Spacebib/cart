@@ -24,8 +24,8 @@ class DonationFormTest extends TestCase
         $this->form = new Form(
             ['fundraise_amount', 'fundraise_remark'],
             [
-                'min' => 10,
-                'max' => 100,
+                'min' => 1000,
+                'max' => 10000,
                 'required' => true
             ]
         );

@@ -37,8 +37,8 @@ class EventFactory
                             'fundraises' => [
                                 [
                                     'id' => 1,
-                                    'min' => 10,
-                                    'max' => 100,
+                                    'min' => 1000,
+                                    'max' => 10000,
                                     'name' => 'donation',
                                     'required' => true,
                                     'fields' => [
