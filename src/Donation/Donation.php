@@ -65,7 +65,7 @@ class Donation
         $amount = $this->form->getData()['fundraise_amount'];
 
         $amount = is_numeric($amount) ? $amount : 0;
-        
+
         return Money::fromCent($this->currency, $amount*100);
     }
 }
