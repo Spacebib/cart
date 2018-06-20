@@ -86,9 +86,9 @@ class CartTest extends TestCase
         ];
         $registration->fillParticipant(0, $data);
         $registration->fillParticipant(1, $data);
-        $donation = $this->cart->donation();
+        $donation = $this->cart->donationTotal();
         $this->assertTrue($this->cart->hasDonation());
-        $this->assertEquals(Money::fromCent('SGD', 20), $donation);
+        $this->assertEquals(Money::fromCent('SGD', 2000), $donation);
     }
 
     public function testTotal()

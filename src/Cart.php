@@ -9,6 +9,7 @@
 namespace Dilab\Cart;
 
 use Dilab\Cart\Coupons\Coupon;
+use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Products\Product;
 use Dilab\Cart\Traits\Serializable;
 
@@ -96,7 +97,10 @@ class Cart
         return $this->buyerEmail;
     }
 
-    public function donation()
+    /**
+     * @return Money
+     */
+    public function donationTotal()
     {
         $currency = $this->currency();
 
@@ -115,8 +119,23 @@ class Cart
 
     public function hasDonation()
     {
-        $donation = $this->donation();
-        return $donation->toCent() > 0;
+        return $this->donationTotal()->toCent() > 0;
+    }
+
+    /**
+     * @return Donation[]
+     */
+    public function donations()
+    {
+        $donations = array_reduce(
+            $this->getParticipants(),
+            function ($carry, Participant $participant) {
+                return array_merge($carry, $participant->getFundraises());
+            },
+            []
+        );
+
+        return $donations;
     }
 
     /**
@@ -134,7 +153,7 @@ class Cart
             return $category->getOriginalPrice()->plus($carry);
         }, Money::fromCent($currency, 0));
 
-        $donationSubTotal = $this->donation();
+        $donationSubTotal = $this->donationTotal();
 
         $productsSubTotal = $this->productsSubTotal();
 
