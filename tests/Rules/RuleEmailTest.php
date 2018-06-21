@@ -24,14 +24,9 @@ class RuleEmailTest extends TestCase
         $this->rule = new RuleEmail();
 
     }
-    public function testGender()
+
+    public function test_email_confirmation()
     {
-        $data = FormDataFactory::correctData();
-
-        $data['email'] = 'xx';
-        $this->assertFalse($this->rule->valid($data));
-        $this->assertEquals(['email'=>'Invalid email address format'], $this->rule->errors());
-
         $data = FormDataFactory::correctData();
         $data['email_confirmation'] = 'ss';
         $this->assertFalse($this->rule->valid($data));
@@ -39,8 +34,29 @@ class RuleEmailTest extends TestCase
             ['email_confirmation'=>'Email addresses do not match'],
             $this->rule->errors()
         );
+    }
 
+    public function test_email_regex()
+    {
         $data = FormDataFactory::correctData();
+
+        $this->assertTrue($this->rule->valid($data));
+        $this->assertEmpty($this->rule->errors());
+
+        $data['email'] = 'xx';
+        $this->assertFalse($this->rule->valid($data));
+        $this->assertEquals(['email'=>'Invalid email address format'], $this->rule->errors());
+    }
+
+    public function test_191()
+    {
+        // https://github.com/Spacebib/starpodium/issues/191
+        //email format should be valid when there is a "."
+        $data = FormDataFactory::correctData();
+
+        $data['email'] = 'celine.os@gamil.com';
+        $data['email_confirmation'] = 'celine.os@gamil.com';
+
         $this->assertTrue($this->rule->valid($data));
         $this->assertEmpty($this->rule->errors());
     }

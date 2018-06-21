@@ -32,6 +32,5 @@ class RuleLengthTest extends TestCase
         $this->assertTrue($this->rule->valid($data));
         $data['nric'] = base64_encode(random_bytes(109));
         $this->assertFalse($this->rule->valid($data));
-
     }
 }

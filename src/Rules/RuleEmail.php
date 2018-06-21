@@ -39,6 +39,6 @@ class RuleEmail implements Rule
 
     private function validateEmailFormat($email)
     {
-        return 1===preg_match('/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/', $email);
+        return 1===preg_match('/^[a-z.A-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/', $email);
     }
 }
