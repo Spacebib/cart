@@ -43,6 +43,8 @@ class Participant
      */
     private $customFields;
 
+    private $groupNum;
+
     /**
      * Participant constructor.
      * @param $id
@@ -285,5 +287,21 @@ class Participant
     public function setCustomFields(CustomFields $customFields)
     {
         $this->customFields = $customFields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroupNum()
+    {
+        return $this->groupNum;
+    }
+
+    /**
+     * @param mixed $groupNum
+     */
+    public function setGroupNum($groupNum)
+    {
+        $this->groupNum = $groupNum;
     }
 }

@@ -12,6 +12,7 @@ use Dilab\Cart\Coupons\Coupon;
 use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Products\Product;
 use Dilab\Cart\Traits\Serializable;
+use Ramsey\Uuid\Uuid;
 
 class Cart
 {
@@ -42,12 +43,15 @@ class Cart
     public function addTicket(Category $category, $qty)
     {
         $tickets = array_map(function () use ($category) {
+            $groupNum = Uuid::uuid1()->toString();
             return new Category(
                 $category->getId(),
                 $category->getName(),
                 $category->getPrice(),
-                array_map(function ($participant) {
-                    return clone $participant;
+                array_map(function (Participant $participant) use ($groupNum) {
+                    $p = clone $participant;
+                    $p->setGroupNum($groupNum);
+                    return $p;
                 }, $category->getParticipants())
             );
         }, range(1, $qty));
@@ -79,6 +83,7 @@ class Cart
                 clone $participant->getCustomFields()
             );
 
+            $newParticipant->setGroupNum($participant->getGroupNum());
             $newParticipant->setTrackId($key);
 
             return $newParticipant;

@@ -64,6 +64,8 @@ class CartTest extends TestCase
         }, $participants);
         $expected = range(0, 11);
         $this->assertSame($expected, $participantsTrackIds);
+
+        $this->assertNotNull($participants[0]->getGroupNum());
     }
 
     public function testSubTotal()
