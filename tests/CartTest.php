@@ -81,7 +81,7 @@ class CartTest extends TestCase
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => EntitlementFactory::postData(),
-            'donation' => DonationFactory::postData()
+            'donations' => DonationFactory::postData()
 
         ];
         $registration->fillParticipant(0, $data);

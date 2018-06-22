@@ -67,7 +67,7 @@ class RegistrationTest extends TestCase
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => EntitlementFactory::postData(),
-            'donation' => []
+            'donations' => []
         ];
 
         $this->registration->renderParticipant($trackId);
@@ -79,7 +79,7 @@ class RegistrationTest extends TestCase
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => EntitlementFactory::postData(),
-            'donation' => DonationFactory::postData()
+            'donations' => DonationFactory::postData()
 
         ];
         $this->registration->renderParticipant($trackId);
@@ -96,7 +96,7 @@ class RegistrationTest extends TestCase
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => EntitlementFactory::postData(),
-            'donation' => DonationFactory::postData()
+            'donations' => DonationFactory::postData()
         ];
 
         $this->assertFalse($this->registration->isCompleted($trackId));
@@ -114,7 +114,7 @@ class RegistrationTest extends TestCase
         $data = [
             'form' => FormDataFactory::correctData(),
             'entitlements' => [],
-            'donation' => []
+            'donations' => []
         ];
 
         $this->assertFalse($this->registration->isCompleted($trackId));

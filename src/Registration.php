@@ -75,7 +75,7 @@ class Registration
 
         $fillForm = $this->fillForm($trackId, $data['form']);
         $fillEntitlements = $this->fillEntitlements($trackId, self::getOrEmptyArray($data, 'entitlements'));
-        $fillDonation = $this->fillDonation($trackId, self::getOrEmptyArray($data, 'donation'));
+        $fillDonation = $this->fillDonation($trackId, self::getOrEmptyArray($data, 'donations'));
         $fillCustomFields = $this->fillCustomFields($trackId, self::getOrEmptyArray($data, 'customFields'));
 
         $participant->setIsDirty(true);
@@ -260,7 +260,9 @@ class Registration
             }
 
             $form = $donation->getForm();
-            if (! $form->fill(self::getOrEmptyArray($data, $donation->getId()), $donation->getId())) {
+            $donationId = $donation->getId();
+
+            if (! $form->fill(data_get($data, $donationId, []), $donation->getId())) {
                 $this->setErrorsByTrackId($trackId, $form->getErrors());
                 $flag = false;
             }
