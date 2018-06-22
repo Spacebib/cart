@@ -298,7 +298,7 @@ class Registration
      * @param $trackId
      * @return Participant
      */
-    private function getParticipantByTrackId($trackId)
+    public function getParticipantByTrackId($trackId)
     {
         return $this->participants[$trackId];
     }
