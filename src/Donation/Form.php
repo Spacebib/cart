@@ -45,12 +45,15 @@ class Form
         }
 
         if ($data['fundraise_amount'] < $this->rules['min']/100) {
-            $this->errors['fundraise_amount'][$donationId] = sprintf('Minimum %s', $this->rules['min']);
+            $this->errors['fundraise_amount'][$donationId] = sprintf('Minimum %s', $this->rules['min']/100);
             return false;
         }
 
         if ($data['fundraise_amount'] > $this->rules['max']/100) {
-            $this->errors['fundraise_amount'][$donationId] = 'Amount is too large';
+            $this->errors['fundraise_amount'][$donationId] = sprintf(
+                'Amount is too large, maximum %s',
+                $this->rules['max']/100
+            );
             return false;
         }
 
