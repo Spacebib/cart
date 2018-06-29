@@ -22,7 +22,7 @@ class Registration
 
     const SUMMARY = 'summary';
 
-    const ADDON = 'add-on';
+    const ADDON = 'add_on';
 
     private $participants;
 
