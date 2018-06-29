@@ -21,7 +21,7 @@ class Money
      */
     private function __construct($currency, $amountInCent)
     {
-        if ($amountInCent < 0 || !is_numeric($amountInCent)) {
+        if (!is_numeric($amountInCent) || (floor($amountInCent) != $amountInCent) || $amountInCent < 0) {
             throw new \LogicException('Invalid cent value');
         }
 
@@ -41,13 +41,13 @@ class Money
     {
         return new self(
             $currency,
-            intval(str_replace(',', '', $amountInDollar)*100)
+            intval(str_replace(',', '', $amountInDollar) * 100)
         );
     }
 
     public function toDollar()
     {
-        return $this->amountInCent/100;
+        return $this->amountInCent / 100;
     }
 
     public function toCent()
@@ -77,7 +77,7 @@ class Money
     {
         $this->canCalculate($b);
 
-        $amount = ($this->toCent() - $b->toCent())>0 ? $this->toCent() - $b->toCent() : 0;
+        $amount = ($this->toCent() - $b->toCent()) > 0 ? $this->toCent() - $b->toCent() : 0;
 
         return Money::fromCent(
             $this->getCurrency(),
@@ -87,9 +87,9 @@ class Money
 
     public function product($p)
     {
-        $amount = $this->toCent()*$p;
+        $amount = $this->toCent() * $p;
 
-        return Money::fromCent($this->getCurrency(), $amount);
+        return Money::fromCent($this->getCurrency(), intval($amount));
     }
 
     private function canCalculate(Money $b)
