@@ -110,9 +110,9 @@ class CartTest extends TestCase
     public function testCouponDiscount()
     {
         // price 1000*2
-        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-        //price 50000*2
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 2);
+        //price 50000*2
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->total();
         // service fee = 102000*0.1 + 8*1000 = 10200+8000 = 18200
         $this->assertEquals(Money::fromCent('SGD', 120200), $result);
@@ -128,7 +128,7 @@ class CartTest extends TestCase
         );
 
         $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
-        // service fee =  (102000-40)*0.1 + 8*1000 = 10160 + 8000 = 18196
+        // service fee =  (102000-10*4)*0.1 + 8*1000 = 10160 + 8000 = 18196
         $this->assertEquals(102000+18196-40, $this->cart->total()->toCent());
         $this->assertEquals(40, $this->cart->getDiscount()->toCent());
         $this->assertEquals(4, $this->cart->usedCouponQuantity());
@@ -219,5 +219,27 @@ class CartTest extends TestCase
         $this->assertEquals(52000+11000-1000*2, $this->cart->total()->toCent());
         $this->assertEquals(2000, $this->cart->getDiscount()->toCent());
         $this->assertEquals(2, $this->cart->usedCouponQuantity());
+    }
+
+    public function test_should_not_charge_for_service_fee_when_total_with_discount_is_0()
+    {
+        // price 1000*1
+        $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
+
+        // apply coupon
+        $coupon = new Coupon(
+            1,
+            [1, 2],
+            DiscountType::PERCENTAGEOFF,
+            100,
+            1101,
+            10
+        );
+
+        $this->assertTrue($this->cart->setCoupon($coupon)->applyCoupon());
+
+        $this->assertEquals(1000, $this->cart->subTotal()->toCent());
+        $this->assertEquals(0, $this->cart->subtotalAfterDiscount()->toCent());
+        $this->assertEquals(0, $this->cart->total()->toCent());
     }
 }

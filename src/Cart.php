@@ -192,7 +192,7 @@ class Cart
 
     public function calcServiceFee()
     {
-        $subTotalAfterDiscount = $this->subTotal()->minus($this->getDiscount());
+        $subTotalAfterDiscount = $this->subtotalAfterDiscount();
 
         $serviceFee = $this->event->getServiceFee();
 
@@ -205,13 +205,17 @@ class Cart
 
     public function total()
     {
-        $subTotal = $this->subTotal();
-
-        if (!$subTotal) {
-            return $subTotal;
+        if (is_null($this->subTotal())) {
+            return null;
         }
 
-        return $subTotal->plus($this->calcServiceFee())->minus($this->getDiscount());
+        $subTotalAfterDiscount = $this->subtotalAfterDiscount();
+
+        if ($subTotalAfterDiscount->toCent() === 0) {
+            return $subTotalAfterDiscount;
+        }
+
+        return $this->subtotalAfterDiscount()->plus($this->calcServiceFee());
     }
 
     public function setCoupon($coupon)
@@ -347,5 +351,14 @@ class Cart
         }
 
         return $sortedTickets;
+    }
+
+    /**
+     * @return Money
+     */
+    public function subtotalAfterDiscount(): Money
+    {
+        $subTotalAfterDiscount = $this->subTotal()->minus($this->getDiscount());
+        return $subTotalAfterDiscount;
     }
 }
