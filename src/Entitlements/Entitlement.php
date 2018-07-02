@@ -21,7 +21,9 @@ class Entitlement
     private $imageLarge;
 
     private $imageThumb;
-    /** @var Variant[] */
+    /**
+     * @var Variant[]
+     */
     private $variants;
 
     public function __construct(
@@ -95,9 +97,12 @@ class Entitlement
      */
     public function getVariantsHasStock(): array
     {
-        return array_filter($this->variants, function (Variant $variant) {
-            return $variant->hasStock();
-        });
+        return array_filter(
+            $this->variants,
+            function (Variant $variant) {
+                return $variant->hasStock();
+            }
+        );
     }
 
     /**
@@ -105,16 +110,22 @@ class Entitlement
      */
     public function getVariantsAvailable(): array
     {
-        return array_filter($this->variants, function (Variant $variant) {
-            return $variant->isAvailable();
-        });
+        return array_filter(
+            $this->variants,
+            function (Variant $variant) {
+                return $variant->isAvailable();
+            }
+        );
     }
 
     public function getSelectedVariantId()
     {
-        $selectedVariants = array_filter($this->variants, function (Variant $variant) {
-            return $variant->getSelected();
-        });
+        $selectedVariants = array_filter(
+            $this->variants,
+            function (Variant $variant) {
+                return $variant->getSelected();
+            }
+        );
 
         if (empty($selectedVariants)) {
             return '';

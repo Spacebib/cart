@@ -38,7 +38,7 @@ class CartTest extends TestCase
         );
     }
 
-    public function testAddTicketThenGetParticipants()
+    public function test_add_ticket_then_get_participants()
     {
         $this->assertCount(0, $this->cart->tickets());
 
@@ -54,11 +54,13 @@ class CartTest extends TestCase
         $participants = $this->cart->getParticipants();
         $this->assertCount(12, $participants);
 
+        // every participant is different
         $participantsObjects = array_map(function (Participant $participant) {
             return spl_object_hash($participant);
         }, $participants);
         $this->assertCount(12, array_unique($participantsObjects));
 
+        // trackId is ordered
         $participantsTrackIds = array_map(function (Participant $participant) {
             return $participant->getTrackId();
         }, $participants);
@@ -66,6 +68,7 @@ class CartTest extends TestCase
         $this->assertSame($expected, $participantsTrackIds);
 
         $this->assertNotNull($participants[0]->getGroupNum());
+        $this->assertNotNull($participants[0]->getAccessCode());
     }
 
     public function testSubTotal()

@@ -25,6 +25,7 @@ class Form
 
     /**
      * Form constructor.
+     *
      * @param $fields
      * @param $rules
      */
@@ -97,9 +98,13 @@ class Form
 
     private function readWhatIsDefined($fillData)
     {
-        return array_filter($fillData, function ($key) {
-            return in_array($key, array_keys($this->fields));
-        }, ARRAY_FILTER_USE_KEY);
+        return array_filter(
+            $fillData,
+            function ($key) {
+                return in_array($key, array_keys($this->fields));
+            },
+            ARRAY_FILTER_USE_KEY
+        );
     }
 
     private function valid($data)
@@ -173,20 +178,20 @@ class Form
                     break;
                 case 'address':
                     $newFields['address'] = [
-                        'address'=>'',
-                        'city'=>'',
-                        'state'=>'',
-                        'zip'=>'',
+                    'address'=>'',
+                    'city'=>'',
+                    'state'=>'',
+                    'zip'=>'',
                     ];
                     break;
                 case 'address_sg_standard':
                     $newFields['address_sg_standard'] = [
-                        'block' => '',
-                        'unit_prefix' => '',
-                        'unit_suffix' => '',
-                        'street' => '',
-                        'building' => '',
-                        'postal_code' => '',
+                    'block' => '',
+                    'unit_prefix' => '',
+                    'unit_suffix' => '',
+                    'street' => '',
+                    'building' => '',
+                    'postal_code' => '',
                     ];
                     break;
                 case 'email':

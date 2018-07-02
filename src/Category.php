@@ -24,6 +24,7 @@ class Category
 
     /**
      * Category constructor.
+     *
      * @param $id
      * @param $name
      * @param $price

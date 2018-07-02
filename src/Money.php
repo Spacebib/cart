@@ -16,6 +16,7 @@ class Money
 
     /**
      * Money constructor.
+     *
      * @param $currency
      * @param $amountInCent
      */

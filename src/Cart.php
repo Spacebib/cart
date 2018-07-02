@@ -21,17 +21,22 @@ class Cart
     private $buyerEmail;
 
     private $tickets;
-    /** @var  Coupon */
+    /**
+     * @var  Coupon
+     */
     private $coupon;
-    /** @var Product[] */
+    /**
+     * @var Product[]
+     */
     private $products=[];
 
     private $event;
 
     /**
      * Cart constructor.
+     *
      * @param $buyerEmail
-     * @param Event $event
+     * @param Event      $event
      */
     public function __construct($buyerEmail, Event $event)
     {
@@ -42,19 +47,26 @@ class Cart
 
     public function addTicket(Category $category, $qty)
     {
-        $tickets = array_map(function () use ($category) {
-            $groupNum = Uuid::uuid1()->toString();
-            return new Category(
-                $category->getId(),
-                $category->getName(),
-                $category->getPrice(),
-                array_map(function (Participant $participant) use ($groupNum) {
-                    $p = clone $participant;
-                    $p->setGroupNum($groupNum);
-                    return $p;
-                }, $category->getParticipants())
-            );
-        }, range(1, $qty));
+        $tickets = array_map(
+            function () use ($category) {
+                $groupNum = Uuid::uuid1()->toString();
+                return new Category(
+                    $category->getId(),
+                    $category->getName(),
+                    $category->getPrice(),
+                    array_map(
+                        function (Participant $participant) use ($groupNum) {
+                            $p = clone $participant;
+                            $p->setGroupNum($groupNum);
+                            $p->setAccessCode(Uuid::uuid1()->toString());
+                            return $p;
+                        },
+                        $category->getParticipants()
+                    )
+                );
+            },
+            range(1, $qty)
+        );
 
         $this->tickets = array_merge($this->tickets, $tickets);
 
@@ -63,31 +75,40 @@ class Cart
 
     public function getParticipants()
     {
-        $participants = array_reduce($this->tickets, function ($carrier, Category $category) {
-            $carrier = array_merge($carrier, $category->getParticipants());
-            return $carrier;
-        }, []);
+        $participants = array_reduce(
+            $this->tickets,
+            function ($carrier, Category $category) {
+                $carrier = array_merge($carrier, $category->getParticipants());
+                return $carrier;
+            },
+            []
+        );
 
         $participants = array_values($participants);
 
-        $participants = array_map(function (Participant $participant, $key) {
+        $participants = array_map(
+            function (Participant $participant, $key) {
 
-            $newParticipant = new Participant(
-                $participant->getId(),
-                $participant->getName(),
-                $participant->getCategoryId(),
-                $participant->getRules(),
-                clone $participant->getForm(),
-                $participant->getEntitlements(),
-                $participant->getFundraises(),
-                clone $participant->getCustomFields()
-            );
+                $newParticipant = new Participant(
+                    $participant->getId(),
+                    $participant->getName(),
+                    $participant->getCategoryId(),
+                    $participant->getRules(),
+                    clone $participant->getForm(),
+                    $participant->getEntitlements(),
+                    $participant->getFundraises(),
+                    clone $participant->getCustomFields()
+                );
 
-            $newParticipant->setGroupNum($participant->getGroupNum());
-            $newParticipant->setTrackId($key);
+                $newParticipant->setGroupNum($participant->getGroupNum());
+                $newParticipant->setAccessCode($participant->getAccessCode());
+                $newParticipant->setTrackId($key);
 
-            return $newParticipant;
-        }, $participants, array_keys($participants));
+                return $newParticipant;
+            },
+            $participants,
+            array_keys($participants)
+        );
 
         return $participants;
     }
@@ -154,9 +175,13 @@ class Cart
 
         $currency = $this->currency();
 
-        $ticketsSubTotal = array_reduce($this->tickets, function ($carry, Category $category) {
-            return $category->getOriginalPrice()->plus($carry);
-        }, Money::fromCent($currency, 0));
+        $ticketsSubTotal = array_reduce(
+            $this->tickets,
+            function ($carry, Category $category) {
+                return $category->getOriginalPrice()->plus($carry);
+            },
+            Money::fromCent($currency, 0)
+        );
 
         $donationSubTotal = $this->donationTotal();
 
@@ -221,10 +246,13 @@ class Cart
 
     public function cancelCoupon()
     {
-        array_map(function (Category $ticket) {
-            $ticket->cancelCoupon();
-            return $ticket;
-        }, $this->tickets());
+        array_map(
+            function (Category $ticket) {
+                $ticket->cancelCoupon();
+                return $ticket;
+            },
+            $this->tickets()
+        );
         return true;
     }
 
@@ -232,16 +260,24 @@ class Cart
     {
         $currency = $this->currency();
 
-        return array_reduce($this->tickets(), function ($carry, Category $ticket) {
-            return $ticket->getDiscount()->plus($carry);
-        }, Money::fromCent($currency, 0));
+        return array_reduce(
+            $this->tickets(),
+            function ($carry, Category $ticket) {
+                return $ticket->getDiscount()->plus($carry);
+            },
+            Money::fromCent($currency, 0)
+        );
     }
 
     public function usedCouponQuantity(): int
     {
-        return array_reduce($this->tickets(), function ($carry, Category $ticket) {
-            return $carry + intval($ticket->isDiscounted());
-        }, 0);
+        return array_reduce(
+            $this->tickets(),
+            function ($carry, Category $ticket) {
+                return $carry + intval($ticket->isDiscounted());
+            },
+            0
+        );
     }
 
     public function addProduct(Product $product)
@@ -253,8 +289,8 @@ class Cart
     public function removeProduct($productId, $productVariantId)
     {
         foreach ($this->products as $i => $product) {
-            if ($product->getId() == $productId &&
-                $product->getSelectedVariantId() == $productVariantId
+            if ($product->getId() == $productId
+                && $product->getSelectedVariantId() == $productVariantId
             ) {
                 unset($this->products[$i]);
                 break;
@@ -278,9 +314,13 @@ class Cart
     {
         $currency = $this->currency();
 
-        return array_reduce($this->products, function ($carry, Product $product) use ($currency) {
-            return $product->getSelectedVariantPrice()->plus($carry);
-        }, Money::fromCent($currency, 0));
+        return array_reduce(
+            $this->products,
+            function ($carry, Product $product) use ($currency) {
+                return $product->getSelectedVariantPrice()->plus($carry);
+            },
+            Money::fromCent($currency, 0)
+        );
     }
 
     public function currency()
@@ -292,12 +332,15 @@ class Cart
     {
         $sortedTickets = $this->tickets();
 
-        $sorted = usort($sortedTickets, function (Category $ticket1, Category $ticket2) {
-            if ($ticket1->getPrice()->toCent() === $ticket2->getPrice()->toCent()) {
-                return 0;
+        $sorted = usort(
+            $sortedTickets,
+            function (Category $ticket1, Category $ticket2) {
+                if ($ticket1->getPrice()->toCent() === $ticket2->getPrice()->toCent()) {
+                    return 0;
+                }
+                return $ticket1->getPrice()->toCent() < $ticket2->getPrice()->toCent() ? 1 : -1;
             }
-            return $ticket1->getPrice()->toCent() < $ticket2->getPrice()->toCent() ? 1 : -1;
-        });
+        );
 
         if (! $sorted) {
             throw new \RuntimeException('can not sort tickets');

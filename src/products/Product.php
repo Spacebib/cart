@@ -23,10 +23,12 @@ class Product
     private $imageLarge;
 
     private $imageThumb;
-    /** @var Variant[] */
+    /**
+     * @var Variant[]
+     */
     private $variants;
 
-    private $participantId=null;
+    private $participantAccessCode;
 
     public function __construct(
         $id,
@@ -81,9 +83,12 @@ class Product
 
     public function getSelectedVariant()
     {
-        $selectedVariants = array_filter($this->variants, function (Variant $variant) {
-            return $variant->getSelected();
-        });
+        $selectedVariants = array_filter(
+            $this->variants,
+            function (Variant $variant) {
+                return $variant->getSelected();
+            }
+        );
 
         if (empty($selectedVariants)) {
             return null;
@@ -97,9 +102,12 @@ class Product
      */
     public function getVariantsAvailable(): array
     {
-        return array_filter($this->variants, function (Variant $variant) {
-            return $variant->isAvailable();
-        });
+        return array_filter(
+            $this->variants,
+            function (Variant $variant) {
+                return $variant->isAvailable();
+            }
+        );
     }
 
     public function getCurrency()
@@ -156,28 +164,28 @@ class Product
     }
 
     /**
-     * @return null
-     */
-    public function getParticipantId()
-    {
-        return $this->participantId;
-    }
-
-    /**
-     * @param int|string $participantId
-     * @return $this
-     */
-    public function setParticipantId($participantId)
-    {
-        $this->participantId = $participantId;
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getImageThumb()
     {
         return $this->imageThumb;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParticipantAccessCode()
+    {
+        return $this->participantAccessCode;
+    }
+
+    /**
+     * @param mixed $participantAccessCode
+     * @return $this
+     */
+    public function setParticipantAccessCode($participantAccessCode)
+    {
+        $this->participantAccessCode = $participantAccessCode;
+        return $this;
     }
 }

@@ -22,15 +22,18 @@ class Coupon
     private $discountRate;
 
     private $code;
-    /** @var  Money */
+    /**
+     * @var  Money
+     */
     private $discount;
 
     private $stock;
 
     /**
      * Coupon constructor.
+     *
      * @param $id
-     * @param array $categoryIds
+     * @param array        $categoryIds
      * @param $discountType
      * @param $discountRate
      * @param $code
@@ -61,10 +64,12 @@ class Coupon
         if ($this->discountType === DiscountType::FIXVALUE) {
             $this->discount = Money::fromCent($amount->getCurrency(), $this->discountRate);
 
-            return $amount->minus(Money::fromCent(
-                $amount->getCurrency(),
-                $this->discountRate
-            ));
+            return $amount->minus(
+                Money::fromCent(
+                    $amount->getCurrency(),
+                    $this->discountRate
+                )
+            );
         } elseif ($this->discountType === DiscountType::PERCENTAGEOFF) {
             $this->discount = Money::fromCent(
                 $amount->getCurrency(),

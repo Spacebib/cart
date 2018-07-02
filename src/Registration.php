@@ -32,7 +32,8 @@ class Registration
 
     /**
      * Registration constructor.
-     * @param array $participants
+     *
+     * @param array       $participants
      * @param $hasProducts
      */
     public function __construct(array $participants, bool $hasProducts = false)
@@ -73,10 +74,14 @@ class Registration
 
         $participant = $this->getParticipantByTrackId($trackId);
 
+        // it's edit if has accessCode
+        if (data_get($data, 'accessCode')) {
+            $this->replaceAccessCode($trackId, data_get($data, 'accessCode'));
+        }
         $fillForm = $this->fillForm($trackId, $data['form']);
-        $fillEntitlements = $this->fillEntitlements($trackId, self::getOrEmptyArray($data, 'entitlements'));
-        $fillDonation = $this->fillDonation($trackId, self::getOrEmptyArray($data, 'donations'));
-        $fillCustomFields = $this->fillCustomFields($trackId, self::getOrEmptyArray($data, 'customFields'));
+        $fillEntitlements = $this->fillEntitlements($trackId, data_get($data, 'entitlements', []));
+        $fillDonation = $this->fillDonation($trackId, data_get($data, 'donations', []));
+        $fillCustomFields = $this->fillCustomFields($trackId, data_get($data, 'customFields', []));
 
         $participant->setIsDirty(true);
 
@@ -101,9 +106,12 @@ class Registration
      */
     public function redirectTo()
     {
-        $inCompletedParticipants = array_filter($this->participants, function (Participant $participant) {
-            return !$participant->isCompleted();
-        });
+        $inCompletedParticipants = array_filter(
+            $this->participants,
+            function (Participant $participant) {
+                return !$participant->isCompleted();
+            }
+        );
 
         if (empty($inCompletedParticipants)) {
             return $this->hasProducts ? self::ADDON : self::SUMMARY;
@@ -129,14 +137,18 @@ class Registration
 
     public function getParticipantsByCategoryId($categoryId)
     {
-        return array_filter($this->participants, function (Participant $participant) use ($categoryId) {
-            return $participant->getCategoryId()  === $categoryId;
-        });
+        return array_filter(
+            $this->participants,
+            function (Participant $participant) use ($categoryId) {
+                return $participant->getCategoryId()  === $categoryId;
+            }
+        );
     }
 
     /**
      * return a list of form fields
-     * @param $trackId
+     *
+     * @param  $trackId
      * @return mixed
      */
     public function renderForm($trackId)
@@ -157,7 +169,7 @@ class Registration
 
     /**
      * @param $trackId
-     * @param array $data
+     * @param array   $data
      * @return boolean
      */
     public function fillForm($trackId, array $data)
@@ -166,14 +178,19 @@ class Registration
 
         $form = $participant->getForm();
 
-        $form->setRules(array_map(function ($rule) use ($participant, $trackId) {
-            if ($rule instanceof RuleNric) {
-                $rule->setRegistration($this);
-                $rule->setCategoryId($participant->getCategoryId());
-                $rule->setTrackId($trackId);
-            }
-            return $rule;
-        }, $form->getRules()));
+        $form->setRules(
+            array_map(
+                function ($rule) use ($participant, $trackId) {
+                    if ($rule instanceof RuleNric) {
+                        $rule->setRegistration($this);
+                        $rule->setCategoryId($participant->getCategoryId());
+                        $rule->setTrackId($trackId);
+                    }
+                    return $rule;
+                },
+                $form->getRules()
+            )
+        );
 
         if (! $form->fill($data)) {
             $this->setErrorsByTrackId($trackId, $form->getErrors());
@@ -199,16 +216,22 @@ class Registration
 
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $entitlementIds = array_map(function (Entitlement $entitlement) {
-            return $entitlement->getId();
-        }, $participant->getEntitlementsHasAvailableVariant());
+        $entitlementIds = array_map(
+            function (Entitlement $entitlement) {
+                return $entitlement->getId();
+            },
+            $participant->getEntitlementsHasAvailableVariant()
+        );
 
         $requestIds = array_keys($data);
 
         if ($lacks = array_diff($entitlementIds, $requestIds)) {
-            array_map(function ($lack) {
-                $errors[$lack] = 'Please select an option for each item';
-            }, $lacks);
+            array_map(
+                function ($lack) {
+                    $errors[$lack] = 'Please select an option for each item';
+                },
+                $lacks
+            );
             $this->setErrorsByTrackId($trackId, ['entitlements' => $errors]);
             return false;
         }
@@ -305,15 +328,20 @@ class Registration
 
     private function guardParticipants(array $participants)
     {
-        $trackIds = array_map(function (Participant $participant) {
-            return $participant->getTrackId();
-        }, $participants);
+        $trackIds = array_map(
+            function (Participant $participant) {
+                return $participant->getTrackId();
+            },
+            $participants
+        );
 
         if (count(array_unique($trackIds)) != count($participants)) {
-            throw new \LogicException(sprintf(
-                'Invalid track IDs: %s',
-                json_encode($trackIds)
-            ));
+            throw new \LogicException(
+                sprintf(
+                    'Invalid track IDs: %s',
+                    json_encode($trackIds)
+                )
+            );
         }
     }
 
@@ -327,5 +355,12 @@ class Registration
         } else {
             $this->errors[$trackId] = $error;
         }
+    }
+
+    private function replaceAccessCode($trackId, string $accessCode)
+    {
+        $participant = $this->getParticipantByTrackId($trackId);
+
+        $participant->setAccessCode($accessCode);
     }
 }

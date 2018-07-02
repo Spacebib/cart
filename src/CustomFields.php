@@ -14,6 +14,7 @@ class CustomFields
 
     /**
      * CustomFields constructor.
+     *
      * @param $fields
      */
     public function __construct($fields)
@@ -43,9 +44,13 @@ class CustomFields
 
     private function readWhatIsDefined($data)
     {
-        return array_filter($data, function ($key) {
-            return in_array($key, array_keys($this->fields));
-        }, ARRAY_FILTER_USE_KEY);
+        return array_filter(
+            $data,
+            function ($key) {
+                return in_array($key, array_keys($this->fields));
+            },
+            ARRAY_FILTER_USE_KEY
+        );
     }
 
     private function valid($data)

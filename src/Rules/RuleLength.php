@@ -57,8 +57,11 @@ class RuleLength implements Rule
 
     private function setLengthErrors($field, $maxLength)
     {
-        $this->errors = array_merge($this->errors(), [
+        $this->errors = array_merge(
+            $this->errors(),
+            [
             $field => sprintf('%s cannot be longer than %s characters.', $field, $maxLength)
-        ]);
+            ]
+        );
     }
 }

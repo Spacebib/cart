@@ -56,16 +56,12 @@ class RuleNric implements Rule
         $participants = $this->registration->getParticipantsByCategoryId($this->category_id);
 
         foreach ($participants as $participant) {
-            if ($this->trackId != $participant->getTrackId() &&
-                isset($participant->getForm()->getData()['nric']) &&
-                $participant->getForm()->getData()['nric'] === $nric
+            if ($this->trackId != $participant->getTrackId()
+                && isset($participant->getForm()->getData()['nric'])
+                && $participant->getForm()->getData()['nric'] === $nric
             ) {
                 $this->errors = [
-                    'nric' => sprintf(
-                        'It seems like %s has already been used to register for this category. 
-                        Please check your email inbox to get the confirmation slip.',
-                        $nric
-                    )
+                    'nric' => 'same NRIC cannot be used to register for same category more than once.',
                 ];
                 return false;
             }

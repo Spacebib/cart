@@ -16,6 +16,7 @@ class ServiceFee
 
     /**
      * ServiceFee constructor.
+     *
      * @param $percentage
      * @param $fixed
      */

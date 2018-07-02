@@ -37,6 +37,7 @@ class Event
 
     /**
      * Event constructor.
+     *
      * @param $id
      * @param $name
      * @param $currency
@@ -73,99 +74,121 @@ class Event
             Money::fromCent($currency, $serviceFeeData['fixed'])
         );
 
-        $categories = array_map(function ($category) use ($currency) {
-            $participantsData = self::getWithException($category, 'participants');
+        $categories = array_map(
+            function ($category) use ($currency) {
+                $participantsData = self::getWithException($category, 'participants');
 
-            return new Category(
+                return new Category(
 
-                self::getWithException($category, 'id'),
-                self::getWithException($category, 'name'),
-                Money::fromCent($currency, self::getWithException($category, 'price')),
-                array_map(
-                    function ($participant) use ($category, $currency) {
+                    self::getWithException($category, 'id'),
+                    self::getWithException($category, 'name'),
+                    Money::fromCent($currency, self::getWithException($category, 'price')),
+                    array_map(
+                        function ($participant) use ($category, $currency) {
 
-                        return new Participant(
-                            self::getWithException($participant, 'id'),
-                            self::getWithException($participant, 'name'),
-                            self::getWithException($category, 'id'),
-                            self::getWithException($participant, 'rules'),
-                            new Form(
-                                self::generateRules(
-                                    self::getWithException($participant, 'rules'),
+                            return new Participant(
+                                self::getWithException($participant, 'id'),
+                                self::getWithException($participant, 'name'),
+                                self::getWithException($category, 'id'),
+                                self::getWithException($participant, 'rules'),
+                                new Form(
+                                    self::generateRules(
+                                        self::getWithException($participant, 'rules'),
+                                        self::getWithException($participant, 'fields')
+                                    ),
                                     self::getWithException($participant, 'fields')
                                 ),
-                                self::getWithException($participant, 'fields')
-                            ),
-                            array_map(function ($entitlement) use ($currency) {
-                                return new Entitlement(
-                                    self::getWithException($entitlement, 'id'),
-                                    self::getWithException($entitlement, 'name'),
-                                    self::getWithException($entitlement, 'description'),
-                                    self::getWithException($entitlement, 'image_chart'),
-                                    self::getWithException($entitlement, 'image_large'),
-                                    self::getWithException($entitlement, 'image_thumb'),
-                                    array_map(function ($variant) {
-                                        return new Variant(
-                                            self::getWithException($variant, 'id'),
-                                            self::getWithException($variant, 'name'),
-                                            self::getWithException($variant, 'status'),
-                                            self::getWithException($variant, 'stock')
+                                array_map(
+                                    function ($entitlement) use ($currency) {
+                                        return new Entitlement(
+                                            self::getWithException($entitlement, 'id'),
+                                            self::getWithException($entitlement, 'name'),
+                                            self::getWithException($entitlement, 'description'),
+                                            self::getWithException($entitlement, 'image_chart'),
+                                            self::getWithException($entitlement, 'image_large'),
+                                            self::getWithException($entitlement, 'image_thumb'),
+                                            array_map(
+                                                function ($variant) {
+                                                    return new Variant(
+                                                        self::getWithException($variant, 'id'),
+                                                        self::getWithException($variant, 'name'),
+                                                        self::getWithException($variant, 'status'),
+                                                        self::getWithException($variant, 'stock')
+                                                    );
+                                                },
+                                                self::getWithException($entitlement, 'variants')
+                                            )
                                         );
-                                    }, self::getWithException($entitlement, 'variants'))
-                                );
-                            }, self::getOrEmptyArray($participant, 'entitlements')),
-                            array_map(function ($fundraise) use ($currency) {
-                                return new Donation(
-                                    self::getWithException($fundraise, 'id'),
-                                    self::getWithException($fundraise, 'name'),
-                                    new \Dilab\Cart\Donation\Form(
-                                        self::getWithException($fundraise, 'fields'),
-                                        [
-                                            'min' => self::getWithException($fundraise, 'min'),
-                                            'max' => self::getWithException($fundraise, 'max'),
-                                            'required' => self::getWithException($fundraise, 'required'),
-                                        ]
-                                    ),
-                                    $currency
-                                );
-                            }, self::getOrEmptyArray($participant, 'fundraises')),
-                            new CustomFields(self::getOrEmptyArray($participant, 'custom_fields'))
-                        );
-                    },
-                    $participantsData,
-                    array_keys($participantsData)
-                )
-            );
-        }, $categoriesData, array_keys($categoriesData));
+                                    },
+                                    self::getOrEmptyArray($participant, 'entitlements')
+                                ),
+                                array_map(
+                                    function ($fundraise) use ($currency) {
+                                        return new Donation(
+                                            self::getWithException($fundraise, 'id'),
+                                            self::getWithException($fundraise, 'name'),
+                                            new \Dilab\Cart\Donation\Form(
+                                                self::getWithException($fundraise, 'fields'),
+                                                [
+                                                'min' => self::getWithException($fundraise, 'min'),
+                                                'max' => self::getWithException($fundraise, 'max'),
+                                                'required' => self::getWithException($fundraise, 'required'),
+                                                ]
+                                            ),
+                                            $currency
+                                        );
+                                    },
+                                    self::getOrEmptyArray($participant, 'fundraises')
+                                ),
+                                new CustomFields(self::getOrEmptyArray($participant, 'custom_fields'))
+                            );
+                        },
+                        $participantsData,
+                        array_keys($participantsData)
+                    )
+                );
+            },
+            $categoriesData,
+            array_keys($categoriesData)
+        );
 
-        $products = array_map(function ($product) use ($currency) {
-            return new Product(
-                self::getWithException($product, 'id'),
-                self::getWithException($product, 'name'),
-                self::getWithException($product, 'description'),
-                self::getWithException($product, 'image_chart'),
-                self::getWithException($product, 'image_large'),
-                self::getWithException($product, 'image_thumb'),
-                array_map(function ($variant) use ($currency) {
-                    return new \Dilab\Cart\Products\Variant(
-                        self::getWithException($variant, 'id'),
-                        self::getWithException($variant, 'name'),
-                        self::getWithException($variant, 'stock'),
-                        self::getWithException($variant, 'status'),
-                        Money::fromCent($currency, self::getWithException($variant, 'price'))
-                    );
-                }, self::getWithException($product, 'variants'))
-            );
-        }, self::getWithException($data, 'products'));
+        $products = array_map(
+            function ($product) use ($currency) {
+                return new Product(
+                    self::getWithException($product, 'id'),
+                    self::getWithException($product, 'name'),
+                    self::getWithException($product, 'description'),
+                    self::getWithException($product, 'image_chart'),
+                    self::getWithException($product, 'image_large'),
+                    self::getWithException($product, 'image_thumb'),
+                    array_map(
+                        function ($variant) use ($currency) {
+                            return new \Dilab\Cart\Products\Variant(
+                                self::getWithException($variant, 'id'),
+                                self::getWithException($variant, 'name'),
+                                self::getWithException($variant, 'stock'),
+                                self::getWithException($variant, 'status'),
+                                Money::fromCent($currency, self::getWithException($variant, 'price'))
+                            );
+                        },
+                        self::getWithException($product, 'variants')
+                    )
+                );
+            },
+            self::getWithException($data, 'products')
+        );
 
         return new self($id, $name, $currency, $serviceFee, $categories, $products);
     }
 
     public function getCategoryById($categoryId)
     {
-        $found = array_filter($this->categories, function (Category $category) use ($categoryId) {
-            return $category->getId() === $categoryId;
-        });
+        $found = array_filter(
+            $this->categories,
+            function (Category $category) use ($categoryId) {
+                return $category->getId() === $categoryId;
+            }
+        );
 
         if (count($found) == 0) {
             throw new \LogicException(
@@ -182,9 +205,12 @@ class Event
      */
     public function getProductById($productId)
     {
-        $found = array_filter($this->products, function (Product $product) use ($productId) {
-            return $product->getId() === intval($productId);
-        });
+        $found = array_filter(
+            $this->products,
+            function (Product $product) use ($productId) {
+                return $product->getId() === intval($productId);
+            }
+        );
 
         if (count($found) == 0) {
             throw new \LogicException(
@@ -245,17 +271,20 @@ class Event
 
     public function getProductsHasVariant()
     {
-        return array_filter($this->products, function (Product $product) {
-            return !empty($product->getVariants());
-        });
+        return array_filter(
+            $this->products,
+            function (Product $product) {
+                return !empty($product->getVariants());
+            }
+        );
     }
 
     /**
-     * @param array $rules
+     * @param array  $rules
      * @param $fields
      * @return mixed
      */
-    private static function generateRules($rules, $fields)
+    public static function generateRules($rules, $fields)
     {
         $rules = array_map(
             function ($condition, $name) {
@@ -286,8 +315,11 @@ class Event
 
     private static function filterNoPriceCategories($categories)
     {
-        return array_filter($categories, function ($category) {
-            return isset($category['price']) && !is_null($category['price']);
-        });
+        return array_filter(
+            $categories,
+            function ($category) {
+                return isset($category['price']) && !is_null($category['price']);
+            }
+        );
     }
 }

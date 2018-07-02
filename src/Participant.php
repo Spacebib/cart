@@ -10,6 +10,7 @@ namespace Dilab\Cart;
 
 use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Entitlements\Entitlement;
+use Dilab\Cart\Entitlements\Variant;
 use Dilab\Cart\Traits\CartHelper;
 
 class Participant
@@ -45,16 +46,19 @@ class Participant
 
     private $groupNum;
 
+    private $accessCode;
+
     /**
      * Participant constructor.
-     * @param $id
-     * @param $name
-     * @param $category_id
-     * @param array $rules
-     * @param Form $form
-     * @param array $entitlements
-     * @param array $fundraises
-     * @param CustomFields $customFields
+     *
+     * @param    $id
+     * @param    $name
+     * @param    $category_id
+     * @param    array        $rules
+     * @param    Form         $form
+     * @param    array        $entitlements
+     * @param    array        $fundraises
+     * @param    CustomFields $customFields
      * @internal param Donation|null $donation
      */
     public function __construct(
@@ -77,25 +81,108 @@ class Participant
         $this->customFields = $customFields;
     }
 
+    /**
+     * @param $entry
+     * @return $this
+     */
+    public static function fromEntry($entry)
+    {
+        $rules = [
+            'age' => $entry->participant->allow_age,
+            'gender' => $entry->participant->allow_gender,
+        ];
+
+        $currency = $entry->participant->category->event->currency;
+
+        $participant = new self(
+            $entry->participant_id,
+            $entry->participant->name,
+            $entry->participant->category_id,
+            $rules,
+            new Form(
+                Event::generateRules($rules, $entry->participant->registrationForm->fields),
+                $entry->participant->registrationForm->fields
+            ),
+            array_map(
+                function ($entitlement) use ($currency) {
+                    return new Entitlement(
+                        self::getWithException($entitlement, 'id'),
+                        self::getWithException($entitlement, 'name'),
+                        self::getWithException($entitlement, 'description'),
+                        self::getWithException($entitlement, 'image_chart'),
+                        self::getWithException($entitlement, 'image_large'),
+                        self::getWithException($entitlement, 'image_thumb'),
+                        array_map(
+                            function ($variant) {
+                                return new Variant(
+                                    self::getWithException($variant, 'id'),
+                                    self::getWithException($variant, 'name'),
+                                    self::getWithException($variant, 'status'),
+                                    self::getWithException($variant, 'stock')
+                                );
+                            },
+                            self::getWithException($entitlement, 'variants')
+                        )
+                    );
+                },
+                $entry->participant->entitlements->toArray()
+            ),
+            array_map(
+                function ($fundraise) use ($currency) {
+                    return new Donation(
+                        self::getWithException($fundraise, 'id'),
+                        self::getWithException($fundraise, 'name'),
+                        new \Dilab\Cart\Donation\Form(
+                            self::getWithException($fundraise, 'fields'),
+                            [
+                                'min' => self::getWithException($fundraise, 'min'),
+                                'max' => self::getWithException($fundraise, 'max'),
+                                'required' => self::getWithException($fundraise, 'required'),
+                            ]
+                        ),
+                        $currency
+                    );
+                },
+                $entry->participant->fundraises->toArray()
+            ),
+            new CustomFields($entry->participant->registrationForm->custom_fields)
+        );
+
+        $participant->setAccessCode($entry->access_code);
+
+        $participant->setGroupNum($entry->grouping_num);
+
+        return $participant;
+    }
+
     public function getEntitlementsHasVariant()
     {
-        return array_filter($this->entitlements, function (Entitlement $entitlement) {
-            return !empty($entitlement->getVariants());
-        });
+        return array_filter(
+            $this->entitlements,
+            function (Entitlement $entitlement) {
+                return !empty($entitlement->getVariants());
+            }
+        );
     }
 
     public function getEntitlementsHasVariantHasStock()
     {
-        return array_filter($this->entitlements, function (Entitlement $entitlement) {
-            return !empty($entitlement->getVariantsHasStock());
-        });
+        return array_filter(
+            $this->entitlements,
+            function (Entitlement $entitlement) {
+                return !empty($entitlement->getVariantsHasStock());
+            }
+        );
     }
 
     public function getEntitlementsHasAvailableVariant()
     {
-        return array_filter($this->entitlements, function (Entitlement $entitlement) {
-            return !empty($entitlement->getVariantsAvailable());
-        });
+        return array_filter(
+            $this->entitlements,
+            function (Entitlement $entitlement) {
+                return !empty($entitlement->getVariantsAvailable());
+            }
+        );
     }
 
     /**
@@ -133,21 +220,28 @@ class Participant
     {
         $donation = $this->fundraises[0];
 
-        return array_reduce($this->fundraises, function ($carry, Donation $donation) {
-            return $donation->getAmount()->plus($carry);
-        }, Money::fromCent($donation->getCurrency(), 0));
+        return array_reduce(
+            $this->fundraises,
+            function ($carry, Donation $donation) {
+                return $donation->getAmount()->plus($carry);
+            },
+            Money::fromCent($donation->getCurrency(), 0)
+        );
     }
 
     public function getShowName()
     {
         $data = $this->form->getData();
 
-        if (isset($data['first_name']) && !empty($data['first_name'])) {
-            return implode(" ", [
-                self::getOrEmpty($data, 'first_name'),
-                self::getOrEmpty($data, 'middle_name'),
-                self::getOrEmpty($data, 'last_name'),
-            ]);
+        if (array_has($data, 'first_name')) {
+            return implode(
+                " ",
+                [
+                    data_get($data, 'first_name', ''),
+                    data_get($data, 'middle_name', ''),
+                    data_get($data, 'last_name', ''),
+                ]
+            );
         }
 
         return $this->name;
@@ -290,18 +384,34 @@ class Participant
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getGroupNum()
+    public function getGroupNum(): string
     {
         return $this->groupNum;
     }
 
     /**
-     * @param mixed $groupNum
+     * @param string $groupNum
      */
-    public function setGroupNum($groupNum)
+    public function setGroupNum(string $groupNum)
     {
         $this->groupNum = $groupNum;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessCode(): string
+    {
+        return $this->accessCode;
+    }
+
+    /**
+     * @param string $accessCode
+     */
+    public function setAccessCode(string $accessCode)
+    {
+        $this->accessCode = $accessCode;
     }
 }
