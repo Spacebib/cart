@@ -194,6 +194,10 @@ class Cart
     {
         $subTotalAfterDiscount = $this->subtotalAfterDiscount();
 
+        if ($subTotalAfterDiscount->toCent() === 0) {
+            return Money::fromCent($this->currency(), 0);
+        }
+
         $serviceFee = $this->event->getServiceFee();
 
         $serviceFeeA = $subTotalAfterDiscount->product($serviceFee->getPercentage()/100);

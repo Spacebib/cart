@@ -240,6 +240,7 @@ class CartTest extends TestCase
 
         $this->assertEquals(1000, $this->cart->subTotal()->toCent());
         $this->assertEquals(0, $this->cart->subtotalAfterDiscount()->toCent());
+        $this->assertEquals(0, $this->cart->calcServiceFee()->toCent());
         $this->assertEquals(0, $this->cart->total()->toCent());
     }
 }
