@@ -165,16 +165,6 @@ class Participant
         );
     }
 
-    public function getEntitlementsHasVariantHasStock()
-    {
-        return array_filter(
-            $this->entitlements,
-            function (Entitlement $entitlement) {
-                return !empty($entitlement->getVariantsHasStock());
-            }
-        );
-    }
-
     public function getEntitlementsHasAvailableVariant()
     {
         return array_filter(
@@ -187,7 +177,7 @@ class Participant
 
     /**
      * @param $id
-     * @return bool|Entitlement
+     * @return null|Entitlement
      */
     public function getEntitlement($id)
     {
@@ -196,7 +186,7 @@ class Participant
                 return $entitlement;
             }
         }
-        return false;
+        return null;
     }
 
     /**

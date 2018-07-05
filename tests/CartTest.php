@@ -74,7 +74,7 @@ class CartTest extends TestCase
     public function testSubTotal()
     {
         $result = $this->cart->subTotal();
-        $this->assertNull($result);
+        $this->assertEquals(0, $result->toCent());
 
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
@@ -99,7 +99,7 @@ class CartTest extends TestCase
     public function testTotal()
     {
         $result = $this->cart->total();
-        $this->assertNull($result);
+        $this->assertEquals(0, $result->toCent());
 
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
         $result = $this->cart->total();

@@ -9,6 +9,7 @@
 namespace Dilab\Cart;
 
 use \Dilab\Cart\Rules\Rule as RuleInterface;
+use Dilab\Cart\Rules\RuleNric;
 use Dilab\Cart\Traits\CartHelper;
 
 class Form
@@ -54,6 +55,19 @@ class Form
         $this->errors = [];
 
         return true;
+    }
+
+    public function updateNRICRule(Registration $registration, Participant $participant, $trackId)
+    {
+        $this->rules = array_map(
+            function ($rule) use ($participant, $trackId, $registration) {
+                if ($rule instanceof RuleNric) {
+                    $rule->enable($registration, $participant->getCategoryId(), $trackId);
+                }
+                return $rule;
+            },
+            $this->getRules()
+        );
     }
 
     /**

@@ -7,11 +7,10 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         printerClass="Codedungeon\PHPUnitPrettyResultPrinter\Printer"
          stopOnFailure="true"
          syntaxCheck="true">
     <testsuites>
-        <testsuite name="Omnipay Test Suite">
+        <testsuite name="Cart Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>

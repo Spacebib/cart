@@ -106,18 +106,18 @@ class Registration
      */
     public function redirectTo()
     {
-        $inCompletedParticipants = array_filter(
-            $this->participants,
-            function (Participant $participant) {
-                return !$participant->isCompleted();
-            }
-        );
+        $inCompletedParticipants = $this->inCompletedParticipants();
 
-        if (empty($inCompletedParticipants)) {
+        if (count($inCompletedParticipants) === 0) {
             return $this->hasProducts ? self::ADDON : self::SUMMARY;
         }
 
         return ($first = array_shift($inCompletedParticipants))->getTrackId();
+    }
+
+    public function allIsCompleted()
+    {
+        return count($this->inCompletedParticipants()) === 0;
     }
 
     public function isDirty($trackId)
@@ -178,26 +178,15 @@ class Registration
 
         $form = $participant->getForm();
 
-        $form->setRules(
-            array_map(
-                function ($rule) use ($participant, $trackId) {
-                    if ($rule instanceof RuleNric) {
-                        $rule->setRegistration($this);
-                        $rule->setCategoryId($participant->getCategoryId());
-                        $rule->setTrackId($trackId);
-                    }
-                    return $rule;
-                },
-                $form->getRules()
-            )
-        );
+        $form->updateNRICRule($this, $participant, $trackId);
 
-        if (! $form->fill($data)) {
-            $this->setErrorsByTrackId($trackId, $form->getErrors());
-            return false;
+        if ($form->fill($data)) {
+            return true;
         }
 
-        return true;
+        $this->setErrorsByTrackId($trackId, $form->getErrors());
+
+        return false;
     }
 
     public function renderEntitlements($trackId)
@@ -211,50 +200,9 @@ class Registration
 
     public function fillEntitlements($trackId, array $data)
     {
-        $flag = true;
-        $errors = null;
-
         $participant = $this->getParticipantByTrackId($trackId);
 
-        $entitlementIds = array_map(
-            function (Entitlement $entitlement) {
-                return $entitlement->getId();
-            },
-            $participant->getEntitlementsHasAvailableVariant()
-        );
-
-        $requestIds = array_keys($data);
-
-        if ($lacks = array_diff($entitlementIds, $requestIds)) {
-            array_map(
-                function ($lack) {
-                    $errors[$lack] = 'Please select an option for each item';
-                },
-                $lacks
-            );
-            $this->setErrorsByTrackId($trackId, ['entitlements' => $errors]);
-            return false;
-        }
-
-        foreach ($data as $entitlementId => $variantId) {
-            if (! in_array($entitlementId, $entitlementIds)) {
-                continue;
-            }
-
-            $entitlement = $participant->getEntitlement($entitlementId);
-
-            if ($entitlement === false) {
-                continue;
-            }
-
-            if (! $variantId) {
-                $errors[$entitlementId] = 'Please select an option for each item';
-                $flag = false;
-                continue;
-            } else {
-                $entitlement->setSelectedVariantId($variantId);
-            }
-        }
+        list($flag, $errors) = $this->validateEntitlementData($data, $participant);
 
         $this->setErrorsByTrackId($trackId, ['entitlements' => $errors]);
 
@@ -275,18 +223,11 @@ class Registration
         $flag = true;
 
         $participant = $this->getParticipantByTrackId($trackId);
+
         $fundraises = $participant->getFundraises();
 
         foreach ($fundraises as $donation) {
-            if (! $donation instanceof Donation) {
-                continue;
-            }
-
-            $form = $donation->getForm();
-            $donationId = $donation->getId();
-
-            if (! $form->fill(data_get($data, $donationId, []), $donation->getId())) {
-                $this->setErrorsByTrackId($trackId, $form->getErrors());
+            if (! $this->validateDonationData($trackId, $data, $donation)) {
                 $flag = false;
             }
         }
@@ -362,5 +303,84 @@ class Registration
         $participant = $this->getParticipantByTrackId($trackId);
 
         $participant->setAccessCode($accessCode);
+    }
+
+    /**
+     * validate entitlement request data
+     *
+     * @param array $data
+     * @param $participant
+     * @return array
+     */
+    private function validateEntitlementData(array $data, Participant $participant): array
+    {
+        $flag = true;
+        $errors = null;
+        $requestIds = array_keys($data);
+        $entitlementIds = array_map(
+            function (Entitlement $entitlement) {
+                return $entitlement->getId();
+            },
+            $participant->getEntitlementsHasAvailableVariant()
+        );
+        // determine has enough entitlements
+        if ($lacks = array_diff($entitlementIds, $requestIds)) {
+            array_map(
+                function ($lack) {
+                    $errors[$lack] = 'Please select an option for each item';
+                },
+                $lacks
+            );
+            $flag = false;
+        }
+
+        // determine has variantId for each valid entitlement
+        foreach ($data as $entitlementId => $variantId) {
+            if (!in_array($entitlementId, $entitlementIds)) {
+                continue;
+            }
+
+            $entitlement = $participant->getEntitlement($entitlementId);
+
+            if (!$variantId) {
+                $errors[$entitlementId] = 'Please select an option for each item';
+                $flag = false;
+                continue;
+            } else {
+                $entitlement->setSelectedVariantId($variantId);
+            }
+        }
+
+        return array($flag, $errors);
+    }
+
+    /**
+     * @param $trackId
+     * @param array $data
+     * @param $donation
+     * @return bool
+     */
+    private function validateDonationData(int $trackId, array $data, Donation $donation): bool
+    {
+        $form = $donation->getForm();
+        $donationId = $donation->getId();
+
+        if ($form->fill(data_get($data, $donationId, []), $donation->getId())) {
+            return true;
+        }
+
+        $this->setErrorsByTrackId($trackId, $form->getErrors());
+
+        return false;
+    }
+
+    private function inCompletedParticipants()
+    {
+        return array_filter(
+            $this->participants,
+            function (Participant $participant) {
+                return !$participant->isCompleted();
+            }
+        );
     }
 }

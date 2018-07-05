@@ -20,7 +20,7 @@ class Cart
 
     private $buyerEmail;
 
-    private $tickets;
+    private $tickets=[];
     /**
      * @var  Coupon
      */
@@ -36,34 +36,19 @@ class Cart
      * Cart constructor.
      *
      * @param $buyerEmail
-     * @param Event      $event
+     * @param Event $event
      */
     public function __construct($buyerEmail, Event $event)
     {
         $this->buyerEmail = $buyerEmail;
         $this->event = $event;
-        $this->tickets = [];
     }
 
     public function addTicket(Category $category, $qty)
     {
         $tickets = array_map(
             function () use ($category) {
-                $groupNum = Uuid::uuid1()->toString();
-                return new Category(
-                    $category->getId(),
-                    $category->getName(),
-                    $category->getPrice(),
-                    array_map(
-                        function (Participant $participant) use ($groupNum) {
-                            $p = clone $participant;
-                            $p->setGroupNum($groupNum);
-                            $p->setAccessCode(Uuid::uuid1()->toString());
-                            return $p;
-                        },
-                        $category->getParticipants()
-                    )
-                );
+                return $this->generateTicket($category);
             },
             range(1, $qty)
         );
@@ -165,61 +150,63 @@ class Cart
     }
 
     /**
-     * @return null | Money
+     * @return Money
      */
     public function subTotal()
     {
-        if (empty($this->tickets)) {
-            return null;
-        }
-
         $currency = $this->currency();
+
+        $intTotal =  Money::fromCent($currency, 0);
+
+        if (empty($this->tickets)) {
+            return $intTotal;
+        }
 
         $ticketsSubTotal = array_reduce(
             $this->tickets,
             function ($carry, Category $category) {
                 return $category->getOriginalPrice()->plus($carry);
             },
-            Money::fromCent($currency, 0)
+            $intTotal
         );
 
         $donationSubTotal = $this->donationTotal();
 
         $productsSubTotal = $this->productsSubTotal();
 
-        return $ticketsSubTotal->plus($donationSubTotal)->plus($productsSubTotal);
+        return $ticketsSubTotal
+            ->plus($donationSubTotal)
+            ->plus($productsSubTotal);
     }
 
     public function calcServiceFee()
     {
-        $subTotalAfterDiscount = $this->subtotalAfterDiscount();
-
-        if ($subTotalAfterDiscount->toCent() === 0) {
+        if (! $this->shouldCalcServiceFee()) {
             return Money::fromCent($this->currency(), 0);
         }
 
         $serviceFee = $this->event->getServiceFee();
 
-        $serviceFeeA = $subTotalAfterDiscount->product($serviceFee->getPercentage()/100);
+        $serviceFeeA = $this
+            ->subtotalAfterDiscount()
+            ->product($serviceFee->getPercentage()/100);
 
-        $serviceFeeB = $serviceFee->getFixed()->product(count($this->getParticipants()));
+        $serviceFeeB = $serviceFee
+            ->getFixed()
+            ->product(count($this->getParticipants()));
 
         return $serviceFeeA->plus($serviceFeeB);
     }
 
     public function total()
     {
-        if (is_null($this->subTotal())) {
-            return null;
-        }
-
         $subTotalAfterDiscount = $this->subtotalAfterDiscount();
 
-        if ($subTotalAfterDiscount->toCent() === 0) {
+        if (! $this->shouldCalcServiceFee()) {
             return $subTotalAfterDiscount;
         }
 
-        return $this->subtotalAfterDiscount()->plus($this->calcServiceFee());
+        return $subTotalAfterDiscount->plus($this->calcServiceFee());
     }
 
     public function setCoupon($coupon)
@@ -264,6 +251,11 @@ class Cart
         return true;
     }
 
+    /**
+     * get cart discount amount
+     *
+     * @return Money
+     */
     public function getDiscount()
     {
         $currency = $this->currency();
@@ -294,7 +286,14 @@ class Cart
         return true;
     }
 
-    public function removeProduct($productId, $productVariantId)
+    /**
+     * remove a product form cart
+     *
+     * @param int $productId
+     * @param int $productVariantId
+     * @return bool
+     */
+    public function removeProduct(int $productId, int $productVariantId)
     {
         foreach ($this->products as $i => $product) {
             if ($product->getId() == $productId
@@ -363,6 +362,32 @@ class Cart
     public function subtotalAfterDiscount(): Money
     {
         $subTotalAfterDiscount = $this->subTotal()->minus($this->getDiscount());
+
         return $subTotalAfterDiscount;
+    }
+
+    private function generateTicket(Category $category)
+    {
+        $groupNum = Uuid::uuid1()->toString();
+
+        return new Category(
+            $category->getId(),
+            $category->getName(),
+            $category->getPrice(),
+            array_map(
+                function (Participant $participant) use ($groupNum) {
+                    $p = clone $participant;
+                    $p->setGroupNum($groupNum);
+                    $p->setAccessCode(Uuid::uuid1()->toString());
+                    return $p;
+                },
+                $category->getParticipants()
+            )
+        );
+    }
+
+    private function shouldCalcServiceFee()
+    {
+        return $this->subtotalAfterDiscount()->toCent() !== 0;
     }
 }

@@ -75,4 +75,11 @@ class RuleNric implements Rule
     {
         return $this->errors;
     }
+
+    public function enable(Registration $registration, int $categoryId, int $trackId)
+    {
+        $this->setRegistration($registration);
+        $this->setCategoryId($categoryId);
+        $this->setTrackId($trackId);
+    }
 }
