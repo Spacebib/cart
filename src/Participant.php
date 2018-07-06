@@ -90,57 +90,60 @@ class Participant
     public static function fromArray($data, $categoryId, $currency)
     {
         $participant = new self(
-            $data['id'],
-            $data['name'],
+            self::getOrFail($data, 'id'),
+            self::getOrFail($data, 'name'),
             $categoryId,
-            $data['rules'],
+            self::getOrFail($data, 'rules'),
             new Form(
-                Event::generateRules($data['rules'], $data['fields']),
-                $data['fields']
+                Event::generateRules(
+                    self::getOrFail($data, 'rules'),
+                    self::getOrFail($data, 'fields')
+                ),
+                self::getOrFail($data, 'fields')
             ),
             array_map(
                 function ($entitlement) use ($currency) {
                     return new Entitlement(
-                        self::getWithException($entitlement, 'id'),
-                        self::getWithException($entitlement, 'name'),
-                        self::getWithException($entitlement, 'description'),
-                        self::getWithException($entitlement, 'image_chart'),
-                        self::getWithException($entitlement, 'image_large'),
-                        self::getWithException($entitlement, 'image_thumb'),
+                        self::getOrFail($entitlement, 'id'),
+                        self::getOrFail($entitlement, 'name'),
+                        self::getOrFail($entitlement, 'description'),
+                        self::getOrFail($entitlement, 'image_chart'),
+                        self::getOrFail($entitlement, 'image_large'),
+                        self::getOrFail($entitlement, 'image_thumb'),
                         array_map(
                             function ($variant) {
                                 return new Variant(
-                                    self::getWithException($variant, 'id'),
-                                    self::getWithException($variant, 'name'),
-                                    self::getWithException($variant, 'status'),
-                                    self::getWithException($variant, 'stock')
+                                    self::getOrFail($variant, 'id'),
+                                    self::getOrFail($variant, 'name'),
+                                    self::getOrFail($variant, 'status'),
+                                    self::getOrFail($variant, 'stock')
                                 );
                             },
-                            self::getWithException($entitlement, 'variants')
+                            self::getOrFail($entitlement, 'variants')
                         )
                     );
                 },
-                $data['entitlements']
+                data_get($data, 'entitlements', [])
             ),
             array_map(
                 function ($fundraise) use ($currency) {
                     return new Donation(
-                        self::getWithException($fundraise, 'id'),
-                        self::getWithException($fundraise, 'name'),
+                        self::getOrFail($fundraise, 'id'),
+                        self::getOrFail($fundraise, 'name'),
                         new \Dilab\Cart\Donation\Form(
-                            self::getWithException($fundraise, 'fields'),
+                            self::getOrFail($fundraise, 'fields'),
                             [
-                                'min' => self::getWithException($fundraise, 'min'),
-                                'max' => self::getWithException($fundraise, 'max'),
-                                'required' => self::getWithException($fundraise, 'required'),
+                                'min' => self::getOrFail($fundraise, 'min'),
+                                'max' => self::getOrFail($fundraise, 'max'),
+                                'required' => self::getOrFail($fundraise, 'required'),
                             ]
                         ),
                         $currency
                     );
                 },
-                $data['fundraises']
+                data_get($data, 'fundraises', [])
             ),
-            new CustomFields($data['custom_fields'])
+            new CustomFields(data_get($data, 'custom_fields', []))
         );
 
         return $participant;

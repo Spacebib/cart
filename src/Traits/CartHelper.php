@@ -10,7 +10,7 @@ namespace Dilab\Cart\Traits;
 
 trait CartHelper
 {
-    public static function getWithException($data, $path)
+    public static function getOrFail($data, $path)
     {
         if (! array_key_exists($path, $data)) {
             throw new \LogicException(

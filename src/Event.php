@@ -57,15 +57,15 @@ class Event
 
     public static function init($data)
     {
-        $id = self::getWithException($data, 'id');
+        $id = self::getOrFail($data, 'id');
 
-        $name = self::getWithException($data, 'name');
+        $name = self::getOrFail($data, 'name');
 
-        $currency = self::getWithException($data, 'currency');
+        $currency = self::getOrFail($data, 'currency');
 
-        $serviceFeeData = self::getWithException($data, 'service_fee');
+        $serviceFeeData = self::getOrFail($data, 'service_fee');
 
-        $categoriesData = self::getWithException($data, 'categories');
+        $categoriesData = self::getOrFail($data, 'categories');
 
         $categoriesData = self::filterNoPriceCategories($categoriesData);
 
@@ -76,72 +76,16 @@ class Event
 
         $categories = array_map(
             function ($category) use ($currency) {
-                $participantsData = self::getWithException($category, 'participants');
+                $participantsData = self::getOrFail($category, 'participants');
 
                 return new Category(
 
-                    self::getWithException($category, 'id'),
-                    self::getWithException($category, 'name'),
-                    Money::fromCent($currency, self::getWithException($category, 'price')),
+                    self::getOrFail($category, 'id'),
+                    self::getOrFail($category, 'name'),
+                    Money::fromCent($currency, self::getOrFail($category, 'price')),
                     array_map(
                         function ($participant) use ($category, $currency) {
-
-                            return new Participant(
-                                self::getWithException($participant, 'id'),
-                                self::getWithException($participant, 'name'),
-                                self::getWithException($category, 'id'),
-                                self::getWithException($participant, 'rules'),
-                                new Form(
-                                    self::generateRules(
-                                        self::getWithException($participant, 'rules'),
-                                        self::getWithException($participant, 'fields')
-                                    ),
-                                    self::getWithException($participant, 'fields')
-                                ),
-                                array_map(
-                                    function ($entitlement) use ($currency) {
-                                        return new Entitlement(
-                                            self::getWithException($entitlement, 'id'),
-                                            self::getWithException($entitlement, 'name'),
-                                            self::getWithException($entitlement, 'description'),
-                                            self::getWithException($entitlement, 'image_chart'),
-                                            self::getWithException($entitlement, 'image_large'),
-                                            self::getWithException($entitlement, 'image_thumb'),
-                                            array_map(
-                                                function ($variant) {
-                                                    return new Variant(
-                                                        self::getWithException($variant, 'id'),
-                                                        self::getWithException($variant, 'name'),
-                                                        self::getWithException($variant, 'status'),
-                                                        self::getWithException($variant, 'stock')
-                                                    );
-                                                },
-                                                self::getWithException($entitlement, 'variants')
-                                            )
-                                        );
-                                    },
-                                    self::getOrEmptyArray($participant, 'entitlements')
-                                ),
-                                array_map(
-                                    function ($fundraise) use ($currency) {
-                                        return new Donation(
-                                            self::getWithException($fundraise, 'id'),
-                                            self::getWithException($fundraise, 'name'),
-                                            new \Dilab\Cart\Donation\Form(
-                                                self::getWithException($fundraise, 'fields'),
-                                                [
-                                                'min' => self::getWithException($fundraise, 'min'),
-                                                'max' => self::getWithException($fundraise, 'max'),
-                                                'required' => self::getWithException($fundraise, 'required'),
-                                                ]
-                                            ),
-                                            $currency
-                                        );
-                                    },
-                                    self::getOrEmptyArray($participant, 'fundraises')
-                                ),
-                                new CustomFields(self::getOrEmptyArray($participant, 'custom_fields'))
-                            );
+                            return Participant::fromArray($participant, self::getOrFail($category, 'id'), $currency);
                         },
                         $participantsData,
                         array_keys($participantsData)
@@ -155,27 +99,27 @@ class Event
         $products = array_map(
             function ($product) use ($currency) {
                 return new Product(
-                    self::getWithException($product, 'id'),
-                    self::getWithException($product, 'name'),
-                    self::getWithException($product, 'description'),
-                    self::getWithException($product, 'image_chart'),
-                    self::getWithException($product, 'image_large'),
-                    self::getWithException($product, 'image_thumb'),
+                    self::getOrFail($product, 'id'),
+                    self::getOrFail($product, 'name'),
+                    self::getOrFail($product, 'description'),
+                    self::getOrFail($product, 'image_chart'),
+                    self::getOrFail($product, 'image_large'),
+                    self::getOrFail($product, 'image_thumb'),
                     array_map(
                         function ($variant) use ($currency) {
                             return new \Dilab\Cart\Products\Variant(
-                                self::getWithException($variant, 'id'),
-                                self::getWithException($variant, 'name'),
-                                self::getWithException($variant, 'stock'),
-                                self::getWithException($variant, 'status'),
-                                Money::fromCent($currency, self::getWithException($variant, 'price'))
+                                self::getOrFail($variant, 'id'),
+                                self::getOrFail($variant, 'name'),
+                                self::getOrFail($variant, 'stock'),
+                                self::getOrFail($variant, 'status'),
+                                Money::fromCent($currency, self::getOrFail($variant, 'price'))
                             );
                         },
-                        self::getWithException($product, 'variants')
+                        self::getOrFail($product, 'variants')
                     )
                 );
             },
-            self::getWithException($data, 'products')
+            self::getOrFail($data, 'products')
         );
 
         return new self($id, $name, $currency, $serviceFee, $categories, $products);
