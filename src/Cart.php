@@ -236,6 +236,10 @@ class Cart
             }
         }
 
+        if (!$flag) {
+            $this->setCoupon(null);
+        }
+        
         return $flag;
     }
 
