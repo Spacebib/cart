@@ -57,12 +57,12 @@ class Form
         return true;
     }
 
-    public function updateNRICRule(Registration $registration, Participant $participant, $trackId)
+    public function updateNRICRule(Registration $registration, Participant $participant)
     {
         $this->rules = array_map(
-            function ($rule) use ($participant, $trackId, $registration) {
+            function ($rule) use ($participant, $registration) {
                 if ($rule instanceof RuleNric) {
-                    $rule->enable($registration, $participant->getCategoryId(), $trackId);
+                    $rule->enable($registration, $participant);
                 }
                 return $rule;
             },

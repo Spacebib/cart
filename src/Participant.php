@@ -82,26 +82,21 @@ class Participant
     }
 
     /**
-     * @param $entry
+     * @param $data
+     * @param $categoryId
+     * @param $currency
      * @return $this
      */
-    public static function fromEntry($entry)
+    public static function fromArray($data, $categoryId, $currency)
     {
-        $rules = [
-            'age' => $entry->participant->allow_age,
-            'gender' => $entry->participant->allow_gender,
-        ];
-
-        $currency = $entry->participant->category->event->currency;
-
         $participant = new self(
-            $entry->participant_id,
-            $entry->participant->name,
-            $entry->participant->category_id,
-            $rules,
+            $data['id'],
+            $data['name'],
+            $categoryId,
+            $data['rules'],
             new Form(
-                Event::generateRules($rules, $entry->participant->registrationForm->fields),
-                $entry->participant->registrationForm->fields
+                Event::generateRules($data['rules'], $data['fields']),
+                $data['fields']
             ),
             array_map(
                 function ($entitlement) use ($currency) {
@@ -125,7 +120,7 @@ class Participant
                         )
                     );
                 },
-                $entry->participant->entitlements->toArray()
+                $data['entitlements']
             ),
             array_map(
                 function ($fundraise) use ($currency) {
@@ -143,16 +138,57 @@ class Participant
                         $currency
                     );
                 },
-                $entry->participant->fundraises->toArray()
+                $data['fundraises']
             ),
-            new CustomFields($entry->participant->registrationForm->custom_fields)
+            new CustomFields($data['custom_fields'])
         );
 
-        $participant->setAccessCode($entry->access_code);
-
-        $participant->setGroupNum($entry->grouping_num);
-
         return $participant;
+    }
+
+    public function toEntryArray()
+    {
+        $data = [];
+
+        $data['fields'] = $this->getForm()->getData();
+        $data['entitlements'] = [];
+        $data['fundraises'] = [];
+        // handle participant_id
+        $data['fields']['participant_id'] = $this->getId();
+        // handle grouping_num
+        $data['fields']['grouping_num'] = $this->getGroupNum();
+        // handle access_code
+        $data['fields']['access_code'] = $this->getAccessCode();
+        // handle address
+        if (isset($data['fields']['address_sg_standard'])) {
+            $data['fields']['address'] = $data['fields']['address_sg_standard'];
+            unset($data['fields']['address_sg_standard']);
+        }
+
+        $entitlements = $this->getEntitlements();
+
+        foreach ($entitlements as $entitlement) {
+            $data['entitlements'][] = [
+                'entitlement_variant_id' => $entitlement->getSelectedVariantId(),
+            ];
+        }
+
+        $fundraises = $this->getFundraises();
+
+        foreach ($fundraises as $fundraise) {
+            $data['fundraises'][] = [
+                'fundraise_id' => $fundraise->getId(),
+                'amount' => $fundraise->getForm()->getData()['fundraise_amount'],
+                'remark' => $fundraise->getForm()->getData()['fundraise_remark']
+            ];
+        }
+
+        if ($this->getCustomFields()) {
+            $customFields = $this->getCustomFields()->getFields();
+            $data['custom_fields'] = $customFields;
+        }
+
+        return $data;
     }
 
     public function getEntitlementsHasVariant()

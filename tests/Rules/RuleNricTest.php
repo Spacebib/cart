@@ -38,24 +38,29 @@ class RuleNricTest extends TestCase
     public function testValid()
     {
         $trackId = 0;
+        $participant = $this->registration->getParticipantByTrackId($trackId);
         $data = FormDataFactory::correctData();
-        $this->registration->renderForm($trackId);
-        $this->assertTrue($this->registration->fillForm($trackId, $data));
+        $this->registration->renderForm($participant);
+        $this->assertTrue($this->registration->fillForm($participant, $data));
 
         $trackId = 1;
+        $participant = $this->registration->getParticipantByTrackId($trackId);
         $data = FormDataFactory::correctData();
-        $this->registration->renderForm($trackId);
-        $this->assertTrue($this->registration->fillForm($trackId, $data));
+        $this->registration->renderForm($participant);
+        $this->assertTrue($this->registration->fillForm($participant, $data));
 
         $trackId = 2;
+        $participant = $this->registration->getParticipantByTrackId($trackId);
+
         $data = FormDataFactory::correctData();
-        $this->registration->renderForm($trackId);
-        $this->assertFalse($this->registration->fillForm($trackId, $data));
+        $this->registration->renderForm($participant);
+        $this->assertFalse($this->registration->fillForm($participant, $data));
 
         $trackId = 3;
+        $participant = $this->registration->getParticipantByTrackId($trackId);
         $data = FormDataFactory::correctData();
-        $this->registration->renderForm($trackId);
-        $this->assertTrue($this->registration->fillForm($trackId, $data));
+        $this->registration->renderForm($participant);
+        $this->assertTrue($this->registration->fillForm($participant, $data));
     }
 
     public function tearDown()

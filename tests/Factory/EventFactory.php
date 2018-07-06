@@ -130,6 +130,7 @@ class EventFactory
                                     ]
                                 ]
                             ],
+                            'custom_fields' => []
                         ],
                         [
                             'id' => 2,

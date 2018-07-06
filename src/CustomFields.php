@@ -17,7 +17,7 @@ class CustomFields
      *
      * @param $fields
      */
-    public function __construct($fields)
+    public function __construct(array $fields)
     {
         $fields = $this->transformFields($fields);
 

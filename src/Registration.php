@@ -54,34 +54,32 @@ class Registration
         return null;
     }
 
-    public function renderParticipant($trackId)
+    public function renderParticipant(int $trackId)
     {
-        $form = $this->renderForm($trackId);
+        $participant = $this->getParticipantByTrackId($trackId);
 
-        $entitlements = $this->renderEntitlements($trackId);
+        $form = $this->renderForm($participant);
 
-        $fundraises = $this->renderDonation($trackId);
+        $entitlements = $this->renderEntitlements($participant);
 
-        $customFields = $this->renderCustomFields($trackId);
+        $fundraises = $this->renderDonation($participant);
+
+        $customFields = $this->renderCustomFields($participant);
 
         return compact('form', 'entitlements', 'fundraises', 'customFields');
     }
 
-    public function fillParticipant($trackId, array $data)
+    public function fillParticipant(int $trackId, array $data)
     {
         // truncate errors first
         $this->errors[$trackId] = [];
 
         $participant = $this->getParticipantByTrackId($trackId);
 
-        // it's edit if has accessCode
-        if (data_get($data, 'accessCode')) {
-            $this->replaceAccessCode($trackId, data_get($data, 'accessCode'));
-        }
-        $fillForm = $this->fillForm($trackId, $data['form']);
-        $fillEntitlements = $this->fillEntitlements($trackId, data_get($data, 'entitlements', []));
-        $fillDonation = $this->fillDonation($trackId, data_get($data, 'donations', []));
-        $fillCustomFields = $this->fillCustomFields($trackId, data_get($data, 'customFields', []));
+        $fillForm = $this->fillForm($participant, $data['form']);
+        $fillEntitlements = $this->fillEntitlements($participant, data_get($data, 'entitlements', []));
+        $fillDonation = $this->fillDonation($participant, data_get($data, 'donations', []));
+        $fillCustomFields = $this->fillCustomFields($participant, data_get($data, 'customFields', []));
 
         $participant->setIsDirty(true);
 
@@ -148,13 +146,11 @@ class Registration
     /**
      * return a list of form fields
      *
-     * @param  $trackId
+     * @param Participant $participant
      * @return mixed
      */
-    public function renderForm($trackId)
+    public function renderForm(Participant $participant)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         $form = $participant->getForm();
 
         $wasTouched = $participant->isTouched();
@@ -168,66 +164,56 @@ class Registration
     }
 
     /**
-     * @param $trackId
-     * @param array   $data
-     * @return boolean
+     * @param Participant $participant
+     * @param array $data
+     * @return bool
      */
-    public function fillForm($trackId, array $data)
+    public function fillForm(Participant $participant, array $data)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         $form = $participant->getForm();
 
-        $form->updateNRICRule($this, $participant, $trackId);
+        $form->updateNRICRule($this, $participant);
 
         if ($form->fill($data)) {
             return true;
         }
 
-        $this->setErrorsByTrackId($trackId, $form->getErrors());
+        $this->setErrorsByTrackId($participant->getTrackId(), $form->getErrors());
 
         return false;
     }
 
-    public function renderEntitlements($trackId)
+    public function renderEntitlements(Participant $participant)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         $entitlements = $participant->getEntitlementsHasVariant();
 
         return $entitlements;
     }
 
-    public function fillEntitlements($trackId, array $data)
+    public function fillEntitlements(Participant $participant, array $data)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         list($flag, $errors) = $this->validateEntitlementData($data, $participant);
 
-        $this->setErrorsByTrackId($trackId, ['entitlements' => $errors]);
+        $this->setErrorsByTrackId($participant->getTrackId(), ['entitlements' => $errors]);
 
         return $flag;
     }
 
-    public function renderDonation($trackId)
+    public function renderDonation(Participant $participant)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         $fundraises = $participant->getFundraises();
 
         return $fundraises;
     }
 
-    public function fillDonation($trackId, array $data)
+    public function fillDonation(Participant $participant, array $data)
     {
         $flag = true;
-
-        $participant = $this->getParticipantByTrackId($trackId);
 
         $fundraises = $participant->getFundraises();
 
         foreach ($fundraises as $donation) {
-            if (! $this->validateDonationData($trackId, $data, $donation)) {
+            if (! $this->validateDonationData($participant->getTrackId(), $data, $donation)) {
                 $flag = false;
             }
         }
@@ -235,19 +221,15 @@ class Registration
         return $flag;
     }
 
-    private function renderCustomFields($trackId)
+    private function renderCustomFields(Participant $participant)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         $form = $participant->getCustomFields();
 
         return $form->getFields();
     }
 
-    private function fillCustomFields($trackId, array $data)
+    private function fillCustomFields(Participant $participant, array $data)
     {
-        $participant = $this->getParticipantByTrackId($trackId);
-
         $form = $participant->getCustomFields();
 
         return $form->fill($data);
@@ -296,13 +278,6 @@ class Registration
         } else {
             $this->errors[$trackId] = $error;
         }
-    }
-
-    private function replaceAccessCode($trackId, string $accessCode)
-    {
-        $participant = $this->getParticipantByTrackId($trackId);
-
-        $participant->setAccessCode($accessCode);
     }
 
     /**
