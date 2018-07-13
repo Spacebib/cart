@@ -8,8 +8,12 @@
 
 namespace Dilab\Cart\Donation;
 
+use Dilab\Cart\Money;
+
 class Form
 {
+    use Validator;
+
     private $fields;
 
     private $rules;
@@ -22,57 +26,18 @@ class Form
         $this->rules = $rules;
     }
 
-    public function fill($data, $donationId)
+    public function fill($data, $donationId): bool
     {
         $this->fields = $data;
 
-        if ($this->valid($data, $donationId)) {
-            return true;
-        }
-        return false;
+        return $this->valid($data, $donationId);
     }
 
-    private function valid(array $data, $donationId)
+    public function getAmount()
     {
-        if ($this->isEmpty($data)) {
-            $this->errors['fundraise_amount'][$donationId] = 'Amount can not be empty';
-            return false;
-        }
+        $value = $this->fields[Fields::FUNDRAISE_AMOUNT];
 
-        if (! is_numeric($data['fundraise_amount'])) {
-            $this->errors['fundraise_amount'][$donationId] = 'Amount should be a number';
-            return false;
-        }
-
-        if ($data['fundraise_amount'] < $this->rules['min']/100) {
-            $this->errors['fundraise_amount'][$donationId] = sprintf('Minimum %s', $this->rules['min']/100);
-            return false;
-        }
-
-        if ($data['fundraise_amount'] > $this->rules['max']/100) {
-            $this->errors['fundraise_amount'][$donationId] = sprintf(
-                'Amount is too large, maximum %s',
-                $this->rules['max']/100
-            );
-            return false;
-        }
-
-        if (strlen($data['fundraise_remark']) > 250) {
-            $this->errors['fundraise_remark'][$donationId] = 'remark is too long';
-            return false;
-        }
-        return true;
-    }
-
-    private function isEmpty(array $data)
-    {
-        if (! (isset($data['fundraise_amount']) || isset($data['fundraise_remark']))) {
-            return true;
-        }
-        if ($this->rules['required'] && !$data['fundraise_amount']) {
-            return true;
-        }
-        return false;
+        return is_numeric($value) ? $value : 0;
     }
 
     /**

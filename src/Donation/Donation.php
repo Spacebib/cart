@@ -28,6 +28,13 @@ class Donation
         $this->currency = $currency;
     }
 
+    public function getAmount(): Money
+    {
+        $amount =  $this->form->getAmount();
+
+        return Money::fromCent($this->currency, $amount*100);
+    }
+
     /**
      * @return mixed
      */
@@ -58,14 +65,5 @@ class Donation
     public function getCurrency()
     {
         return $this->currency;
-    }
-
-    public function getAmount()
-    {
-        $amount = $this->form->getData()['fundraise_amount'];
-
-        $amount = is_numeric($amount) ? $amount : 0;
-
-        return Money::fromCent($this->currency, $amount*100);
     }
 }
