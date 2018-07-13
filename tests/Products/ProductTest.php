@@ -87,6 +87,6 @@ class ProductTest extends TestCase
     public function test_get_variants_is_available()
     {
         $this->assertCount(3, $this->product->getVariants());
-        $this->assertCount(1, $this->product->getVariantsAvailable());
+        $this->assertCount(1, $this->product->getAvailableVariants());
     }
 }

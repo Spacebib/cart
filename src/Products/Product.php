@@ -50,22 +50,19 @@ class Product
 
     public function getSelectedVariantId()
     {
-        $variant = $this->getSelectedVariant();
-        if ($variant) {
-            return $variant->getId();
-        }
-        return null;
+        return optional($this->getSelectedVariant())->getId();
     }
 
     public function setSelectedVariantId($variantId)
     {
-        foreach ($this->variants as $variant) {
-            if ($variant->getId() == $variantId && $variant->isAvailable()) {
+        foreach ($this->getAvailableVariants() as $variant) {
+            if ($variant->getId() == $variantId) {
                 $variant->setSelected(true);
             } else {
                 $variant->setSelected(false);
             }
         }
+
         return $this;
     }
 
@@ -74,33 +71,24 @@ class Product
      */
     public function getSelectedVariantPrice()
     {
-        $variant = $this->getSelectedVariant();
-        if ($variant) {
-            return $variant->getPrice();
-        }
-        return null;
+        return optional($this->getSelectedVariant())->getPrice();
     }
 
     public function getSelectedVariant()
     {
-        $selectedVariants = array_filter(
-            $this->variants,
-            function (Variant $variant) {
-                return $variant->getSelected();
+        foreach ($this->variants as $variant) {
+            if ($variant->getSelected()) {
+                return $variant;
             }
-        );
-
-        if (empty($selectedVariants)) {
-            return null;
         }
 
-        return array_pop($selectedVariants);
+        return null;
     }
 
     /**
-     * @return array
+     * @return Variant[]
      */
-    public function getVariantsAvailable(): array
+    public function getAvailableVariants(): array
     {
         return array_filter(
             $this->variants,
