@@ -10,7 +10,10 @@ namespace Dilab\Cart\Rules;
 
 class RuleGender implements Rule
 {
+    use TruncateError;
+
     private $allowedGender;
+
     private $errors = [];
 
     public function __construct($allowedGender)
@@ -20,19 +23,20 @@ class RuleGender implements Rule
 
     public function valid($data)
     {
+        $this->truncateError();
+
         if (!isset($data['gender'])) {
             return true;
         }
 
         $genderRule = new GenderRule($this->allowedGender);
+
         if ($genderRule->match($data['gender'])) {
             $this->errors = [];
             return true;
         }
 
-        $this->errors = [
-            'gender' => $genderRule->describe()
-        ];
+        $this->errors = ['gender' => $genderRule->describe()];
 
         return false;
     }

@@ -14,6 +14,8 @@ class RuleAge implements Rule
 {
     use CartHelper;
 
+    use TruncateError;
+
     private $allowedAge;
 
     private $errors = [];
@@ -25,21 +27,21 @@ class RuleAge implements Rule
 
     public function valid($data)
     {
+        $this->truncateError();
+
         if (!isset($data['dob'])) {
             return true;
         }
 
         $age = self::getAge($data['dob']);
+
         $ageRule = new AgeRule($this->allowedAge);
 
         if ($ageRule->match($age)) {
-            $this->errors = [];
             return true;
         }
 
-        $this->errors = [
-            'dob' => $ageRule->describe()
-        ];
+        $this->errors = ['dob' => $ageRule->describe()];
 
         return false;
     }

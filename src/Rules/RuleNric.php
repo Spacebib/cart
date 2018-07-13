@@ -13,6 +13,8 @@ use Dilab\Cart\Registration;
 
 class RuleNric implements Rule
 {
+    use TruncateError;
+
     private $errors = [];
     /**
      * @var Registration
@@ -22,6 +24,43 @@ class RuleNric implements Rule
     private $category_id;
 
     private $trackId;
+
+    public function valid($data)
+    {
+        $this->truncateError();
+
+        $nric = $data['nric'];
+        /**
+         * @var Participant[] $participants
+         */
+        $participants = $this->registration->getParticipantsByCategoryId($this->category_id);
+
+        foreach ($participants as $participant) {
+            if ($this->trackId != $participant->getTrackId()
+                && isset($participant->getForm()->getData()['nric'])
+                && $participant->getForm()->getData()['nric'] === $nric
+            ) {
+                $this->errors = [
+                    'nric' => 'same NRIC cannot be used to register for same category more than once.',
+                ];
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function errors()
+    {
+        return $this->errors;
+    }
+
+    public function enable(Registration $registration, Participant $participant)
+    {
+        $this->setRegistration($registration);
+        $this->setCategoryId($participant->getCategoryId());
+        $this->setTrackId($participant->getTrackId());
+    }
 
     /**
      * @param mixed $registration
@@ -45,41 +84,5 @@ class RuleNric implements Rule
     public function setCategoryId($category_id)
     {
         $this->category_id = $category_id;
-    }
-
-    public function valid($data)
-    {
-        $nric = $data['nric'];
-        /**
-         * @var Participant[] $participants
-         */
-        $participants = $this->registration->getParticipantsByCategoryId($this->category_id);
-
-        foreach ($participants as $participant) {
-            if ($this->trackId != $participant->getTrackId()
-                && isset($participant->getForm()->getData()['nric'])
-                && $participant->getForm()->getData()['nric'] === $nric
-            ) {
-                $this->errors = [
-                    'nric' => 'same NRIC cannot be used to register for same category more than once.',
-                ];
-                return false;
-            }
-        }
-
-        $this->errors = [];
-        return true;
-    }
-
-    public function errors()
-    {
-        return $this->errors;
-    }
-
-    public function enable(Registration $registration, Participant $participant)
-    {
-        $this->setRegistration($registration);
-        $this->setCategoryId($participant->getCategoryId());
-        $this->setTrackId($participant->getTrackId());
     }
 }

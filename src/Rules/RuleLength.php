@@ -10,15 +10,15 @@ namespace Dilab\Cart\Rules;
 
 class RuleLength implements Rule
 {
+    use TruncateError;
+
     private $errors = [];
 
     public function valid($data)
     {
-        if ($this->validateLength($data)) {
-            $this->errors = [];
-            return true;
-        }
-        return false;
+        $this->truncateError();
+
+        return $this->validateLength($data);
     }
 
     public function errors()
@@ -26,9 +26,10 @@ class RuleLength implements Rule
         return $this->errors;
     }
 
-    private function validateLength(array $data)
+    private function validateLength(array $data): bool
     {
         $flag = true;
+
         foreach ($data as $field => $value) {
             switch ($field) {
                 case 'email':
@@ -52,6 +53,7 @@ class RuleLength implements Rule
                     break;
             }
         }
+
         return $flag;
     }
 
@@ -60,7 +62,7 @@ class RuleLength implements Rule
         $this->errors = array_merge(
             $this->errors(),
             [
-            $field => sprintf('%s cannot be longer than %s characters.', $field, $maxLength)
+                $field => sprintf('%s cannot be longer than %s characters.', $field, $maxLength)
             ]
         );
     }

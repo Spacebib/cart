@@ -10,10 +10,14 @@ namespace Dilab\Cart\Rules;
 
 class RuleEmail implements Rule
 {
+    use TruncateError;
+
     private $errors = [];
 
     public function valid($data)
     {
+        $this->truncateError();
+
         if (!isset($data['email'])) {
             return true;
         }
@@ -28,7 +32,6 @@ class RuleEmail implements Rule
             return false;
         }
 
-        $this->errors = [];
         return true;
     }
 
