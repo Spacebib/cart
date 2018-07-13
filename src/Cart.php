@@ -20,6 +20,7 @@ class Cart
 
     private $buyerEmail;
 
+    /** @var Category[] */
     private $tickets=[];
     /**
      * @var  Coupon
@@ -29,7 +30,7 @@ class Cart
      * @var Product[]
      */
     private $products=[];
-
+    /** @var Event  */
     private $event;
 
     /**

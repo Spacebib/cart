@@ -83,6 +83,8 @@ class CouponTest extends TestCase
     {
         $originPrice = Money::fromCent('VHD', 1000);
 
+        $this->expectException(InvalidDiscountTypeException::class);
+
         $this->coupon = new Coupon(
             1,
             [1],
@@ -91,9 +93,6 @@ class CouponTest extends TestCase
             '1101',
             10
         );
-        
-        $this->expectException(InvalidDiscountTypeException::class);
-        $this->coupon->apply($originPrice);
     }
 
     public function test_category_can_apply_this_coupon()
@@ -101,7 +100,7 @@ class CouponTest extends TestCase
         $this->coupon = new Coupon(
             1,
             [1],
-            'fdfd',
+            DiscountType::FIXVALUE,
             1000000,
             '1101',
             0
@@ -112,7 +111,7 @@ class CouponTest extends TestCase
         $this->coupon = new Coupon(
             1,
             [1],
-            'fdfd',
+            DiscountType::FIXVALUE,
             1000000,
             '1101',
             10
@@ -123,7 +122,7 @@ class CouponTest extends TestCase
         $this->coupon = new Coupon(
             1,
             [1],
-            'fdfd',
+            DiscountType::FIXVALUE,
             1000000,
             '1101',
             10

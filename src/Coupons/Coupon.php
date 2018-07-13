@@ -28,6 +28,10 @@ class Coupon
     private $discount;
 
     private $stock;
+    /**
+     * @var Discounter
+     */
+    private $discounter;
 
     /**
      * Coupon constructor.
@@ -53,63 +57,35 @@ class Coupon
         $this->discountRate = $discountRate;
         $this->code = $code;
         $this->stock = $stock;
+
+        $this->discounter = DiscounterFactory::build($this->discountType, $this->discountRate);
     }
 
-    public function apply(Money $amount)
+    public function apply(Money $amount): Money
     {
-        $this->guardDiscount($amount);
+        $this->discounter->execute($amount);
 
-        $this->stock--;
+        $this->reduceStock();
 
-        if ($this->discountType === DiscountType::FIXVALUE) {
-            $this->discount = Money::fromCent($amount->getCurrency(), $this->discountRate);
+        $this->discount = $this->discounter->getDiscount();
 
-            return $amount->minus(
-                Money::fromCent(
-                    $amount->getCurrency(),
-                    $this->discountRate
-                )
-            );
-        } elseif ($this->discountType === DiscountType::PERCENTAGEOFF) {
-            $this->discount = Money::fromCent(
-                $amount->getCurrency(),
-                $amount->toCent()*$this->discountRate/100
-            );
-
-            return Money::fromCent(
-                $amount->getCurrency(),
-                intval($amount->toCent() - $amount->toCent()*$this->discountRate/100)
-            );
-        }
-
-        return $amount;
+        return $this->discounter->getDiscountedPrice();
     }
 
-    public function canApply($categoryId)
+    public function canApply(int $categoryId): bool
     {
         return $this->stock > 0 && in_array($categoryId, $this->getCategoryIds());
     }
 
-    private function guardDiscount(Money $amount)
+    private function reduceStock(): void
     {
-        if (! in_array($this->discountType, DiscountType::types())) {
-            InvalidDiscountTypeException::throw(
-                sprintf('invalid discount type %s', $this->discountType)
-            );
-        }
-
-        if ($this->discountType === DiscountType::PERCENTAGEOFF) {
-            if ($this->discountRate > 100) {
-                $this->discountRate = 100;
-            }
-        } elseif ($this->discountType === DiscountType::FIXVALUE) {
-            if ($this->discountRate > $amount->toCent()) {
-                $this->discountRate = $amount->toCent();
-            }
-        }
+        $this->stock--;
     }
 
-    public function getDiscount()
+    /**
+     * @return Money
+     */
+    public function getDiscount(): Money
     {
         return $this->discount;
     }
