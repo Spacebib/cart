@@ -298,7 +298,7 @@ class Registration
             },
             $participant->getEntitlementsHasAvailableVariant()
         );
-        // determine has enough entitlements
+        // determine if has enough entitlements
         if ($lacks = array_diff($entitlementIds, $requestIds)) {
             array_map(
                 function ($lack) {
@@ -309,7 +309,7 @@ class Registration
             $flag = false;
         }
 
-        // determine has variantId for each valid entitlement
+        // determine if has variantId for each valid entitlement
         foreach ($data as $entitlementId => $variantId) {
             if (!in_array($entitlementId, $entitlementIds)) {
                 continue;

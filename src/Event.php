@@ -125,7 +125,7 @@ class Event
         return new self($id, $name, $currency, $serviceFee, $categories, $products);
     }
 
-    public function getCategoryById($categoryId)
+    public function getCategoryById(int $categoryId): Category
     {
         $found = array_filter(
             $this->categories,
@@ -144,10 +144,10 @@ class Event
     }
 
     /**
-     * @param $productId
+     * @param int $productId
      * @return Product
      */
-    public function getProductById($productId)
+    public function getProductById(int $productId): Product
     {
         $found = array_filter(
             $this->products,
@@ -163,6 +163,64 @@ class Event
         }
 
         return $first = array_shift($found);
+    }
+
+    public function getProductsHasVariant()
+    {
+        return array_filter(
+            $this->products,
+            function (Product $product) {
+                return !empty($product->getVariants());
+            }
+        );
+    }
+
+    /**
+     * @param array  $rules
+     * @param $fields
+     * @return mixed
+     */
+    public static function generateRules($rules, $fields)
+    {
+        $rules = array_map(
+            function ($condition, $name) {
+                return self::getRule($name, $condition);
+            },
+            $rules,
+            array_keys($rules)
+        );
+
+        $rules[] = new RuleEmail();
+
+        $rules[] = new RuleLength();
+
+        if (in_array('nric', $fields)) {
+            $rules[] = new RuleNric();
+        }
+
+        return $rules;
+    }
+
+    private static function getRule($name, $condition)
+    {
+        switch ($name) {
+            case 'age':
+                return new RuleAge($condition);
+            case 'gender':
+                return new RuleGender($condition);
+            default:
+                return null;
+        }
+    }
+
+    private static function filterNoPriceCategories($categories)
+    {
+        return array_filter(
+            $categories,
+            function ($category) {
+                return isset($category['price']) && !is_null($category['price']);
+            }
+        );
     }
 
     /**
@@ -211,59 +269,5 @@ class Event
     public function getServiceFee()
     {
         return $this->serviceFee;
-    }
-
-    public function getProductsHasVariant()
-    {
-        return array_filter(
-            $this->products,
-            function (Product $product) {
-                return !empty($product->getVariants());
-            }
-        );
-    }
-
-    /**
-     * @param array  $rules
-     * @param $fields
-     * @return mixed
-     */
-    public static function generateRules($rules, $fields)
-    {
-        $rules = array_map(
-            function ($condition, $name) {
-                return self::getRule($name, $condition);
-            },
-            $rules,
-            array_keys($rules)
-        );
-        $rules[] = new RuleEmail();
-        $rules[] = new RuleLength();
-        if (in_array('nric', $fields)) {
-            $rules[] = new RuleNric();
-        }
-        return $rules;
-    }
-
-    private static function getRule($name, $condition)
-    {
-        switch ($name) {
-            case 'age':
-                return new RuleAge($condition);
-            case 'gender':
-                return new RuleGender($condition);
-            default:
-                return null;
-        }
-    }
-
-    private static function filterNoPriceCategories($categories)
-    {
-        return array_filter(
-            $categories,
-            function ($category) {
-                return isset($category['price']) && !is_null($category['price']);
-            }
-        );
     }
 }

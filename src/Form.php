@@ -70,46 +70,6 @@ class Form
         );
     }
 
-    /**
-     * @param mixed $data
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @param array $errors
-     */
-    public function setErrors($errors)
-    {
-        $this->errors = $errors;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
     private function readWhatIsDefined($fillData)
     {
         return array_filter(
@@ -259,6 +219,46 @@ class Form
             }
         }
         return $emptyFields;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @param array $errors
+     */
+    public function setErrors($errors)
+    {
+        $this->errors = $errors;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**
