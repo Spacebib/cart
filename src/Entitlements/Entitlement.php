@@ -45,6 +45,43 @@ class Entitlement
     }
 
     /**
+     * @return array
+     */
+    public function getAvailableVariants(): array
+    {
+        return array_filter(
+            $this->variants,
+            function (Variant $variant) {
+                return $variant->isAvailable();
+            }
+        );
+    }
+
+    public function getSelectedVariantId()
+    {
+        foreach ($this->variants as $variant) {
+            if ($variant->getSelected()) {
+                return $variant->getId();
+            }
+        }
+
+        return '';
+    }
+
+    public function setSelectedVariantId($variantId)
+    {
+        // For handling edit,
+        // allow to select unavailable variant here
+        foreach ($this->variants as $variant) {
+            if ($variant->getId() == $variantId) {
+                $variant->setSelected(true);
+            } else {
+                $variant->setSelected(false);
+            }
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -90,62 +127,5 @@ class Entitlement
     public function getVariants(): array
     {
         return $this->variants;
-    }
-
-    /**
-     * @return array
-     */
-    public function getVariantsHasStock(): array
-    {
-        return array_filter(
-            $this->variants,
-            function (Variant $variant) {
-                return $variant->hasStock();
-            }
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getVariantsAvailable(): array
-    {
-        return array_filter(
-            $this->variants,
-            function (Variant $variant) {
-                return $variant->isAvailable();
-            }
-        );
-    }
-
-    public function getSelectedVariantId()
-    {
-        $selectedVariants = array_filter(
-            $this->variants,
-            function (Variant $variant) {
-                return $variant->getSelected();
-            }
-        );
-
-        if (empty($selectedVariants)) {
-            return '';
-        }
-
-        return array_pop($selectedVariants)->getId();
-    }
-
-    public function setSelectedVariantId($variantId)
-    {
-        /**
-         * For handling edit,
-         * don't deny to select unavailable variant here
-         */
-        foreach ($this->variants as $variant) {
-            if ($variant->getId() == $variantId) {
-                $variant->setSelected(true);
-            } else {
-                $variant->setSelected(false);
-            }
-        }
     }
 }

@@ -209,7 +209,7 @@ class Participant
         return array_filter(
             $this->entitlements,
             function (Entitlement $entitlement) {
-                return !empty($entitlement->getVariantsAvailable());
+                return !empty($entitlement->getAvailableVariants());
             }
         );
     }

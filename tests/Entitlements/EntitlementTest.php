@@ -55,15 +55,9 @@ class EntitlementTest extends TestCase
         $this->assertEquals('', $selectedId);
     }
 
-    public function test_get_variants_has_stock()
-    {
-        $this->assertCount(3, $this->entitlement->getVariants());
-        $this->assertCount(2, $this->entitlement->getVariantsHasStock());
-    }
-
     public function test_get_variants_is_available()
     {
         $this->assertCount(3, $this->entitlement->getVariants());
-        $this->assertCount(1, $this->entitlement->getVariantsAvailable());
+        $this->assertCount(1, $this->entitlement->getAvailableVariants());
     }
 }
