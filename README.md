@@ -64,8 +64,10 @@ $cart->removeProduct($productId, $productVariantId)
 + Get product details
 
 ```php
-$cart->getProducts()
-$cart->countProducts()
+$cart->getProducts()  
+  
+$cart->countProducts()  
+  
 $cart->productsSubtotal()
 ```
 
@@ -74,10 +76,20 @@ $cart->productsSubtotal()
 The cart can only use one coupon, but a coupon can be used for multiple tickets 
 ```php
 $cart->getCoupon()
-$cart->setCoupon($coupon)
+```
+```php
+$cart->setCoupon(Coupon $coupon)
+```
+```php
 $cart->applyCoupon()
-$cart->canceloCoupon()
+```
+```php
+$cart->cancelCoupon()
+```
+```php
 $cart->getDiscount()
+```
+```php
 $cart->usedCouponQuantity()
 ```
 
