@@ -149,6 +149,24 @@ class Participant
         return $participant;
     }
 
+    public function formatFieldsData()
+    {
+        $data['fields'] = $this->getForm()->getData();
+        // handle participant_id
+        $data['fields']['participant_id'] = $this->getId();
+        // handle grouping_num
+        $data['fields']['grouping_num'] = $this->getGroupNum();
+        // handle access_code
+        $data['fields']['access_code'] = $this->getAccessCode();
+        // handle address
+        if (isset($data['fields']['address_sg_standard'])) {
+            $data['fields']['address'] = $data['fields']['address_sg_standard'];
+            unset($data['fields']['address_sg_standard']);
+        }
+
+        return $data['fields'];
+    }
+
     public function toEntryArray()
     {
         $data = [];
