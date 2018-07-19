@@ -163,6 +163,12 @@ class Participant
             $data['fields']['address'] = $data['fields']['address_sg_standard'];
             unset($data['fields']['address_sg_standard']);
         }
+        // handle custom-fields
+        $data['fields']['custom_fields'] = '';
+        if ($this->getCustomFields()) {
+            $customFields = $this->getCustomFields()->getFields();
+            $data['fields']['custom_fields'] = $customFields;
+        }
 
         return $data['fields'];
     }
@@ -199,8 +205,8 @@ class Participant
         foreach ($fundraises as $fundraise) {
             $data['fundraises'][] = [
                 'fundraise_id' => $fundraise->getId(),
-                'amount' => $fundraise->getForm()->getData()['fundraise_amount'],
-                'remark' => $fundraise->getForm()->getData()['fundraise_remark']
+                'amount' => array_get($fundraise->getForm()->getData(), 'fundraise_amount'),
+                'remark' => array_get($fundraise->getForm()->getData(), 'fundraise_remark')
             ];
         }
 

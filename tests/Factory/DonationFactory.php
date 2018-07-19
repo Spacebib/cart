@@ -44,17 +44,25 @@ class DonationFactory
         return $donation;
     }
 
-    public static function postData()
+    public static function postData($id=1)
     {
         return [
-                [
-                    'fundraise_amount' => '20',
-                    'fundraise_remark' => '',
-                ],
-                [
-                    'fundraise_amount' => '20',
-                    'fundraise_remark' => '',
-                ],
+            $id =>  [
+                'fundraise_amount' => '20',
+                'fundraise_remark' => '',
+            ],
+            $id =>  [
+                'fundraise_amount' => '20',
+                'fundraise_remark' => '',
+            ],
+            $id =>  [
+                'fundraise_amount' => '20',
+                'fundraise_remark' => '',
+            ],
+            $id =>  [
+                'fundraise_amount' => '20',
+                'fundraise_remark' => '',
+            ],
         ];
     }
 }
