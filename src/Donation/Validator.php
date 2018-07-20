@@ -12,6 +12,15 @@ trait Validator
 {
     public function valid(array $data, $donationId)
     {
+        if (!array_key_exists(Fields::FUNDRAISE_AMOUNT, $data)
+            || !array_key_exists(Fields::FUNDRAISE_REMARK, $data)) {
+            return false;
+        }
+
+        if ($this->isEmpty($data) && !$this->rules['required']) {
+            return true;
+        }
+
         if ($this->isEmpty($data)) {
             $this->errors[Fields::FUNDRAISE_AMOUNT][$donationId] = 'Amount can not be empty';
             return false;
@@ -40,19 +49,12 @@ trait Validator
             $this->errors[Fields::FUNDRAISE_REMARK][$donationId] = 'remark is too long';
             return false;
         }
+
         return true;
     }
 
     private function isEmpty(array $data)
     {
-        if (! (isset($data[Fields::FUNDRAISE_AMOUNT]) || isset($data[Fields::FUNDRAISE_REMARK]))) {
-            return true;
-        }
-
-        if ($this->rules['required'] && !$data[Fields::FUNDRAISE_AMOUNT]) {
-            return true;
-        }
-
-        return false;
+        return $data[Fields::FUNDRAISE_AMOUNT]==='' || is_null($data[Fields::FUNDRAISE_AMOUNT]);
     }
 }
