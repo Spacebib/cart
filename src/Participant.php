@@ -152,6 +152,8 @@ class Participant
     public function formatFieldsData()
     {
         $data['fields'] = $this->getForm()->getData();
+        // handle email_confirmation
+        unset($data['fields']['email_confirmation']);
         // handle participant_id
         $data['fields']['participant_id'] = $this->getId();
         // handle grouping_num
@@ -170,6 +172,18 @@ class Participant
             $data['fields']['custom_fields'] = $customFields;
         }
 
+        foreach ($data['fields'] as $field => $value) {
+            if ($field === 'dob') {
+                $value = \DateTime::createFromFormat(
+                    'd-m-Y',
+                    implode("-", array_values($value))
+                )->format('Y-m-d');
+            } elseif (is_array($value)) {
+                $value = json_encode($value);
+            }
+            $data['fields'][$field] = $value;
+        }
+
         return $data['fields'];
     }
 
@@ -180,6 +194,8 @@ class Participant
         $data['fields'] = $this->getForm()->getData();
         $data['entitlements'] = [];
         $data['fundraises'] = [];
+        // handle email_confirmation
+        unset($data['fields']['email_confirmation']);
         // handle participant_id
         $data['fields']['participant_id'] = $this->getId();
         // handle grouping_num
