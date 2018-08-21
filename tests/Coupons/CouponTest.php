@@ -81,7 +81,7 @@ class CouponTest extends TestCase
     
     public function test_validate_discount_type()
     {
-        $originPrice = Money::fromCent('VHD', 1000);
+        Money::fromCent('VHD', 1000);
 
         $this->expectException(InvalidDiscountTypeException::class);
 

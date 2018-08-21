@@ -164,6 +164,9 @@ class CartTest extends TestCase
         $this->assertEquals(Money::fromCent('SGD', 114000), $this->cart->total());
     }
 
+    /**
+     * test coupon wont't over use
+     */
     public function test_will_apply_the_most_expensive_ticket_when_coupon_only_one()
     {
         // price 1000
