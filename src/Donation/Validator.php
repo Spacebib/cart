@@ -12,8 +12,7 @@ trait Validator
 {
     public function valid(array $data, $donationId)
     {
-        if (!array_key_exists(Fields::FUNDRAISE_AMOUNT, $data)
-            || !array_key_exists(Fields::FUNDRAISE_REMARK, $data)) {
+        if (!array_key_exists(Fields::FUNDRAISE_AMOUNT, $data)) {
             return false;
         }
 
@@ -45,7 +44,7 @@ trait Validator
             return false;
         }
 
-        if (strlen($data['' . Fields::FUNDRAISE_REMARK . '']) > 250) {
+        if (array_key_exists(Fields::FUNDRAISE_REMARK, $data) && strlen($data['' . Fields::FUNDRAISE_REMARK . '']) > 250) {
             $this->errors[Fields::FUNDRAISE_REMARK][$donationId] = 'remark is too long';
             return false;
         }
