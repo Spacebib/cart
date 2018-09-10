@@ -34,6 +34,8 @@ class Cart
     /** @var Event  */
     private $event;
 
+    private $participants=null;
+
     /**
      * Cart constructor.
      *
@@ -62,6 +64,9 @@ class Cart
 
     public function getParticipants()
     {
+        if ($this->participants) {
+            return $this->participants;
+        }
         $participants = array_reduce(
             $this->tickets,
             function ($carrier, Category $category) {
@@ -77,7 +82,7 @@ class Cart
             function (Participant $participant, $key) {
 
                 $newParticipant = deepCopy($participant);
-                
+
                 $newParticipant->setGroupNum($participant->getGroupNum());
                 $newParticipant->setAccessCode($participant->getAccessCode());
                 $newParticipant->setTrackId($key);
@@ -88,7 +93,9 @@ class Cart
             array_keys($participants)
         );
 
-        return $participants;
+        $this->participants = $participants;
+
+        return $this->participants;
     }
 
     public function tickets()

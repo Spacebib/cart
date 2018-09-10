@@ -44,7 +44,7 @@ class DonationFactory
         return $donation;
     }
 
-    public static function postData($id=1)
+    public static function postData($id = 1)
     {
         return [
             $id =>  [
