@@ -13,6 +13,7 @@ use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Products\Product;
 use Dilab\Cart\Traits\Serializable;
 use Ramsey\Uuid\Uuid;
+use function DeepCopy\deep_copy as deepCopy;
 
 class Cart
 {
@@ -75,17 +76,8 @@ class Cart
         $participants = array_map(
             function (Participant $participant, $key) {
 
-                $newParticipant = new Participant(
-                    $participant->getId(),
-                    $participant->getName(),
-                    $participant->getCategoryId(),
-                    $participant->getRules(),
-                    clone $participant->getForm(),
-                    $participant->getEntitlements(),
-                    $participant->getFundraises(),
-                    clone $participant->getCustomFields()
-                );
-
+                $newParticipant = deepCopy($participant);
+                
                 $newParticipant->setGroupNum($participant->getGroupNum());
                 $newParticipant->setAccessCode($participant->getAccessCode());
                 $newParticipant->setTrackId($key);
