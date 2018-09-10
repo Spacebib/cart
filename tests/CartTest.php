@@ -73,14 +73,13 @@ class CartTest extends TestCase
 
     public function testSubTotal()
     {
-        $result = $this->cart->subTotal();
-        $this->assertEquals(0, $result->toCent());
+        $this->assertEquals(0, $this->cart->subTotal()->toCent());
 
         $this->cart->addTicket(EventFactory::create()->getCategoryById(1), 1);
         $this->cart->addTicket(EventFactory::create()->getCategoryById(2), 2);
-        $result = $this->cart->subTotal();
+        
         $this->assertFalse($this->cart->hasDonation());
-        $this->assertEquals(Money::fromCent('SGD', 101000), $result);
+        $this->assertEquals(Money::fromCent('SGD', 101000), $this->cart->subTotal());
 
         $registration = new Registration($this->cart->getParticipants());
         $data = [
@@ -91,9 +90,9 @@ class CartTest extends TestCase
         ];
         $registration->fillParticipant(0, $data);
         $registration->fillParticipant(1, $data);
-        $donation = $this->cart->donationTotal();
+        
         $this->assertTrue($this->cart->hasDonation());
-        $this->assertEquals(Money::fromCent('SGD', 2000), $donation);
+        $this->assertEquals(Money::fromCent('SGD', 2000), $this->cart->donationTotal());
     }
 
     public function testTotal()

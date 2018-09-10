@@ -13,6 +13,7 @@ use Dilab\Cart\Donation\Donation;
 use Dilab\Cart\Products\Product;
 use Dilab\Cart\Traits\Serializable;
 use Ramsey\Uuid\Uuid;
+use function DeepCopy\deep_copy as deepCopy;
 
 class Cart
 {
@@ -32,6 +33,8 @@ class Cart
     private $products=[];
     /** @var Event  */
     private $event;
+
+    private $participants=null;
 
     /**
      * Cart constructor.
@@ -61,6 +64,9 @@ class Cart
 
     public function getParticipants()
     {
+        if ($this->participants) {
+            return $this->participants;
+        }
         $participants = array_reduce(
             $this->tickets,
             function ($carrier, Category $category) {
@@ -75,16 +81,7 @@ class Cart
         $participants = array_map(
             function (Participant $participant, $key) {
 
-                $newParticipant = new Participant(
-                    $participant->getId(),
-                    $participant->getName(),
-                    $participant->getCategoryId(),
-                    $participant->getRules(),
-                    clone $participant->getForm(),
-                    $participant->getEntitlements(),
-                    $participant->getFundraises(),
-                    clone $participant->getCustomFields()
-                );
+                $newParticipant = deepCopy($participant);
 
                 $newParticipant->setGroupNum($participant->getGroupNum());
                 $newParticipant->setAccessCode($participant->getAccessCode());
@@ -96,7 +93,9 @@ class Cart
             array_keys($participants)
         );
 
-        return $participants;
+        $this->participants = $participants;
+
+        return $this->participants;
     }
 
     public function tickets()
