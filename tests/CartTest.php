@@ -69,6 +69,12 @@ class CartTest extends TestCase
 
         $this->assertNotNull($participants[0]->getGroupNum());
         $this->assertNotNull($participants[0]->getAccessCode());
+
+        // every participant has different access code
+        $accessCodes = array_map(function (Participant $participant) {
+            return $participant->getAccessCode();
+        }, $participants);
+        $this->assertCount(12, array_filter($accessCodes));
     }
 
     public function testSubTotal()
