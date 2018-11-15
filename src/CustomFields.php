@@ -58,7 +58,7 @@ class CustomFields
         $flag = true;
 
         foreach ($this->fields as $key => $field) {
-            $value = data_get($data, $key);
+            $value = array_get($data, $key);
             $this->fields[$key]['value'] = $value;
             $this->fields[$key]['valid'] = true;
 
