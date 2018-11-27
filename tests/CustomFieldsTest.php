@@ -167,6 +167,7 @@ class CustomFieldsTest extends TestCase
 
             if ($key === 'untitled') {
                 $this->assertFalse($field['valid']);
+                $this->assertEquals('Invalid format', $field['error']);
             } else {
                 $this->assertTrue($field['valid']);
             }
