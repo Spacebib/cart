@@ -90,7 +90,7 @@ class Money
     {
         $amount = $this->toCent() * $p;
 
-        return Money::fromCent($this->getCurrency(), intval($amount));
+        return Money::fromCent($this->getCurrency(), ceil(floatval($amount)));
     }
 
     private function canCalculate(Money $b)
