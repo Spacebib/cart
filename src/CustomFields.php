@@ -61,6 +61,7 @@ class CustomFields
             $value = array_get($data, $key);
             $this->fields[$key]['value'] = $value;
             $this->fields[$key]['valid'] = true;
+            $this->fields[$key]['error'] = null;
 
             if (data_get($field, 'validation.required.enabled') && ! $value) {
                 $this->fields[$key]['valid'] = false;
