@@ -12,6 +12,8 @@ class CustomFields
 {
     private $fields;
 
+    private $errors;
+
     /**
      * CustomFields constructor.
      *
@@ -64,16 +66,14 @@ class CustomFields
             $this->fields[$key]['error'] = null;
 
             if (data_get($field, 'validation.required.enabled') && ! $value) {
-                $this->fields[$key]['valid'] = false;
-                $this->fields[$key]['error'] = data_get($field, 'validation.required.error');
+                $this->errors[$key] = data_get($field, 'validation.required.error');
                 $flag = false;
             } elseif (data_get($field, 'validation.regex.enabled')) {
                 if (in_array(data_get($field, 'type'), ['checkbox'])) {
                     continue;
                 }
                 if (1 !== preg_match("/".data_get($field, 'validation.regex.pattern')."/", $value)) {
-                    $this->fields[$key]['valid'] = false;
-                    $this->fields[$key]['error'] = data_get($field, 'validation.regex.error');
+                    $this->errors[$key] = data_get($field, 'validation.regex.error');
                     $flag = false;
                 }
             }
@@ -88,5 +88,21 @@ class CustomFields
     public function getFields(): array
     {
         return $this->fields;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @param mixed $errors
+     */
+    public function setErrors($errors): void
+    {
+        $this->errors = $errors;
     }
 }

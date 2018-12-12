@@ -145,15 +145,7 @@ class CustomFieldsTest extends TestCase
 
         $this->assertFalse($this->form->fill($data));
 
-        foreach ($this->form->getFields() as $key => $field) {
-            $this->assertArrayHasKey('value', $field);
-
-            if ($key === 'untitled_1') {
-                $this->assertFalse($field['valid']);
-            } else {
-                $this->assertTrue($field['valid']);
-            }
-        }
+        $this->assertArrayHasKey('untitled_1', $this->form->getErrors());
     }
 
     public function test_fill_with_regex()
@@ -162,15 +154,7 @@ class CustomFieldsTest extends TestCase
 
         $this->assertFalse($this->form->fill($data));
 
-        foreach ($this->form->getFields() as $key => $field) {
-            $this->assertArrayHasKey('value', $field);
-
-            if ($key === 'untitled') {
-                $this->assertFalse($field['valid']);
-                $this->assertEquals('Invalid format', $field['error']);
-            } else {
-                $this->assertTrue($field['valid']);
-            }
-        }
+        $this->assertArrayHasKey('untitled', $this->form->getErrors());
+        $this->assertEquals('Invalid format', $this->form->getErrors()['untitled']);
     }
 }

@@ -232,7 +232,12 @@ class Registration
     {
         $form = $participant->getCustomFields();
 
-        return $form->fill($data);
+        if ($form->fill($data)) {
+            return true;
+        }
+        
+        $this->setErrorsByTrackId($participant->getTrackId(), ['custom_fields' => $form->getErrors()]);
+        return false;
     }
 
     public function getParticipants()
