@@ -1,5 +1,6 @@
 # Cart
-[![Build Status](https://www.travis-ci.org/Spacebib/cart.svg?branch=master)](https://www.travis-ci.org/Spacebib/cart) 
+[![Build Status](https://www.travis-ci.org/Spacebib/cart.svg?branch=master)](https://www.travis-ci.org/Spacebib/cart)  
+
 A Shopping Cart Abstraction
 
 ## Usage
