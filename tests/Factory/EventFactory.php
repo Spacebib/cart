@@ -80,6 +80,7 @@ class EventFactory
                                     'image_chart' => '',
                                     'image_large' => '',
                                     'image_thumb' => '',
+                                    'visible' => true,
                                     'variants'=> [
                                         [
                                             'id'=>1,
@@ -108,6 +109,7 @@ class EventFactory
                                     'image_chart' => '',
                                     'image_large' => '',
                                     'image_thumb' => '',
+                                    'visible' => true,
                                     'variants'=> [
                                         [
                                             'id'=>3,
@@ -203,6 +205,7 @@ class EventFactory
                                     'image_chart' => '',
                                     'image_large' => '',
                                     'image_thumb' => '',
+                                    'visible' => true,
                                     'variants'=> [
                                         [
                                             'id'=>1,
@@ -247,6 +250,7 @@ class EventFactory
                                     'image_chart' => '',
                                     'image_large' => '',
                                     'image_thumb' => '',
+                                    'visible' => true,
                                     'variants'=> [
                                         [
                                             'id'=>1,

@@ -29,6 +29,7 @@ class EntitlementTest extends TestCase
             '',
             '',
             '',
+            true,
             [
                 new Variant(1, 'size:s', 1, 10),
                 new Variant(2, 'size:m', 0, 10),

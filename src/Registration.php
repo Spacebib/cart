@@ -303,8 +303,15 @@ class Registration
             },
             $participant->getEntitlementsHasAvailableVariant()
         );
+
+        $availableEntitlementsIds = array_map(
+            function (Entitlement $entitlement) {
+                return $entitlement->getId();
+            },
+            $participant->getAvailableEntitlements()
+        );
         // determine if has enough entitlements
-        if ($lacks = array_diff($entitlementIds, $requestIds)) {
+        if ($lacks = array_diff($availableEntitlementsIds, $requestIds)) {
             array_map(
                 function ($lack) {
                     $errors[$lack] = 'Please select an option for each item';
@@ -314,7 +321,7 @@ class Registration
             $flag = false;
         }
 
-        // determine if has variantId for each valid entitlement
+        // fill chosen variant for each entitlement
         foreach ($data as $entitlementId => $variantId) {
             if (!in_array($entitlementId, $entitlementIds)) {
                 continue;

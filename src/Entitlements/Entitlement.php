@@ -21,6 +21,8 @@ class Entitlement
     private $imageLarge;
 
     private $imageThumb;
+    
+    private $visible;
     /**
      * @var Variant[]
      */
@@ -33,6 +35,7 @@ class Entitlement
         $imageChart,
         $imageLarge,
         $imageThumb,
+        bool $visible,
         array $variants
     ) {
         $this->id = $id;
@@ -41,6 +44,7 @@ class Entitlement
         $this->imageChart = $imageChart;
         $this->imageLarge = $imageLarge;
         $this->imageThumb = $imageThumb;
+        $this->visible = $visible;
         $this->variants = $variants;
     }
 
@@ -79,6 +83,11 @@ class Entitlement
                 $variant->setSelected(false);
             }
         }
+    }
+
+    public function isVisible()
+    {
+        return $this->visible;
     }
 
     /**

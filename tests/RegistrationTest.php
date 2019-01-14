@@ -236,6 +236,7 @@ class RegistrationTest extends TestCase
                                     'image_chart' => '',
                                     'image_large' => '',
                                     'image_thumb' => '',
+                                    'visible' => true,
                                     'variants'=> [
                                         [
                                             'id'=>1,

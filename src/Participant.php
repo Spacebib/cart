@@ -110,6 +110,7 @@ class Participant
                         self::getOrFail($entitlement, 'image_chart'),
                         self::getOrFail($entitlement, 'image_large'),
                         self::getOrFail($entitlement, 'image_thumb'),
+                        self::getOrFail($entitlement, 'visible'),
                         array_map(
                             function ($variant) {
                                 return new Variant(
@@ -208,7 +209,12 @@ class Participant
             unset($data['fields']['address_sg_standard']);
         }
 
-        $entitlements = $this->getEntitlements();
+        $entitlements = array_filter(
+            $this->getEntitlements(),
+            function (Entitlement $entitlement) {
+                return $entitlement->getSelectedVariantId();
+            }
+        );
 
         foreach ($entitlements as $entitlement) {
             $data['entitlements'][] = [
@@ -250,6 +256,16 @@ class Participant
             $this->entitlements,
             function (Entitlement $entitlement) {
                 return !empty($entitlement->getAvailableVariants());
+            }
+        );
+    }
+
+    public function getAvailableEntitlements()
+    {
+        return array_filter(
+            $this->entitlements,
+            function (Entitlement $entitlement) {
+                return $entitlement->isVisible() && !empty($entitlement->getAvailableVariants());
             }
         );
     }

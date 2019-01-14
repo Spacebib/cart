@@ -49,7 +49,7 @@ class RuleAgeTest extends TestCase
 
         $data = FormDataFactory::correctData();
 
-        $data['dob'] = ['day'=>1, 'month'=>2, 'year'=>2017];
+        $data['dob'] = ['day'=>1, 'month'=>2, 'year'=>date('Y')-10];
         $this->assertFalse($this->rule->valid($data));
         $this->assertContains('years old & above', $this->rule->errors()['dob']);
 
@@ -72,7 +72,7 @@ class RuleAgeTest extends TestCase
         $this->assertFalse($this->rule->valid($data));
         $this->assertContains('years old & below', $this->rule->errors()['dob']);
 
-        $data['dob'] = ['day'=>27, 'month'=>1, 'year'=>2000];
+        $data['dob'] = ['day'=>27, 'month'=>1, 'year'=>date('Y')-18];
         $this->assertTrue($this->rule->valid($data));
         $this->assertEmpty($this->rule->errors());
     }
@@ -91,7 +91,7 @@ class RuleAgeTest extends TestCase
         $this->assertFalse($this->rule->valid($data));
         $this->assertContains(sprintf('From %s years old to %s years old', 1, 18), $this->rule->errors()['dob']);
 
-        $data['dob'] = ['day'=>27, 'month'=>1, 'year'=>2000];
+        $data['dob'] = ['day'=>27, 'month'=>1, 'year'=>date('Y')-18];
         $this->assertTrue($this->rule->valid($data));
         $this->assertEmpty($this->rule->errors());
     }

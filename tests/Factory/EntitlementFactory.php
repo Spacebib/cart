@@ -22,6 +22,7 @@ class EntitlementFactory
             'image_chart' => '',
             'image_large' => '',
             'image_thumb' => '',
+            'visible' => true,
             'variants'=> [
                 [
                     'id'=>1,
@@ -50,6 +51,7 @@ class EntitlementFactory
             'image_chart' => '',
             'image_large' => '',
             'image_thumb' => '',
+            'visible' => true,
             'variants'=> [
                 [
                     'id'=>3,
@@ -84,6 +86,7 @@ class EntitlementFactory
                 $data['image_chart'],
                 $data['image_large'],
                 $data['image_thumb'],
+                $data['visible'],
                 array_map(function ($v) {
                     return new Variant($v['id'], $v['name'], $v['status'], $v['stock']);
                 }, $data['variants'])
