@@ -86,11 +86,17 @@ class Money
         );
     }
 
+    /**
+     * only work for calc service fee
+     * product will round up.
+     * @param  $p
+     * @return Money
+     */
     public function product($p)
     {
         $amount = $this->toCent() * $p;
 
-        return Money::fromCent($this->getCurrency(), intval($amount));
+        return Money::fromCent($this->getCurrency(), (int)ceil(floatval($amount)));
     }
 
     private function canCalculate(Money $b)
