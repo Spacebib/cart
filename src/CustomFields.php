@@ -72,7 +72,7 @@ class CustomFields
                 if (in_array(data_get($field, 'type'), ['checkbox'])) {
                     continue;
                 }
-                if (1 !== preg_match("/".data_get($field, 'validation.regex.pattern')."/", $value)) {
+                if (1 !== preg_match("/".data_get($field, 'validation.regex.pattern')."/u", $value)) {
                     $this->errors[$key] = data_get($field, 'validation.regex.error');
                     $flag = false;
                 }

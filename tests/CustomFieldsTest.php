@@ -157,4 +157,50 @@ class CustomFieldsTest extends TestCase
         $this->assertArrayHasKey('untitled', $this->form->getErrors());
         $this->assertEquals('Invalid format', $this->form->getErrors()['untitled']);
     }
+
+    public function test_fill_with_regex_in_Vietnamese()
+    {
+        $this->formWithVietnameseRegex();
+
+        $data = ['untitled' => 'ảựăậ ảự'];
+
+        $this->assertTrue($this->form->fill($data));
+    }
+
+    private function formWithVietnameseRegex()
+    {
+        $fields = array (
+            0 =>
+                array (
+                    'label' => 'Untitled',
+                    'help_text' => '',
+                    'tooltip' => '',
+                    'tooltip_title' => '',
+                    'size' => 'large',
+                    'validation' =>
+                        array (
+                            'required' =>
+                                array (
+                                    'enabled' => true,
+                                    'error' => 'Required.',
+                                ),
+                            'regex' =>
+                                array (
+                                    'enabled' => true,
+                                    'error' => 'Invalid format',
+                                    'pattern' => '^.{1,7}$',
+                                ),
+                        ),
+                    'values' =>
+                        array (
+                            0 => 'First Choice',
+                            1 => 'Second Choice',
+                        ),
+                    'key' => 'untitled',
+                    'type' => 'text',
+                ),
+        );
+
+        $this->form = new CustomFields($fields);
+    }
 }
