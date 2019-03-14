@@ -318,7 +318,7 @@ class Participant
     {
         $data = $this->form->getData();
 
-        if (array_has($data, 'first_name')) {
+        if (!empty(array_get($data, 'first_name'))) {
             return implode(
                 " ",
                 [
