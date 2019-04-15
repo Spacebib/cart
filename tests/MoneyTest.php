@@ -53,5 +53,9 @@ class MoneyTest extends TestCase
         $result = $moneyA->product(0.11);
         $this->assertEquals(Money::fromCent('SGD', 1100), $result);
 
+        $moneyA = Money::fromCent('SGD', 5000);
+        $result = $moneyA->product(0.07);
+        $this->assertEquals(Money::fromCent('SGD', 350), $result);
+
     }
 }

@@ -94,7 +94,7 @@ class Money
      */
     public function product($p)
     {
-        $amount = $this->toCent() * $p;
+        $amount = bcmul($this->toCent(), $p, 1);
 
         return Money::fromCent($this->getCurrency(), (int)ceil(floatval($amount)));
     }
