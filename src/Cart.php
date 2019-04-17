@@ -36,6 +36,8 @@ class Cart
 
     private $participants=null;
 
+    private $isPlaced = false;
+
     /**
      * Cart constructor.
      *
@@ -393,5 +395,15 @@ class Cart
     private function shouldCalcServiceFee()
     {
         return $this->subtotalAfterDiscount()->toCent() !== 0;
+    }
+
+    public function place()
+    {
+        $this->isPlaced = true;
+    }
+
+    public function isPlaced()
+    {
+        return $this->isPlaced;
     }
 }

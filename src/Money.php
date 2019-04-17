@@ -111,4 +111,14 @@ class Money
             );
         }
     }
+
+    public function place()
+    {
+        $this->isPlaced = true;
+    }
+
+    public function isPlaced()
+    {
+        return $this->isPlaced;
+    }
 }
