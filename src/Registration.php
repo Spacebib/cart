@@ -194,7 +194,9 @@ class Registration
     {
         list($flag, $errors) = $this->validateEntitlementData($data, $participant);
 
-        $this->setErrorsByTrackId($participant->getTrackId(), ['entitlements' => $errors]);
+        if (!$flag) {
+            $this->setErrorsByTrackId($participant->getTrackId(), ['entitlements' => $errors]);
+        }
 
         return $flag;
     }
