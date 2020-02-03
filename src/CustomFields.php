@@ -65,7 +65,7 @@ class CustomFields
             $this->fields[$key]['valid'] = true;
             $this->fields[$key]['error'] = null;
 
-            if (data_get($field, 'validation.required.enabled') && ! $value) {
+            if (data_get($field, 'validation.required.enabled') && ('' === $value || is_null($value))) {
                 $this->errors[$key] = data_get($field, 'validation.required.error');
                 $flag = false;
             } elseif (data_get($field, 'validation.regex.enabled')) {

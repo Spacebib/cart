@@ -167,6 +167,14 @@ class CustomFieldsTest extends TestCase
         $this->assertTrue($this->form->fill($data));
     }
 
+    public function test_fill_with_required_with_zero_value()
+    {
+        $data = ['untitled' => 1, 'untitled_1' => '0', 'untitled_2' => 'First Choice'];
+
+        $this->assertTrue($this->form->fill($data));
+        $this->assertNull($this->form->getErrors());
+    }
+
     private function formWithVietnameseRegex()
     {
         $fields = array (
